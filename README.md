@@ -4,7 +4,7 @@ A loader for injecting the [Purse's](https://docs.purse.tech/docs/integrate/purs
 and provide TypeScript types.
 
 While the SDK can be imported through this package, the core Purse runtime is always loaded directly
-from https://cdn.purse-sandbox.com to meet PCI-DSS compliance requirements. This ensures that the global Purse
+from https://cdn.purse-sandbox.com to meet compliance and security requirements. This ensures that the global Purse
 object behaves consistently across all environments without the need to self-host or bundle the script.
 
 The `loadHeadlessCheckout` function dynamically retrieves the most up-to-date version of the Purse Web SDK, independent
@@ -13,23 +13,11 @@ the runtime capabilities of the SDK itself.
 
 ## Features
 
-| SDK | Description                                                                                                                            |      Loader       |     Types   |
-|-----|----------------------------------------------------------------------------------------------------------------------------------------|:-----------------:|:-----------:|
-| [Headless Checkout](https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/how-to-build) | Full control over checkout UI with secure payment orchestration by Purse. Ideal for custom payment experiences.                        |    ✅ Available    |  ✅ Available |
-| [Drop-in UI](https://docs.purse.tech/docs/integrate/purse-checkout/widget-v3) | Pre-built, configurable payment interface with multiple payment methods.                                                               |     🚧 Coming     |      🚧 Coming    |
-| [Hosted Fields](https://docs.purse.tech/docs/integrate/purse-checkout/hosted-fields) | Lightweight integration for credit card payments with PCI-compliant fields. Customize the form while Purse handles the sensitive data. |        🚧 Coming        | 🚧 Coming |
-
-## Requirements
-To use @purse-eu/web-sdk in your project, ensure the following:
-
-Node.js: ≥ 20.x
-
-### Peer Dependencies
-You can install the following peer dependency:
-
-```bash
-npm install @types/googlepay
-```
+|                                                                                                           | loader                  | types                   |
+|-----------------------------------------------------------------------------------------------------------|-------------------------|-------------------------|
+| [Headless checkout](https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/how-to-build) | :white_check_mark:      | :white_check_mark:      |
+| [Drop-in UI](https://docs.purse.tech/docs/integrate/purse-checkout/widget-v3)                             | :building_construction: | :building_construction: |
+| [Hosted fields](https://docs.purse.tech/docs/integrate/purse-checkout/hosted-fields)                      | :building_construction: | :building_construction: |
 
 ## Installation
 
