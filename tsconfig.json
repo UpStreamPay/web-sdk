@@ -4,7 +4,7 @@
     "outDir": "./dist",
 
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noEmit": false,
     "allowJs": false,
     "declaration": true,
