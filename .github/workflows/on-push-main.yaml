@@ -1,0 +1,19 @@
+name: ON | PUSH | MAIN
+run-name: CREATE RELEASE | MAIN
+
+# When pushing to main, run the following jobs:
+# - Call the release-manager to create a release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release-manager:
+    uses: UpStreamPay/usp-reusable-workflows/.github/workflows/release-manager.yaml@v2
+    with:
+      version-file: package.json
+      version-path: version
+    secrets:
+      GITHUB_ACCESS_TOKEN: ${{ secrets.USP_GITHUB_ADMIN_ACCES_TOKEN }}

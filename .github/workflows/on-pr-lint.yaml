@@ -1,0 +1,67 @@
+name: ON | PR | CHECK LINTS
+run-name: ON | PR | CHECK LINTS | ${{ github.ref_name }}
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    types: ['opened', 'edited', 'reopened', 'synchronize']
+
+
+jobs:
+  # ------------------------------------ BUILD ---------------------------------------------- #
+  BUILD-TEST:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: "pr-lints-${{ github.ref_name }}"
+      cancel-in-progress: true
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+      packages: 'write'
+
+    steps:
+      - name: Checkout service
+        id: checkout_service
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.USP_GITHUB_ADMIN_ACCES_TOKEN }}
+          fetch-depth: '0'
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          scope: '@purse'
+          token: ${{ secrets.USP_NPM_ADMIN_ACCES_TOKEN }}
+          cache: npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.USP_NPM_ADMIN_ACCES_TOKEN }}
+
+      - name: Setup git identity
+        run: |
+          git config --global user.name 'upStreamPay'
+          git config --global user.email 'upstreampay@users.noreply.github.com'
+        env:
+          GITHUB_TOKEN: ${{ secrets.USP_GITHUB_ADMIN_ACCES_TOKEN }}
+
+      - name: Install
+        run: npm ci --include=dev
+
+      - name: Build
+        run: npm run build
+
+# ------------------------------------ LINT ---------------------------------------------- #
+      - name: Lint
+        run: npm run lint
+
+# ------------------------------------ LINT ---------------------------------------------- #
+      - name: arethetypeswrong
+        run: npm run check-exports
+
+# ------------------------------------ UNIT TEST ---------------------------------------------- #
+      - name: Unit tests
+        if: always()
+        run: npm run tests
+

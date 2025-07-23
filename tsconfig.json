@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "outDir": "./dist",
+
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": false,
+    "allowJs": false,
+    "declaration": true,
+    "removeComments": false,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["DOM", "ES2022"]
+  },
+  "include": ["src"]
+}
