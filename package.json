@@ -1,5 +1,5 @@
 {
-  "name": "@purse/web-sdk",
+  "name": "@upstreampay/web-sdk",
   "version": "1.1.1",
   "description": "Purse web SDK loaders",
   "scripts": {
