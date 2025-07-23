@@ -1,6 +1,6 @@
 {
   "name": "@purse/web-sdk",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Purse web SDK loaders",
   "main": "dist/index.umd.js",
   "module": "dist/index.esm.js",
