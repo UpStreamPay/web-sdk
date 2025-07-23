@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { injectScript, getWindowNameSpace } from './utils';
 import { SDKs } from './SDKs';
-import type { PublicSDK } from './types';
+import { PublicSDK } from './types';
 
 describe('injectScript', () => {
   let originalHead: HTMLElement | null;
@@ -44,7 +44,7 @@ describe('injectScript', () => {
     script.dispatchEvent(new Event('error'));
 
     await expect(promise).rejects.toThrow(
-        `The script "${fakeUrl}" failed to load. Check the HTTP status in DevTools to learn more.`
+      `The script "${fakeUrl}" failed to load. Check the HTTP status in DevTools to learn more.`,
     );
   });
 
@@ -56,7 +56,7 @@ describe('injectScript', () => {
     document.documentElement.removeChild(originalBody!);
 
     await expect(injectScript('https://cdn.example.com/sdk.js')).rejects.toThrow(
-        'Could not find target for script to render (no Head nor Body)'
+      'Could not find target for script to render (no Head nor Body)',
     );
 
     // Restore
