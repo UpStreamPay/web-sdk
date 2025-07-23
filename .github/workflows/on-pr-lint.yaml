@@ -63,5 +63,5 @@ jobs:
 # ------------------------------------ UNIT TEST ---------------------------------------------- #
       - name: Unit tests
         if: always()
-        run: npm run tests
+        run: npm test
 
