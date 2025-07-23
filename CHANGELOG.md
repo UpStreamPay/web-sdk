@@ -1,3 +1,12 @@
+## [1.1.2](https://github.com/UpStreamPay/web-sdk/compare/v1.1.1...v1.1.2) (2025-07-23)
+
+
+### Bug Fixes
+
+* first publish to github private registry ([613ef2e](https://github.com/UpStreamPay/web-sdk/commit/613ef2e2c5dafc9a6615474d03edd38462c9ae5b))
+
+
+
 ## [1.1.1](https://github.com/UpStreamPay/web-sdk/compare/v1.1.0...v1.1.1) (2025-07-23)
 
 

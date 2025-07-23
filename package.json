@@ -1,6 +1,6 @@
 {
   "name": "@upstreampay/web-sdk",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Purse web SDK loaders",
   "scripts": {
     "prebuild": "rimraf dist",
