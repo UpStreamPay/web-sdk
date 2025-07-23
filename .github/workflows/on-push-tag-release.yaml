@@ -1,0 +1,49 @@
+name: ON | PUSH | TAG | RELEASE
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+jobs:
+
+  BUILD_RELEASE:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+      packages: 'write'
+
+    steps:
+      - name: Checkout service
+        id: checkout_service
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref_name }}
+          token: ${{ secrets.USP_GITHUB_ADMIN_FINE_GRAINED_ACCES_TOKEN }}
+          fetch-depth: '0'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+          scope: 'purse-eu'
+          token: ${{ secrets.NPM_AUTH_TOKEN }}
+
+      - name: Setup git identity
+        run: |
+          git config --global user.name 'upStreamPay'
+          git config --global user.email 'upstreampay@users.noreply.github.com'
+        env:
+          GITHUB_TOKEN: ${{ secrets.USP_GITHUB_ADMIN_FINE_GRAINED_ACCES_TOKEN }}
+
+      - name: Install
+        run: npm ci --include=dev
+
+      - name: build version
+        run: npm run build
+
+      - name: publish
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+

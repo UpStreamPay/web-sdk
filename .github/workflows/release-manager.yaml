@@ -1,0 +1,162 @@
+name: Release Manager
+
+###
+### Release Manager
+###
+
+on:
+  workflow_call:
+    inputs:
+      tag-prefix:
+        description: "Tag prefix of the releases tags"
+        required: false
+        default: "v"
+        type: string
+      output-file:
+        description: "Output file for CHANGELOG modifications"
+        required: false
+        default: "CHANGELOG.md"
+        type: string
+      version-file:
+        description: "The file containing the version number"
+        required: false
+        default: "config.json"
+        type: string
+      version-path:
+        description: "The path to the version number in the file"
+        required: false
+        default: "version"
+        type: string
+      release-count:
+        description: "The number of releases to keep"
+        required: false
+        default: 0
+        type: number
+      skip-on-empty:
+        description: "Skip the release if there are no changes"
+        required: false
+        default: true
+        type: boolean
+      skip-commit:
+        description: "Skip the commit of the version file"
+        required: false
+        default: false
+        type: boolean
+      skip-version-file:
+        description: "Skip the version file update"
+        required: false
+        default: false
+        type: boolean
+      skip-ci:
+        description: "Skip CI (CHANGELOG generation, bump version)"
+        required: false
+        default: false
+        type: boolean
+      pre-commit:
+        description: "The pre-commit command to run"
+        required: false
+        default: ""
+        type: string
+      git-user-name:
+        description: "Git user name used for push modifications (changelog, bump version"
+        required: false
+        default: "Conventional Changelog"
+        type: string
+      git-path:
+        description: "Path filter for the logs. If set, only commits that match the path filter will be considered. By default, we won't use this feature(empty string)"
+        required: false
+        type: string
+        default: ""
+      git-user-email:
+        description: "Git user email for pushed modifications (changelog, bump version)"
+        required: false
+        default: "github@upstreampay.com"
+        type: string
+      git-message:
+        description: "Git message used for commit modifications (changelog, bump version)"
+        required: false
+        default: "chore(release): {version}"
+        type: string
+      preset:
+        description: "Preset used for analyze commit from previous tag version"
+        required: false
+        default: "angular"
+        type: string
+      pre-release:
+        description: "Marks the release as pre-release"
+        required: false
+        default: false
+        type: boolean
+    secrets:
+      GITHUB_ACCESS_TOKEN:
+        description: "Github access token which will be used for checkout project, create tag and push modifications (changelog, version bump)"
+        required: true
+    outputs:
+      release-url: 
+        value: ${{ jobs.create_release.outputs.release_url }}
+      changelog: 
+        value: ${{ jobs.create_release.outputs.changelog }}
+      clean-changelog: 
+        value: ${{ jobs.create_release.outputs.clean_changelog }}
+      version: 
+        value: ${{ jobs.create_release.outputs.version }}
+      tag: 
+        value: ${{ jobs.create_release.outputs.tag }}
+      skipped: 
+        value: ${{ jobs.create_release.outputs.skipped }}
+
+jobs:
+  create_release:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: ${{ github.actor != 'DaGoodBoiii' }}
+    outputs:
+      release_url: ${{ steps.create_release.outputs.url }}
+      changelog: ${{ steps.conventional_changelog.outputs.changelog }}
+      clean_changelog: ${{ steps.conventional_changelog.outputs.clean_changelog }}
+      version: ${{ steps.conventional_changelog.outputs.version }}
+      tag: ${{ steps.conventional_changelog.outputs.tag }}
+      skipped: ${{ steps.conventional_changelog.outputs.skipped }}
+    steps:
+      # Checkout repository with CI user token in order to push on protected branch in the next step if needed
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          fetch-depth: 0
+
+      # Generate new version of the release, create tag and release associated
+      # If there is no changes (fix or feat), release creation will be skipped
+      - name: Conventional Changelog Action
+        id: conventional_changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          github-token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          git-message: ${{ inputs.git-message }}
+          git-user-name: ${{ inputs.git-user-name }}
+          git-user-email: ${{ inputs.git-user-email }}
+          git-path: ${{ inputs.git-path }}
+          preset: ${{ inputs.preset }}
+          tag-prefix: ${{ inputs.tag-prefix }}
+          output-file: ${{ inputs.output-file }}
+          release-count: ${{ inputs.release-count }}
+          version-file: ${{ inputs.version-file }}
+          version-path: ${{ inputs.version-path }}
+          skip-on-empty: ${{ inputs.skip-on-empty }}
+          skip-commit: ${{ inputs.skip-commit }}
+          skip-version-file: ${{ inputs.skip-version-file }}
+          skip-ci: ${{ inputs.skip-ci }}
+          pre-commit: ${{ inputs.pre-commit }}
+          pre-release: ${{ inputs.pre-release }}
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        if: ${{ steps.conventional_changelog.outputs.skipped == 'false' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        with:
+          tag_name: ${{ steps.conventional_changelog.outputs.tag }}
+          body: ${{ steps.conventional_changelog.outputs.clean_changelog }}

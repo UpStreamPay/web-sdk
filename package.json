@@ -1,0 +1,57 @@
+{
+  "name": "@purse-eu/web-sdk",
+  "version": "0.0.0",
+  "description": "Purse web SDK loaders",
+  "keywords": [
+    "purse",
+    "upstreampay",
+    "payment",
+    "loader",
+    "headless checkout"
+  ],
+  "repository": "https://github.com/UpStreamPay/web-sdk",
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "dev": "vite build --watch",
+    "test": "vitest",
+    "build": "vite build",
+    "lint": "eslint '{src,types}/**/*.{ts,js}' && npm run check-format",
+    "typecheck": "tsc",
+    "clean": "rimraf dist",
+    "prettier": "prettier './**/*.{js,ts,md,html,css}' --write",
+    "check-format": "prettier --check './**/*.{js,ts,md,html,css}'",
+    "check-exports": "attw --pack ."
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.15.3",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "conditional-type-checks": "^1.0.5",
+    "eslint": "^9.31.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "jsdom": "^26.1.0",
+    "prettier": "^3.6.2",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.38.0",
+    "vite": "^7.0.5",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.2.4"
+  },
+  "optionalDependencies":  {
+    "@rollup/rollup-linux-arm64-gnu": "^4.0.0"
+  },
+  "peerDependencies": {
+    "@types/googlepay": "^0.7.6"
+  },
+  "main": "dist/index.umd.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "author": "@upstreampay",
+  "license": "MIT"
+}
