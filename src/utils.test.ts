@@ -43,7 +43,7 @@ describe('injectScript', () => {
     script = document.querySelector(`script[src="${fakeUrl}"]`)!;
     script.dispatchEvent(new Event('error'));
 
-    await expect(promise).rejects.toThrow(
+    expect(promise).rejects.toThrow(
       `The script "${fakeUrl}" failed to load. Check the HTTP status in DevTools to learn more.`,
     );
   });
@@ -82,6 +82,6 @@ describe('getWindowNameSpace', () => {
   });
 
   it('rejects with an error if the namespace is not present on window', async () => {
-    await expect(getWindowNameSpace(mockSDK)).rejects.toThrow(loadErrorMessage);
+    expect(() => getWindowNameSpace(mockSDK)).toThrow(loadErrorMessage);
   });
 });
