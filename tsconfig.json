@@ -12,10 +12,11 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["DOM", "ES2022"],
+    "typeRoots": ["./src/generated/types", "./node_modules/@types"],
     "types": [
       "googlepay"
     ]
   },
 
-  "include": ["src"]
+  "include": ["src/**/*.ts"]
 }
