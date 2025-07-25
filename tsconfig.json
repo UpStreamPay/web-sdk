@@ -11,7 +11,11 @@
     "removeComments": false,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["DOM", "ES2022"]
+    "lib": ["DOM", "ES2022"],
+    "types": [
+      "googlepay"
+    ]
   },
+
   "include": ["src"]
 }
