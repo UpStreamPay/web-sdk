@@ -145,7 +145,7 @@ declare class Amount {
 	]>;
 	reset(amount: number | undefined, currencyCode: string): Amount;
 	setPrimarySource(source: PaymentItemInterface<any> | null): PaymentSplit | null;
-	takeSplit({ token, amount: srcAmount, minIncrement, }: {
+	takeSplit(data: {
 		token: PaymentItemInterface;
 		amount: number;
 		minIncrement?: number;
@@ -3972,6 +3972,6 @@ export {
 	XPayButtonUIOptions as PurseHeadlessCheckoutXPayButtonUIOptions,
 };
 
-export as namespace Purse;
+export as namespace HeadlessCheckoutModule;
 
 export {};
