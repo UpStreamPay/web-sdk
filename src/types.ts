@@ -1,7 +1,7 @@
 export const PublicSDKs = ['widget', 'headless'] as const;
-export type PublicSDK = typeof PublicSDKs[number];
+export type PublicSDK = (typeof PublicSDKs)[number];
 export const PublicEnvironments = ['sandbox', 'production'] as const;
-export type PublicEnvironment = typeof PublicEnvironments[number];
+export type PublicEnvironment = (typeof PublicEnvironments)[number];
 
 //Generated types will come soon
 export interface Headless {
