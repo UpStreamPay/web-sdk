@@ -1,3 +1,12 @@
+# [1.2.0](https://github.com/UpStreamPay/web-sdk/compare/v1.1.2...v1.2.0) (2025-07-25)
+
+
+### Features
+
+* add types ([719d59a](https://github.com/UpStreamPay/web-sdk/commit/719d59a0322f933b03633c6d5d85fa66e025774f))
+
+
+
 ## [1.1.2](https://github.com/UpStreamPay/web-sdk/compare/v1.1.1...v1.1.2) (2025-07-23)
 
 
