@@ -1,11 +1,15 @@
 import { injectScript, getWindowNameSpace } from './utils';
 import { SDKs } from './SDKs';
 import { PublicEnvironment, Widget } from './types';
-import {PurseHeadlessCheckout} from "./generated/types/headless-checkout";
+import * as HeadlessCheckout from 'headless-checkout';
 
-export async function loadHeadlessCheckout(env: PublicEnvironment = 'production'): Promise<typeof PurseHeadlessCheckout> {
+export { type HeadlessCheckout };
+
+export async function loadHeadlessCheckout(
+  env: PublicEnvironment = 'production',
+): Promise<typeof HeadlessCheckout.PurseHeadlessCheckout> {
   await injectScript(SDKs['headless'][env]);
-  return getWindowNameSpace<typeof PurseHeadlessCheckout>('headless');
+  return getWindowNameSpace<typeof HeadlessCheckout.PurseHeadlessCheckout>('headless');
 }
 
 export async function loadWidgetV3(env: PublicEnvironment = 'production'): Promise<Widget> {
