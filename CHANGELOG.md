@@ -1,3 +1,12 @@
+# [1.4.0](https://github.com/UpStreamPay/web-sdk/compare/v1.3.0...v1.4.0) (2025-07-25)
+
+
+### Features
+
+* **headless-checkout:** sync references 3.50.0 ([2a962b2](https://github.com/UpStreamPay/web-sdk/commit/2a962b21a7b3398e2f56a72bde09e1e21ceca72d))
+
+
+
 # [1.3.0](https://github.com/UpStreamPay/web-sdk/compare/v1.2.0...v1.3.0) (2025-07-25)
 
 
