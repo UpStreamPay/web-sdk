@@ -18,10 +18,10 @@ export const injectScript = async (url: string): Promise<HTMLScriptElement> => {
   return script;
 };
 
-export const getWindowNameSpace = (sdk: PublicSDK) => {
+export const getWindowNameSpace = <T>(sdk: PublicSDK) => {
   const { namespace, loadErrorMessage } = SDKs[sdk];
   if (!window[namespace]) {
     return Promise.reject(new Error(loadErrorMessage));
   }
-  return window[namespace];
+  return window[namespace] as T;
 };
