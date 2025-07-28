@@ -1,3 +1,12 @@
+## [1.6.2](https://github.com/UpStreamPay/web-sdk/compare/v1.6.1...v1.6.2) (2025-07-28)
+
+
+### Bug Fixes
+
+* add npm url ([6e12543](https://github.com/UpStreamPay/web-sdk/commit/6e125430cce66bc4ceb830c063b1c4a43323c4f3))
+
+
+
 ## [1.6.1](https://github.com/UpStreamPay/web-sdk/compare/v1.6.0...v1.6.1) (2025-07-28)
 
 
