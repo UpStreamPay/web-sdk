@@ -35,8 +35,8 @@ export default defineConfig({
   plugins: [
     dts({
       insertTypesEntry: true,
-      clearPureImport: true,
-      rollupTypes: true,
+      copyDtsFiles: true,
+      exclude: ['**/**.test.ts', '**/**.spec.ts'],
     }),
   ],
 });
