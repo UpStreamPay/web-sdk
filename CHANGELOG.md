@@ -1,3 +1,12 @@
+## [1.6.1](https://github.com/UpStreamPay/web-sdk/compare/v1.6.0...v1.6.1) (2025-07-28)
+
+
+### Bug Fixes
+
+* remove github npm references ([666b2e8](https://github.com/UpStreamPay/web-sdk/commit/666b2e8818adbe4a4b550abbcd6a33ffa3d95eae))
+
+
+
 # [1.6.0](https://github.com/UpStreamPay/web-sdk/compare/v1.5.0...v1.6.0) (2025-07-28)
 
 
