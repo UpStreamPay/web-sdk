@@ -27,6 +27,12 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           scope: 'purse-eu'
 
+      - name: Configure npm registry auth
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+
       - name: Setup git identity
         run: |
           git config --global user.name 'upStreamPay'
