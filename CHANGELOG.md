@@ -1,3 +1,12 @@
+# [1.5.0](https://github.com/UpStreamPay/web-sdk/compare/v1.4.0...v1.5.0) (2025-07-28)
+
+
+### Features
+
+* types export ([8db92f3](https://github.com/UpStreamPay/web-sdk/commit/8db92f35e22b28c13eb689dcea447c051aa95cc2))
+
+
+
 # [1.4.0](https://github.com/UpStreamPay/web-sdk/compare/v1.3.0...v1.4.0) (2025-07-25)
 
 
