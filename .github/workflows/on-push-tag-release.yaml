@@ -26,7 +26,6 @@ jobs:
         with:
           cache: npm
           node-version: ${{ vars.NODE_VERSION }}
-          registry-url: 'https://npm.pkg.github.com'
           scope: '@purse-eu'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
