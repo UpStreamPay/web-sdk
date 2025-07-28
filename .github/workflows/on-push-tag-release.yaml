@@ -25,13 +25,8 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
-          scope: '@purse-eu'
-
-      - name: Configure npm registry auth
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          scope: 'purse-eu'
+          token: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Setup git identity
         run: |
@@ -49,5 +44,5 @@ jobs:
       - name: publish
         run: npm publish --provenance --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
