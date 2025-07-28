@@ -1,3 +1,12 @@
+# [1.6.0](https://github.com/UpStreamPay/web-sdk/compare/v1.5.0...v1.6.0) (2025-07-28)
+
+
+### Features
+
+* push to npm registry ([f6a7456](https://github.com/UpStreamPay/web-sdk/commit/f6a7456ad31aca8133288c45823fb8b4bfdc7a72))
+
+
+
 # [1.5.0](https://github.com/UpStreamPay/web-sdk/compare/v1.4.0...v1.5.0) (2025-07-28)
 
 
