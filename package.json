@@ -6,7 +6,7 @@
     "prebuild": "rimraf dist",
     "dev": "vite build --watch",
     "test": "vitest",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "lint": "eslint '{src,types}/**/*.{ts,js}' && npm run check-format",
     "typecheck": "tsc",
     "clean": "rimraf dist",
