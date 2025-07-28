@@ -1,3 +1,12 @@
+## [1.6.3](https://github.com/UpStreamPay/web-sdk/compare/v1.6.2...v1.6.3) (2025-07-28)
+
+
+### Bug Fixes
+
+* setup npmrc ([e341693](https://github.com/UpStreamPay/web-sdk/commit/e34169362dba79993d50a9e71c00892e60808ab4))
+
+
+
 ## [1.6.2](https://github.com/UpStreamPay/web-sdk/compare/v1.6.1...v1.6.2) (2025-07-28)
 
 
