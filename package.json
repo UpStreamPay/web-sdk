@@ -1,10 +1,15 @@
 {
   "name": "@purse-eu/web-sdk",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Purse web SDK loaders",
-  "keywords": ["purse","upstreampay","payment","loader","headless checkout"],
+  "keywords": [
+    "purse",
+    "upstreampay",
+    "payment",
+    "loader",
+    "headless checkout"
+  ],
   "repository": "https://github.com/UpStreamPay/web-sdk",
-
   "scripts": {
     "prebuild": "rimraf dist",
     "dev": "vite build --watch",
