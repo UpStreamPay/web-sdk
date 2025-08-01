@@ -4,7 +4,7 @@ A loader for injecting the [Purse's](https://docs.purse.tech/docs/integrate/purs
 and provide TypeScript types.
 
 While the SDK can be imported through this package, the core Purse runtime is always loaded directly
-from https://cdn.purse-sandbox.com to meet compliance and security requirements. This ensures that the global Purse
+from https://cdn.purse-sandbox.com to meet PCI-DSS compliance requirements. This ensures that the global Purse
 object behaves consistently across all environments without the need to self-host or bundle the script.
 
 The `loadHeadlessCheckout` function dynamically retrieves the most up-to-date version of the Purse Web SDK, independent
