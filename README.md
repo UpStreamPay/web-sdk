@@ -19,6 +19,18 @@ the runtime capabilities of the SDK itself.
 | [Drop-in UI](https://docs.purse.tech/docs/integrate/purse-checkout/widget-v3)                             | :building_construction: | :building_construction: |
 | [Hosted fields](https://docs.purse.tech/docs/integrate/purse-checkout/hosted-fields)                      | :building_construction: | :building_construction: |
 
+## Requirements
+To use @purse-eu/web-sdk in your project, ensure the following:
+
+Node.js: ≥ 20.x
+
+### Peer Dependencies
+You can install the following peer dependency:
+
+```bash
+npm install @types/googlepay
+```
+
 ## Installation
 
 ```bash
