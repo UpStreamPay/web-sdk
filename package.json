@@ -1,6 +1,6 @@
 {
   "name": "@purse-eu/web-sdk",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Purse web SDK loaders",
   "keywords": [
     "purse",
@@ -40,7 +40,7 @@
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^3.2.4"
   },
-  "optionalDependencies":  {
+  "optionalDependencies": {
     "@rollup/rollup-linux-arm64-gnu": "^4.0.0"
   },
   "peerDependencies": {
