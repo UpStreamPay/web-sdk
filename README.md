@@ -1,17 +1,22 @@
 # Purse web SDKs loader
 
-A loader for injecting the [Purse's](https://docs.purse.tech/docs/integrate/purse-checkout/integration-mode) web scripts
-and provide TypeScript types.
+This package provides a lightweight loader for Purse’s web SDKs and exposes the TypeScript types you need for integration.
 
-While the SDK can be imported through this package, the core Purse runtime is always loaded directly
-from https://cdn.purse-sandbox.com to meet compliance and security requirements. This ensures that the global Purse
-object behaves consistently across all environments without the need to self-host or bundle the script.
+> ⚠️ Important:
+> Although you import this package in your project, the Purse runtime is always loaded from the appropriate CDN based on the environment (e.g., https://cdn.purse-sandbox.com or https://cdn.purse-secure.com).
+> This ensures PCI-DSS compliance and consistent behavior across all environments—without requiring you to self-host or bundle the SDK.
 
-The `loadHeadlessCheckout` function dynamically retrieves the most up-to-date version of the Purse Web SDK, independent
-of the version of `@purse-eu/web-sdk` in your project. Package updates focus on developer experience and do not alter
-the runtime capabilities of the SDK itself.
+## What it does
 
-## Features
+The main function exposed by this package is:
+
+```ts
+loadHeadlessCheckout(environment: 'sandbox' | 'production')
+```
+It dynamically loads the latest version of the Headless Checkout SDK from the correct CDN and returns a ready-to-use module.
+This decouples your integration from the package version of @purse-eu/web-sdk, and ensures you always use the latest secure runtime.
+
+## Available SDKs
 
 | SDK | Description                                                                                                                            |      Loader       |     Types   |
 |-----|----------------------------------------------------------------------------------------------------------------------------------------|:-----------------:|:-----------:|
@@ -37,7 +42,7 @@ npm install @types/googlepay
 npm install @purse/web-sdk
 ```
 
-## Usage
+## Quick Start
 
 ```ts
 import {loadHeadlessCheckout, type  PurseHeadlessCheckoutV1Params} from '@purse/web-sdk';
@@ -52,3 +57,11 @@ loadHeadlessCheckout('sandbox').then(async module => {
     });
 });
 ```
+## Developer Documentation
+Full documentation is available at: https://docs.purse.tech/docs/integrate/purse-checkout/integration-mode
+
+This includes:
+
+- Integration guides 
+- SDK reference (methods, types, events) 
+- Use cases and advanced examples
