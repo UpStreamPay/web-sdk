@@ -5,10 +5,10 @@ export const SDKs = {
     sandbox: 'https://cdn.purse-sandbox.com/headless-checkout/latest/purse.umd.js',
     production: 'https://cdn.purse-secure.com/headless-checkout/stable/purse.umd.js',
   },
-  widget: {
-    namespace: 'UpStreamPay',
-    loadErrorMessage: 'WidgetV3 load failed.',
-    sandbox: 'https://cdn.purse-sandbox.com/dropin/latest/purse.js',
-    production: 'https://cdn.purse-secure.com/dropin/v3-stable/purse.js',
+  securefields: {
+    namespace: 'Purse',
+    loadErrorMessage: "Can't load securefields SDK",
+    sandbox: 'https://cdn.purse-sandbox.com/secure-fields/latest/purse.js',
+    production: 'https://cdn.purse-secure.com/secure-fields/stable/purse.js',
   },
 } as const;

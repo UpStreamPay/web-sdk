@@ -66,7 +66,7 @@ describe('injectScript', () => {
 });
 
 describe('getWindowNameSpace', () => {
-  const mockSDK: PublicSDK = 'widget'; // Example key that should exist in SDKs
+  const mockSDK: PublicSDK = 'securefields'; // Example key that should exist in SDKs
   const { namespace, loadErrorMessage } = SDKs[mockSDK];
 
   afterEach(() => {

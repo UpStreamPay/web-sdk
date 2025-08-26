@@ -26,7 +26,6 @@ jobs:
         id: checkout_service
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
           token: ${{ secrets.USP_GITHUB_ADMIN_FINE_GRAINED_ACCES_TOKEN }}
           fetch-depth: '0'
 
