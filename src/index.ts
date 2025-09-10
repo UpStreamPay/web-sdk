@@ -1,13 +1,9 @@
 import { injectScript, getWindowNameSpace } from './utils';
 import { SDKs } from './SDKs';
-import { PublicEnvironment } from './types';
-import { createHeadlessCheckout, initSecureFields } from './generated/types';
+import { HeadlessCheckoutModule, PublicEnvironment, SecurefieldsModule } from './types';
 
 export * from './types';
 export * from './generated/types';
-
-export type HeadlessCheckoutModule = { createHeadlessCheckout: typeof createHeadlessCheckout };
-export type SecurefieldsModule = { initSecureFields: typeof initSecureFields };
 
 export async function loadHeadlessCheckout(env: PublicEnvironment = 'production'): Promise<HeadlessCheckoutModule> {
   await injectScript(SDKs['headless'][env]);
