@@ -1,3 +1,8 @@
 src/
 .idea/
 .npmrc
+index.html
+vite.config.js
+vitest.config.js
+eslint.config.js
+.prettier*

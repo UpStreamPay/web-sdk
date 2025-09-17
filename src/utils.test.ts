@@ -43,7 +43,7 @@ describe('injectScript', () => {
     script = document.querySelector(`script[src="${fakeUrl}"]`)!;
     script.dispatchEvent(new Event('error'));
 
-    expect(promise).rejects.toThrow(
+    await expect(promise).rejects.toThrow(
       `The script "${fakeUrl}" failed to load. Check the HTTP status in DevTools to learn more.`,
     );
   });
