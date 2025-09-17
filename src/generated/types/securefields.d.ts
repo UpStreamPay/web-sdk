@@ -1,12 +1,7 @@
-export declare type CardInfo = {
-    detected_brands: CardNetwork[];
-    bin: string;
-    last_four_digits: string;
-};
-
-export declare type CardNetwork = (typeof CardNetworks)[number];
-
-export declare const CardNetworks: readonly ["VISA", "CARTE_BANCAIRE", "MASTERCARD", "MAESTRO", "AMERICAN_EXPRESS", "DISCOVER", "JCB", "DINERS_CLUB", "UNIONPAY", "OTHER"];
+import { CardInfo } from '@vault/shared';
+import { Scheme } from '@vault/shared';
+import { SubmitOptions } from '@vault/shared';
+import { SubmitResult } from '@vault/shared';
 
 declare type CSSPseudoClasses = ':empty' | ':focus' | ':valid' | ':invalid' | ':autocomplete' | '::placeholder' | ':brandDetected';
 
@@ -20,15 +15,7 @@ export declare interface FieldState {
     valid?: boolean;
 }
 
-/**
- * Initializes the Secure Fields SDK with the provided tenant ID and configuration.
- * @param payload - An object containing the tenant ID and configuration for the SDK.
- * @returns A promise that resolves to an instance of the SDK identified for the tenantId.
- */
-export declare const initSecureFields: (payload: {
-    tenantId: string;
-    config: VaultSDKAdapterConfig;
-}) => Promise<VaultSDKAdapter>;
+/* Excluded from this release type: initSecureFields */
 
 export declare interface SdkAdapterEventData {
     /**
@@ -115,16 +102,11 @@ export declare interface SdkAdapterEventData {
          fields: FieldsState;
      };
      /**
-      * Triggered when the card information is available.
-      * This include the detected brands, the masked bin and the last four digits of the card.
-      */
-     cardInfo: CardInfo;
-     /**
       * Triggered when a brand is detected in the card number field.
       * It can also contain a co-brand if applicable.
       */
      brandDetected: {
-         brands?: CardNetwork[];
+         brands?: Scheme[];
      };
     }
 
@@ -142,46 +124,59 @@ export declare interface SdkAdapterEventData {
         fontSize?: string;
         lineHeight?: string;
         fontWeight?: string;
-        fontStyle?: string;
-        textTransform?: string;
         color?: string;
         placeholderColor?: string;
         backgroundColor?: string;
     }
 
     /**
-     * This is a common interface for all vault SDK adapters.
+     * Common interface for all vault SDK adapters.
      */
     export declare interface VaultSDKAdapter {
         /**
          * Renders the fields in the targets specified in the config.
-         * @throws SdkErrors.CONTAINER_NOT_FOUND if the target element for the field is not found.
+         * @throws SdkErrors.CONTAINER_NOT_FOUND If the target element for the field is not found.
          */
         render: () => void;
         /**
          * Destroys the SDK instance and removes all event listeners.
-         * This is terminal and cannot the instance cannot be used after this call.
+         * This is terminal; the instance cannot be used after this call.
          */
         destroy: () => void;
         /**
-         * Triggers a validation of the form, requesting the form_id to be returned if the form is valid.
-         * @param payload - The payload containing the expiry month and year.
-         * @throws SdkErrors.TOKENIZATION_FAILED if the form is invalid or if there is an error during the process.
-         * @throws SdkErrors.INVALID_FORM if the form is not valid.
-         * @event success - emitted when the form is successfully tokenized.
-         * @event error - emitted when there is an error during the tokenization process.
+         * Gets card information such as BIN, detected brands, and last four digits.
+         * @returns Promise<CardInfo | null> - Null if the form is not complete enough.
+         * @example
+         * ```ts
+         * const info = await hostedFields.getCardInfo();
+         * if (info) {
+         *   console.log(info.bin);
+         *   console.log(info.detected_brands);
+         *   console.log(info.last_four_digit);
+         * }
+         * ```
          */
-        submit: (payload: {
-            expiry_month: number;
-            expiry_year: number;
-        }) => Promise<{
-            vault_form_token: string;
-            card?: {
-                last_four_digits?: string;
-                bin?: string;
-                detected_brands?: CardNetwork[];
-            };
-        }>;
+        getCardInfo: () => Promise<CardInfo | null>;
+        /**
+         * Triggers validation and tokenization of the form.
+         * @param payload - The payload containing expiry month, expiry year, cardholder name, and selected network.
+         * @throws SdkErrors.TOKENIZATION_FAILED If the form is invalid or if there is an error during the process.
+         * @throws SdkErrors.INVALID_FORM If the form is not valid.
+         * @event success Emitted when the form is successfully tokenized.
+         * @event error Emitted when there is an error during the tokenization process.
+         * @example
+         * ```ts
+         *  const result = await hostedFields.submit({
+         *      expiryMonth: 12;
+         *      expiryYear: 25;
+         *      cardHolderName: 'Joe Dawn';
+         *      selectedNetwork: 'VISA';
+         *      saveToken: false;
+         *   });
+         *   ```
+         *
+         */
+        submit: (payload: SubmitOptions) => Promise<SubmitResult>;
         /**
          * Registers an event listener for the specified event.
          */
@@ -193,11 +188,12 @@ export declare interface SdkAdapterEventData {
      */
     export declare interface VaultSDKAdapterConfig {
         /**
-         * Eligible card networks for the vault form
+         * Eligible card networks for the vault form.
          */
-        brands: CardNetwork[];
+        brands: Scheme[];
         /**
-         * Targets and labels for the iframe fields
+         * Targets and labels for the iframe fields.
+         * The 'cvv' field is required; 'cardNumber' is optional.
          */
         fields: {
             cardNumber?: SDKVaultFieldConfig;
@@ -213,5 +209,9 @@ export declare interface SdkAdapterEventData {
             };
         };
     }
+
+    export declare type Vendor = typeof VENDORS[number];
+
+    export declare const VENDORS: readonly ["pci_proxy", "purse"];
 
     export { }
