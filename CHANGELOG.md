@@ -1,3 +1,12 @@
+## [0.2.1](https://github.com/UpStreamPay/web-sdk/compare/v0.2.0...v0.2.1) (2025-09-17)
+
+
+### Bug Fixes
+
+* change window interface declaration ([#25](https://github.com/UpStreamPay/web-sdk/issues/25)) ([0c0bc41](https://github.com/UpStreamPay/web-sdk/commit/0c0bc418e6db9292d8f43e81996b54c8677f2738))
+
+
+
 # [0.2.0](https://github.com/UpStreamPay/web-sdk/compare/v0.1.0...v0.2.0) (2025-08-26)
 
 
