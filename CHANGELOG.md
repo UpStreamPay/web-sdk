@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/UpStreamPay/web-sdk/compare/v0.2.1...v0.3.0) (2025-09-18)
+
+
+### Features
+
+* **types:** merge PRs from bundles releases ([b9c2f8f](https://github.com/UpStreamPay/web-sdk/commit/b9c2f8f6192d65cfc5b4cb7544accfd7aa555686)), closes [#27](https://github.com/UpStreamPay/web-sdk/issues/27)
+
+
+
 ## [0.2.1](https://github.com/UpStreamPay/web-sdk/compare/v0.2.0...v0.2.1) (2025-09-17)
 
 
