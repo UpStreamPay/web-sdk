@@ -11,9 +11,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["DOM", "ES2022"],
-    "types": [
-      "googlepay"
-    ],
+    "types": ["googlepay"]
   },
 
   "include": ["src/**/*.ts"]

@@ -8,101 +8,101 @@ on:
   workflow_call:
     inputs:
       tag-prefix:
-        description: "Tag prefix of the releases tags"
+        description: 'Tag prefix of the releases tags'
         required: false
-        default: "v"
+        default: 'v'
         type: string
       output-file:
-        description: "Output file for CHANGELOG modifications"
+        description: 'Output file for CHANGELOG modifications'
         required: false
-        default: "CHANGELOG.md"
+        default: 'CHANGELOG.md'
         type: string
       version-file:
-        description: "The file containing the version number"
+        description: 'The file containing the version number'
         required: false
-        default: "config.json"
+        default: 'config.json'
         type: string
       version-path:
-        description: "The path to the version number in the file"
+        description: 'The path to the version number in the file'
         required: false
-        default: "version"
+        default: 'version'
         type: string
       release-count:
-        description: "The number of releases to keep"
+        description: 'The number of releases to keep'
         required: false
         default: 0
         type: number
       skip-on-empty:
-        description: "Skip the release if there are no changes"
+        description: 'Skip the release if there are no changes'
         required: false
         default: true
         type: boolean
       skip-commit:
-        description: "Skip the commit of the version file"
+        description: 'Skip the commit of the version file'
         required: false
         default: false
         type: boolean
       skip-version-file:
-        description: "Skip the version file update"
+        description: 'Skip the version file update'
         required: false
         default: false
         type: boolean
       skip-ci:
-        description: "Skip CI (CHANGELOG generation, bump version)"
+        description: 'Skip CI (CHANGELOG generation, bump version)'
         required: false
         default: false
         type: boolean
       pre-commit:
-        description: "The pre-commit command to run"
+        description: 'The pre-commit command to run'
         required: false
-        default: ""
+        default: ''
         type: string
       git-user-name:
-        description: "Git user name used for push modifications (changelog, bump version"
+        description: 'Git user name used for push modifications (changelog, bump version'
         required: false
-        default: "Conventional Changelog"
+        default: 'Conventional Changelog'
         type: string
       git-path:
         description: "Path filter for the logs. If set, only commits that match the path filter will be considered. By default, we won't use this feature(empty string)"
         required: false
         type: string
-        default: ""
+        default: ''
       git-user-email:
-        description: "Git user email for pushed modifications (changelog, bump version)"
+        description: 'Git user email for pushed modifications (changelog, bump version)'
         required: false
-        default: "github@upstreampay.com"
+        default: 'github@upstreampay.com'
         type: string
       git-message:
-        description: "Git message used for commit modifications (changelog, bump version)"
+        description: 'Git message used for commit modifications (changelog, bump version)'
         required: false
-        default: "chore(release): {version}"
+        default: 'chore(release): {version}'
         type: string
       preset:
-        description: "Preset used for analyze commit from previous tag version"
+        description: 'Preset used for analyze commit from previous tag version'
         required: false
-        default: "angular"
+        default: 'angular'
         type: string
       pre-release:
-        description: "Marks the release as pre-release"
+        description: 'Marks the release as pre-release'
         required: false
         default: false
         type: boolean
     secrets:
       GITHUB_ACCESS_TOKEN:
-        description: "Github access token which will be used for checkout project, create tag and push modifications (changelog, version bump)"
+        description: 'Github access token which will be used for checkout project, create tag and push modifications (changelog, version bump)'
         required: true
     outputs:
-      release-url: 
+      release-url:
         value: ${{ jobs.create_release.outputs.release_url }}
-      changelog: 
+      changelog:
         value: ${{ jobs.create_release.outputs.changelog }}
-      clean-changelog: 
+      clean-changelog:
         value: ${{ jobs.create_release.outputs.clean_changelog }}
-      version: 
+      version:
         value: ${{ jobs.create_release.outputs.version }}
-      tag: 
+      tag:
         value: ${{ jobs.create_release.outputs.tag }}
-      skipped: 
+      skipped:
         value: ${{ jobs.create_release.outputs.skipped }}
 
 jobs:

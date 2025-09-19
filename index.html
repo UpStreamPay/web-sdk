@@ -10,8 +10,8 @@
 
       (async () => {
         const module = await sdk.loadSecureFields('sandbox');
-        console.log({module});
-        document.body.append(!!module.initSecureFields()? "Module loaded": "Module not loaded");
+        console.log({ module });
+        document.body.append(!!module.initSecureFields() ? 'Module loaded' : 'Module not loaded');
       })();
     </script>
   </body>
