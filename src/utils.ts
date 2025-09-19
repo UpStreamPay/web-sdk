@@ -20,8 +20,8 @@ export const injectScript = async (url: string): Promise<HTMLScriptElement> => {
 
 export const getWindowNameSpace = <T>(sdk: PublicSDK) => {
   const { namespace, loadErrorMessage } = SDKs[sdk];
-  if (!window[namespace as any]) {
+  if (!window[namespace]) {
     throw new Error(loadErrorMessage);
   }
-  return window[namespace as any] as T;
+  return window[namespace] as T;
 };
