@@ -1,3 +1,12 @@
+## [0.3.2](https://github.com/UpStreamPay/web-sdk/compare/v0.3.1...v0.3.2) (2025-09-30)
+
+
+### Bug Fixes
+
+* **docs:** doc sync  ([99bad30](https://github.com/UpStreamPay/web-sdk/commit/99bad3017ea791775b55d1897c677768cad1853d)), closes [#32](https://github.com/UpStreamPay/web-sdk/issues/32)
+
+
+
 ## [0.3.1](https://github.com/UpStreamPay/web-sdk/compare/v0.3.0...v0.3.1) (2025-09-19)
 
 
