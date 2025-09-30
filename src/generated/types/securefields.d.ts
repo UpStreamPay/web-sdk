@@ -268,7 +268,7 @@ export interface SecureFieldsClient {
 	destroy: () => void;
 	/**
 	 * Gets card information such as BIN, detected brands, and last four digits.
-	 * @returns Promise<CardInfo | null> - Null if the form is not complete enough.
+	 * @returns Card info or Null if the form is not complete enough.
 	 * @example
 	 * ```ts
 	 * const info = await hostedFields.getCardInfo();
@@ -282,7 +282,8 @@ export interface SecureFieldsClient {
 	getCardInfo: () => Promise<CardInfo | null>;
 	/**
 	 * Triggers validation and tokenization of the form.
-	 * @param payload - The payload containing expiry month, expiry year, cardholder name, and selected network.
+	 * @param payload {@link SubmitOptions}- This param is not passed when tokenizing a cvv, otherwise this payload
+	 * contains the expiry month, expiry year, cardholder name, and selected network.
 	 * @throws SecureFieldsErrors.TOKENIZATION_FAILED If the form is invalid or if there is an error during the process.
 	 * @throws SecureFieldsErrors.INVALID_FORM If the form is not valid.
 	 * @example
@@ -316,12 +317,20 @@ export interface SecureFieldsClient {
 	 *
 	 * `error` Emitted when there is an error during the tokenization process.
 	 */
-	submit: (payload: SubmitOptions) => Promise<SubmitResult>;
+	submit: (payload?: SubmitOptions) => Promise<SubmitResult>;
 	/**
 	 * Registers an event listener for the specified event.
 	 */
 	on<K extends SecureFieldsEvents>(event: K, callback: (data: SecureFieldsEventsPayload[K]) => void): void;
 }
+declare const VAULT_VENDORS: readonly [
+	"purse",
+	"pci_proxy"
+];
+/**
+ * @hidden
+ */
+export type Vendor = typeof VAULT_VENDORS[number];
 /**
  * Error codes and messages for the Secure Fields SDK.
  * @category Errors
@@ -333,6 +342,11 @@ export declare const SecureFieldsErrors: {
 	readonly TENANT_ID_REQUIRED: {
 		readonly code: "TENANT_ID_REQUIRED";
 		readonly message: "Tenant ID is required for Secure Fields initialization";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/#prerequisites";
+	};
+	readonly TENANT_ID_FORMAT_MISMATCH_VENDOR: {
+		readonly code: "TENANT_ID_FORMAT_MISMATCH_VENDOR";
+		readonly message: "Tenant ID format mismatch the one implied by vendor";
 		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/#prerequisites";
 	};
 	readonly INVALID_BRANDS: {
@@ -404,8 +418,9 @@ export declare const SecureFieldsErrors: {
 /**
  * @function
  * Initializes the Secure Fields SDK with the provided tenant ID and configuration.
- * @param payload - An object containing the tenant ID and configuration for the SDK.
- * @param vendor - @internal a way to choose the vault vendor.
+ * @param sdkConfiguration
+ * @param sdkConfiguration.tenantId - the tenant ID provided by Purse.
+ * @param sdkConfiguration.config - configuration for the secure fields. See {@link SecureFieldsConfig} for supported options.
  * @returns A promise that resolves to an instance of the SDK identified for the tenantId.
  *
  * @category Entry Point
@@ -421,9 +436,10 @@ export declare const SecureFieldsErrors: {
  * | NOT_SUPPORTED_FIELD   |
  * @see {@link SecureFieldsErrors}
  */
-export declare const initSecureFields: (payload: {
+export declare const initSecureFields: (sdkConfiguration: {
 	tenantId: string;
 	config: SecureFieldsConfig;
+	vault_vendor?: Vendor;
 }) => Promise<SecureFieldsClient>;
 
 export {};
