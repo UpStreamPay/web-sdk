@@ -144,9 +144,14 @@ export type AbstractSessionModel = {
 	expiration_date: string;
 };
 export type PaymentSessionVaultModel = {
-	vendor_front_data: Record<string, {
-		merchant_id: string;
-	}>;
+	vendor_front_data: {
+		purse?: {
+			tenant_id: string;
+		};
+		pci_proxy: {
+			merchant_id: string;
+		};
+	};
 };
 export type PaymentSessionModel = AbstractSessionModel & {
 	id: string;
@@ -2645,7 +2650,12 @@ declare const CardSchemes: {
 	readonly MASTERCARD: "MASTERCARD";
 	readonly AMERICAN_EXPRESS: "AMERICAN_EXPRESS";
 	readonly MAESTRO: "MAESTRO";
+	readonly DINERS_CLUB: "DINERS_CLUB";
+	readonly DISCOVER: "DISCOVER";
+	readonly UNIONPAY: "UNIONPAY";
+	readonly JCB: "JCB";
 	readonly ONEY: "ONEY";
+	readonly OTHER: "OTHER";
 };
 export declare interface CreditCardValidateUiResult {
 	cardNumber: string | null;
@@ -3384,6 +3394,26 @@ export interface PurseHeadlessCheckoutPaymentElement {
 	on<K extends PaymentElementEventName>(eventName: K, callback: PaymentElementEventsCallback[K]): void;
 }
 export interface PurseHeadlessCheckoutSecondaryTokenProvider {
+	/**
+	 * @param pan
+	 * @param cvv
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `FAILED_TO_ADD_TOKEN` \
+	 * If secondary token creation fails
+	 * - {@link PurseHeadlessCheckoutError} `FAILED_TO_INIT_SECONDARY_TOKEN` \
+	 * If secondary token initialization fails
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_SESSION` \
+	 * If the session is missing
+	 * - {@link PurseHeadlessCheckoutError} `PAYMENT_METHOD_NOT_FOUND` \
+	 * If the partner and method associated to the token could not be found in the ones available in the session
+	 * - {@link PurseHeadlessCheckoutError} `SECONDARY_METHOD_REQUIRED_CVV` \
+	 * If the cvv is missing
+	 * - {@link PurseHeadlessCheckoutError} `SECONDARY_METHOD_WRONG_PAN_FORMAT` \
+	 * If the provided pan does not respect the expected format
+	 * - {@link PurseHeadlessCheckoutError} `SECONDARY_METHOD_WRONG_CVV_FORMAT` \
+	 * If the provided cvv does not respect the expected format
+	 */
 	getSecondaryToken(pan: string, cvv?: string): Promise<PurseHeadlessCheckoutSecondaryToken>;
 }
 export type PaymentElementEventName = "fatalError" | "formValid" | "validationRequested";
@@ -3443,6 +3473,51 @@ export interface LoanSimulation {
 	legalText?: string;
 	/** Annual Percentage Rate Cost **/
 	aprc?: number;
+}
+export type PurseHeadlessCheckoutV1SessionData = PaymentSessionModel;
+/**
+ * Interface representing a V1 session for the Headless Checkout.
+ */
+export interface PurseHeadlessCheckoutV1Params {
+	/** API key for authentication */
+	apiKey: string;
+	/** Unique identifier for the merchant entity */
+	entityId: string;
+	/** Target environment for the checkout (e.g., 'sandbox', 'production') */
+	environment: EnvironmentTarget;
+	/** Payment session data containing transaction details */
+	paymentSession: PurseHeadlessCheckoutV1SessionData;
+}
+/**
+ * Represents a V2 session for the Headless Checkout.
+ *
+ * This string contains encoded session information.
+ * It is used to initialize and manage a V2 payment session.
+ *
+ * @typedef {string} PurseHeadlessCheckoutV2Params
+ * @group Interfaces
+ */
+export type PurseHeadlessCheckoutV2Params = string;
+export type RedirectionHandlerParams = {
+	type: "redirection";
+	url: string;
+} | {
+	type: "jsonFormSubmit";
+	url: string;
+	JSONPayload?: string;
+	method?: "GET" | "POST";
+} | {
+	type: "htmlFormSubmit";
+	containerId: string;
+	responseForm: any;
+};
+export interface PurseHeadlessCheckoutHooks {
+	/** Optional argument to pass a callback to invoke before submission */
+	onBeforeValidate?: (split: PurseHeadlessCheckoutPaymentSplit[]) => Promise<void>;
+	/** Optional argument to pass a callback to invoke after submission */
+	onAfterValidate?: () => Promise<void>;
+	/** Optional argument to handle the redirection */
+	redirectionHandler?: (redirectionData: RedirectionHandlerParams) => Promise<void>;
 }
 /**
  * Represents a payment split configuration where multiple payment sources can be combined to fulfill the total payment amount.
@@ -3546,7 +3621,6 @@ export interface PurseHeadlessCheckoutPrimaryMethod extends PurseHeadlessCheckou
 	 *
 	 * @param options - Optional UI customization settings for the payment element
 	 * @returns A payment element instance for this payment method
-	 * @throws {HeadlessCheckoutError} If the payment element creation fails
 	 * @example
 	 * ```typescript
 	 * const paymentElement = primaryMethod.getPaymentElement({
@@ -3564,7 +3638,9 @@ export interface PurseHeadlessCheckoutPrimaryMethod extends PurseHeadlessCheckou
 	 * Changes the active primary payment source in the current payment split.
 	 * Use this when you have multiple primary payment elements mounted (e.g., Wallet AND installments).
 	 *
-	 * @throws {HeadlessCheckoutError} If the method cannot be set as primary source
+	 * @throws - {@link PurseHeadlessCheckoutError} `code: "ELEMENT_NOT_FULFILLED"` \
+	 * If the method has empty or incomplete payment information
+	 *
 	 * @example
 	 * ```typescript
 	 * // Switch to this payment method as the primary source
@@ -3575,7 +3651,10 @@ export interface PurseHeadlessCheckoutPrimaryMethod extends PurseHeadlessCheckou
 	/**
 	 * Some method are 'simulable' and can give a loan simulation if provided with a product description
 	 *
-	 * @throws {HeadlessCheckoutError} If the method can't provide a simulation
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `INVALID_LOAN_SIMULATION` \
+	 * If the method is not simulable or when an error happened during the simulation.
+	 *
 	 * @example
 	 * ```typescript
 	 * await method.simulateLoan({ amount: 200, shipments: [], currency_code: 'EUR',...  });
@@ -3639,8 +3718,12 @@ export interface PurseHeadlessCheckoutPrimaryToken extends PurseHeadlessCheckout
 	 * */
 	getPaymentElement(options?: Options$1): PurseHeadlessCheckoutPaymentElement;
 	/** Use this method if you want to change which primary to use in the split.
-	 * This can be useful if you have moutned multiple primary payment elements (ie. Wallet AND installments for
+	 * This can be useful if you have mounted multiple primary payment elements (ie. Wallet AND installments for
 	 * instance).
+	 *
+	 * @throws - {@link PurseHeadlessCheckoutError} `ELEMENT_NOT_FULFILLED` \
+	 * If the token has empty or incomplete payment information
+	 *
 	 * @example
 	 * ```typescript
 	 * token.setAsPrimarySource();
@@ -3682,10 +3765,18 @@ export interface PurseHeadlessCheckoutSecondaryToken extends PurseHeadlessChecko
 	 * The amount will be deducted from the token's balance and added to the payment split.
 	 *
 	 * @param amount - Amount to use from this token's balance
-	 * @throws {HeadlessCheckoutError} If any of these conditions are not met:
-	 *  - Amount must be greater than 0
-	 *  - Amount must be less than the remaining session amount
-	 *  - Amount must be less than the token's available balance
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `INVALID_TAKE_AMOUNT` \
+	 * If any of these conditions are not met:
+	 *    - Amount must be greater than 0
+	 *    - Amount must be less than the remaining session amount
+	 *    - Amount must be less than the token's available balance
+	 * - {@link PurseHeadlessCheckoutError} `METHOD_NOT_IMPLEMENTED` \
+	 * If the real token could not be fetched and a placeholder object was returned instead
+	 * - {@link PurseHeadlessCheckoutError} `USAGE_LIMIT_ERROR` \
+	 * If the usage limit of the secondary method was reached
+	 *
 	 * @example
 	 * ```typescript
 	 * // Use 50 from a gift card balance
@@ -3697,7 +3788,10 @@ export interface PurseHeadlessCheckoutSecondaryToken extends PurseHeadlessChecko
 	 * Removes this token from the current payment split configuration.
 	 * Any amount previously allocated from this token will be removed from the split.
 	 *
-	 * @throws {HeadlessCheckoutError} If the token cannot be removed from the split
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `METHOD_NOT_IMPLEMENTED` \
+	 * If the real token could not be fetched and a placeholder object was returned instead
+	 *
 	 * @example
 	 * ```typescript
 	 * // Remove a gift card from the payment split
@@ -3721,7 +3815,11 @@ export interface PurseHeadlessCheckoutRegisterable {
 	 * ```typescript
 	 * item.register(true);
 	 * ```
-	 * @throws {PurseHeadlessCheckoutInvalidTokenNameError} If the provided token name is invalid
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `INVALID_TOKEN_NAME` \
+	 * If the provided token name is invalid
+	 * - {@link PurseHeadlessCheckoutError} `TOKEN_NOT_REGISTERABLE` \
+	 * If the token is not registerable
 	 */
 	register(value?: boolean, params?: {
 		name?: string;
@@ -3739,6 +3837,19 @@ export interface PurseHeadlessCheckoutRegisterable {
 export interface PurseHeadlessCheckoutEditable {
 	/**
 	 * Delete the token from the user's wallet
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `METHOD_NOT_IMPLEMENTED` \
+	 * If the token is of type {@link PurseHeadlessCheckoutTemporarySecondaryToken}
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_SESSION` \
+	 * If the session is missing
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_TOKEN` \
+	 * If the provided token cannot be found
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_WALLET_SESSION` \
+	 * If the wallet session is missing
+	 * - {@link PurseHeadlessCheckoutError} `UNKNOWN_ERROR` \
+	 * If an unknown error is caught during the deletion
+	 *
 	 * @example
 	 * ```typescript
 	 * token.delete();
@@ -3748,14 +3859,25 @@ export interface PurseHeadlessCheckoutEditable {
 	/**
 	 * Edit the token's name
 	 * @param payload
-	 * @throws HeadlessCheckoutTokenNotRegisterable if the token is not registerable
-	 * @throws HeadlessCheckoutTokenNotRegistered if the token is not registered
-	 * @throws HeadlessCheckoutTokenNameExists if the token name already exists
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `TOKEN_NOT_REGISTERABLE` \
+	 * If the token is not registerable
+	 * - {@link PurseHeadlessCheckoutError} `TOKEN_NOT_REGISTERED` \
+	 * If the token is not registered (see {@link PurseHeadlessCheckoutRegisterable.register})
+	 * - {@link PurseHeadlessCheckoutError} `TOKEN_NAME_EXISTS` \
+	 * If the token name already exists
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_TOKEN` \
+	 * If the provided token cannot be found
+	 * - {@link PurseHeadlessCheckoutError} `INVALID_TOKEN_NAME` \
+	 * If the provided token name is invalid
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_WALLET_SESSION` \
+	 * If the wallet session is missing
+	 *
 	 * @example
 	 * ```typescript
 	 * token.edit({ name: 'New Name' });
 	 * ```
-	 * @throws {PurseHeadlessCheckoutInvalidTokenNameError} If the provided token name is invalid
 	 */
 	edit(payload: {
 		name: string;
@@ -3764,92 +3886,284 @@ export interface PurseHeadlessCheckoutEditable {
 export type PurseHeadlessCheckoutPaymentMethod = PurseHeadlessCheckoutSecondaryMethod | PurseHeadlessCheckoutPrimaryMethod;
 export type PurseHeadlessCheckoutPaymentToken = PurseHeadlessCheckoutSecondaryToken | PurseHeadlessCheckoutPrimaryToken | PurseHeadlessCheckoutTemporarySecondaryToken;
 export type PurseHeadlessCheckoutPaymentItem = PurseHeadlessCheckoutPaymentMethod | PurseHeadlessCheckoutPaymentToken;
-export type PurseHeadlessCheckoutV1SessionData = PaymentSessionModel;
-/**
- * Interface representing a V1 session for the Headless Checkout.
- */
-export interface PurseHeadlessCheckoutV1Params {
-	/** API key for authentication */
-	apiKey: string;
-	/** Unique identifier for the merchant entity */
-	entityId: string;
-	/** Target environment for the checkout (e.g., 'sandbox', 'production') */
-	environment: EnvironmentTarget;
-	/** Payment session data containing transaction details */
-	paymentSession: PurseHeadlessCheckoutV1SessionData;
+export interface HeadlessCheckout {
+	/**
+	 * List of available payment methods for the checkout.
+	 * This property is a Writable object containing an array of PurseCheckoutPaymentMethod.
+	 * Each payment-element in the array represents a payment method with its associated properties.
+	 * @type {Readable<Array<PurseHeadlessCheckoutPaymentMethod>>}
+	 * @example
+	 * ```ts
+	 * headlessCheckout.paymentMethods.subscribe((methods: PurseCheckoutPaymentMethod[]) => {
+	 *    console.log('The payment methods changed', methods);
+	 *    // Perhaps update the UI with the new methods
+	 * });
+	 * ```
+	 */
+	readonly paymentMethods: Writable<PurseHeadlessCheckoutPaymentMethod[]>;
+	/**
+	 * List of available payment tokens for the checkout.
+	 * This property is a Writable object containing an array of PurseCheckoutPaymentToken.
+	 * Each payment-element in the array represents a payment token with its associated properties.
+	 * @type {Readable<Array<PurseCheckoutPaymentToken>>}
+	 * @example
+	 * ```ts
+	 * headlessCheckout.paymentTokens.subscribe((tokens: PurseCheckoutPaymentToken[]) => {
+	 *   console.log('The payment tokens changed', tokens);
+	 *   // Perhaps update the UI with the new tokens
+	 * });
+	 * ```
+	 */
+	readonly paymentTokens: Writable<PurseHeadlessCheckoutPaymentToken[]>;
+	/**
+	 * This property indicates if the payment can be submitted.
+	 * @example
+	 * ```ts
+	 * headlessCheckout.isPaymentFulfilled.subscribe((isFulfilled: boolean) => {
+	 *    if(isFulfilled) {
+	 *      enablePayButton();
+	 *    }else{
+	 *      disablePayButton();
+	 *    }
+	 * });
+	 * ```
+	 */
+	readonly isPaymentFulfilled: Readable<boolean>;
+	/**
+	 * The remaining amount to pay represents the amount that is left to pay after the secondary payment method(s) has been used.
+	 * @example
+	 * ```ts
+	 * headlessCheckout.remainingAmountToPay.subscribe((amount: number) => {
+	 *    console.log('Perhaps update the text in your pay button', amount);
+	 * });
+	 * ```
+	 * */
+	remainingAmountToPay: Readable<number>;
+	/**
+	 * Splits represent the repartition between the primary payment method and the secondary payment methods.
+	 * @link PurseHeadlessCheckoutPaymentSplit
+	 * @example
+	 * ```ts
+	 * headlessCheckout.amountSplit.subscribe((splits: PurseHeadlessCheckoutPaymentSplit[]) => {
+	 *    console.log('The payment composition changed', splits);
+	 * });
+	 * ```
+	 * */
+	amountSplit: Readable<PurseHeadlessCheckoutPaymentSplit[]>;
+	/**
+	 * Cleans up resources and removes event listeners.
+	 * @example
+	 * ```ts
+	 * headlessCheckout.teardown();
+	 * ```
+	 */
+	teardown(): void;
+	/**
+	 * Sets the wallet session. The wallet session is used to retrieve and manage the user's stored card tokens.
+	 * @param {WalletSessionModel} walletSession
+	 * @throws {PurseHeadlessCheckoutError} If setting the wallet session fails
+	 * @example
+	 * ```ts
+	 * headlessCheckout.setWalletSession(walletSession);
+	 * ```
+	 */
+	setWalletSession(walletSession: WalletSessionModel): Promise<void>;
+	/**
+	 * Remove all tokens from the provided wallet session
+	 * @throws {PurseHeadlessCheckoutWalletSessionMissingError} If the wallet session is missing
+	 * @throws {PurseHeadlessCheckoutError} If deleting the tokens fails
+	 * @example
+	 * ```ts
+	 * headlessCheckout.deleteAllTokens();
+	 * ```
+	 */
+	deleteAllTokens(): Promise<void>;
+	/**
+	 * Clears the primary split from the amount share.
+	 * Nothing happens if the primary split is already cleared.
+	 * @example
+	 * ```ts
+	 * headlessCheckout.clearPrimarySplit();
+	 * ```
+	 */
+	clearPrimarySplit(): void;
+	/**
+	 * Updates the session with the provided session data.
+	 * @param {PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params['paymentSession']} widgetData - The session data. Can be either an encoded string (V2) or a payment session object (V1).
+	 * @example
+	 * ```ts
+	 * headlessCheckout.setSession(paymentSession);
+	 * ```
+	 */
+	setSession(widgetData: PurseHeadlessCheckoutV2Params): Promise<void>;
+	setSession(widgetData: PurseHeadlessCheckoutV1Params["paymentSession"]): Promise<void>;
+	setSession(widgetData: PurseHeadlessCheckoutV1Params["paymentSession"] | string): Promise<void>;
+	/**
+	 * Submits the current payment configuration for processing.
+	 * This will validate and process all payment methods in the current split configuration.
+	 *
+	 * @throws {HeadlessCheckoutError} If:
+	 *  - No payment methods are configured
+	 *  - Payment validation fails
+	 *  - Payment processing fails
+	 *  - The total amount does not match the session amount
+	 *
+	 * @example
+	 * ```typescript
+	 * try {
+	 *   // Configure payment methods and amounts
+	 *   await primaryMethod.setAsPrimarySource();
+	 *   await secondaryToken.take(50.00);
+	 *
+	 *   // Submit the payment
+	 *   await checkout.submitPayment();
+	 *   console.log('Payment successful!');
+	 * } catch (error) {
+	 *   console.error('Payment failed:', error);
+	 * }
+	 * ```
+	 */
+	submitPayment(): Promise<void>;
 }
-/**
- * Represents a V2 session for the Headless Checkout.
- *
- * This string contains encoded session information.
- * It is used to initialize and manage a V2 payment session.
- *
- * @typedef {string} PurseHeadlessCheckoutV2Params
- * @group Interfaces
- */
-export type PurseHeadlessCheckoutV2Params = string;
-export type RedirectionHandlerParams = {
-	type: "redirection";
-	url: string;
-} | {
-	type: "jsonFormSubmit";
-	url: string;
-	JSONPayload?: string;
-	method?: "GET" | "POST";
-} | {
-	type: "htmlFormSubmit";
-	containerId: string;
-	responseForm: any;
-};
-export interface PurseHeadlessCheckoutHooks {
-	/** Optional argument to pass a callback to invoke before submission */
-	onBeforeValidate?: (split: PurseHeadlessCheckoutPaymentSplit[]) => Promise<void>;
-	/** Optional argument to pass a callback to invoke after submission */
-	onAfterValidate?: () => Promise<void>;
-	/** Optional argument to handle the redirection */
-	redirectionHandler?: (redirectionData: RedirectionHandlerParams) => Promise<void>;
+export interface PurseHeadlessCheckoutEventPayload {
+	HEADLESS_CHECKOUT_CLEAR_PRIMARY_SPLIT: {
+		partner: string;
+		method: string;
+	};
+	HEADLESS_CHECKOUT_CLIENT_HOOK_ERROR: Record<never, never>;
+	HEADLESS_CHECKOUT_CREATE: {
+		sessionType: "v1" | "v2";
+	};
+	HEADLESS_CHECKOUT_DELETE_ALL_TOKENS: Record<never, never>;
+	HEADLESS_CHECKOUT_EXPIRED_SESSION: {
+		paymentSessionId: string;
+	};
+	HEADLESS_CHECKOUT_METHOD_GET_PAYMENT_ELEMENT: {
+		partner: string;
+		method: string;
+		options?: string | Options$1;
+	};
+	HEADLESS_CHECKOUT_METHOD_GET_SECONDARY_TOKEN: Record<never, never>;
+	HEADLESS_CHECKOUT_METHOD_LOAN_SIM: {
+		partner: string;
+		method: string;
+	};
+	HEADLESS_CHECKOUT_METHOD_REGISTER: {
+		partner: string;
+		method: string;
+		saveToken: boolean;
+	};
+	HEADLESS_CHECKOUT_METHOD_SET_PRIMARY: {
+		partner: string;
+		method: string;
+	};
+	HEADLESS_CHECKOUT_OTHER_ERROR: Record<never, never>;
+	HEADLESS_CHECKOUT_PAGE_UNLOAD: Record<never, never>;
+	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_APPEND_TO: {
+		partner: string;
+		method: string;
+	};
+	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_REMOVE: {
+		partner: string;
+		method: string;
+		id?: string;
+	};
+	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_SET_OPTIONS: {
+		partner: string;
+		method: string;
+		options?: string | Options$1;
+	};
+	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_VALIDATE_UI: {
+		partner: string;
+		method: string;
+	};
+	HEADLESS_CHECKOUT_PAYMENT_ERROR: {
+		message?: string;
+		api_status?: string;
+	};
+	HEADLESS_CHECKOUT_PAYMENT_FULFILLED: {
+		isFulfilled: boolean;
+	};
+	HEADLESS_CHECKOUT_PRIMARY_TOKEN_GET_PAYMENT_ELEMENT: {
+		partner: string;
+		method: string;
+		id?: string;
+	};
+	HEADLESS_CHECKOUT_PRIMARY_TOKEN_SET_AS_PRIMARY: {
+		partner: string;
+		method: string;
+	};
+	HEADLESS_CHECKOUT_REACTIVE_VALUE_SUBSCRIBE: {
+		variableName: string;
+	};
+	HEADLESS_CHECKOUT_READY: Record<never, never>;
+	HEADLESS_CHECKOUT_SECONDARY_TOKEN_REGISTER: Record<never, never>;
+	HEADLESS_CHECKOUT_SECONDARY_TOKEN_REMOVE_FROM_SPLIT: {
+		partner: string;
+		method: string;
+		id?: string;
+	};
+	HEADLESS_CHECKOUT_SECONDARY_TOKEN_TAKE: {
+		partner: string;
+		method: string;
+		amount?: number;
+	};
+	HEADLESS_CHECKOUT_SET_SESSION: {
+		paymentSessionId: string;
+		sessionType: "v1" | "v2" | "unknown";
+		message?: string;
+	};
+	HEADLESS_CHECKOUT_SET_WALLET_SESSION: {
+		walletSessionId: string;
+	};
+	HEADLESS_CHECKOUT_SET_WALLET_SESSION_FAILED: {
+		message?: string;
+		stack?: string;
+	};
+	HEADLESS_CHECKOUT_SUBMIT_PAYMENT: {
+		splits: PurseHeadlessCheckoutPaymentSplit[];
+	};
+	HEADLESS_CHECKOUT_TOKEN_DELETE: {
+		partner: string;
+		method: string;
+		tokenId?: string;
+	};
+	HEADLESS_CHECKOUT_TOKEN_EDIT: {
+		partner: string;
+		method: string;
+		tokenId?: string;
+	};
+	HEADLESS_CHECKOUT_UNCAUGHT_ERROR: Record<never, never>;
 }
-declare const PurseHeadlessCheckoutEventBusCodesEnum: {
-	readonly HEADLESS_CHECKOUT_TOKENS_ARE_DISABLED: "HEADLESS_CHECKOUT_TOKENS_ARE_DISABLED";
-	readonly HEADLESS_CHECKOUT_READY: "HEADLESS_CHECKOUT_READY";
-	readonly HEADLESS_CHECKOUT_EXPIRED_SESSION: "HEADLESS_CHECKOUT_EXPIRED_SESSION";
-	readonly HEADLESS_CHECKOUT_PAYMENT_FULFILLED: "HEADLESS_CHECKOUT_PAYMENT_FULFILLED";
-	readonly HEADLESS_CHECKOUT_OTHER_ERROR: "HEADLESS_CHECKOUT_OTHER_ERROR";
-	readonly HEADLESS_CHECKOUT_CLIENT_HOOK_ERROR: "HEADLESS_CHECKOUT_CLIENT_HOOK_ERROR";
-	readonly HEADLESS_CHECKOUT_PAYMENT_ERROR: "HEADLESS_CHECKOUT_PAYMENT_ERROR";
-};
-export type PurseHeadlessCheckoutEventCodes = (typeof PurseHeadlessCheckoutEventBusCodesEnum)[keyof typeof PurseHeadlessCheckoutEventBusCodesEnum];
+export type PurseHeadlessCheckoutEventCode = keyof PurseHeadlessCheckoutEventPayload;
 declare const EventScopes: {
-	headlessCheckout: ("HEADLESS_CHECKOUT_READY" | "HEADLESS_CHECKOUT_EXPIRED_SESSION" | "HEADLESS_CHECKOUT_PAYMENT_FULFILLED" | "HEADLESS_CHECKOUT_OTHER_ERROR" | "HEADLESS_CHECKOUT_CLIENT_HOOK_ERROR" | "HEADLESS_CHECKOUT_PAYMENT_ERROR")[];
+	headlessCheckout: string[];
 };
-export interface PurseHeadlessCheckoutEventBusEvent<T> extends Event$1<T> {
-	code: PurseHeadlessCheckoutEventCodes;
-	payload?: T;
+export interface PurseHeadlessCheckoutEventBusEvent<Code extends PurseHeadlessCheckoutEventCode> extends Event$1<PurseHeadlessCheckoutEventPayload[Code]> {
+	code: Code;
+	payload?: PurseHeadlessCheckoutEventPayload[Code];
 }
 declare class PurseHeadlessCheckoutEventBus extends EventBus<PurseHeadlessCheckoutEventBusEvent<any>> {
-	static readonly CODES: {
-		readonly HEADLESS_CHECKOUT_TOKENS_ARE_DISABLED: "HEADLESS_CHECKOUT_TOKENS_ARE_DISABLED";
-		readonly HEADLESS_CHECKOUT_READY: "HEADLESS_CHECKOUT_READY";
-		readonly HEADLESS_CHECKOUT_EXPIRED_SESSION: "HEADLESS_CHECKOUT_EXPIRED_SESSION";
-		readonly HEADLESS_CHECKOUT_PAYMENT_FULFILLED: "HEADLESS_CHECKOUT_PAYMENT_FULFILLED";
-		readonly HEADLESS_CHECKOUT_OTHER_ERROR: "HEADLESS_CHECKOUT_OTHER_ERROR";
-		readonly HEADLESS_CHECKOUT_CLIENT_HOOK_ERROR: "HEADLESS_CHECKOUT_CLIENT_HOOK_ERROR";
-		readonly HEADLESS_CHECKOUT_PAYMENT_ERROR: "HEADLESS_CHECKOUT_PAYMENT_ERROR";
-	};
 	static readonly SCOPES: {
-		headlessCheckout: ("HEADLESS_CHECKOUT_READY" | "HEADLESS_CHECKOUT_EXPIRED_SESSION" | "HEADLESS_CHECKOUT_PAYMENT_FULFILLED" | "HEADLESS_CHECKOUT_OTHER_ERROR" | "HEADLESS_CHECKOUT_CLIENT_HOOK_ERROR" | "HEADLESS_CHECKOUT_PAYMENT_ERROR")[];
+		headlessCheckout: string[];
 	};
-	private static readonly _instance;
-	constructor();
-	post<T>(event: PurseHeadlessCheckoutEventBusEvent<T>): void;
+	static _instance?: PurseHeadlessCheckoutEventBus;
+	private readonly _logQueue;
+	private readonly _windowErrorWatcher;
+	private extras;
+	private constructor();
+	patchExtrasData(payload: Partial<PurseHeadlessCheckoutEventBus["extras"]>): void;
+	post<T extends PurseHeadlessCheckoutEventCode>(event: PurseHeadlessCheckoutEventBusEvent<T>): void;
 	unsubscribeAll(): void;
 	subscribe(listener: EventListener$1<PurseHeadlessCheckoutEventBusEvent<any>>, scopes?: Array<keyof typeof EventScopes | "*">): EventListenerTerminator;
-	postFromCode<T>(code: keyof typeof PurseHeadlessCheckoutEventBusCodesEnum, { type, payload, }?: {
+	postFromCode<C extends PurseHeadlessCheckoutEventCode>(code: C, { type, payload, }?: {
 		type?: keyof typeof EventType;
-		payload?: T;
+		payload?: PurseHeadlessCheckoutEventPayload[C];
 	}): void;
+	private beforeUnload;
+	static getInstance(extras?: PurseHeadlessCheckoutEventBus["extras"], processLog?: (e: PurseHeadlessCheckoutEventBusEvent<any>[]) => void): PurseHeadlessCheckoutEventBus;
 }
-export declare class PurseHeadlessCheckout {
+export declare class PurseHeadlessCheckout implements HeadlessCheckout {
 	/**
 	 * Checkout manager. Not to be used directly.
 	 * @protected
@@ -3947,18 +4261,27 @@ export declare class PurseHeadlessCheckout {
 	teardown(): void;
 	/**
 	 * Sets the wallet session. The wallet session is used to retrieve and manage the user's stored card tokens.
+	 *
 	 * @param {WalletSessionModel} walletSession
-	 * @throws {PurseHeadlessCheckoutError} If setting the wallet session fails
+	 *
+	 * @throws {@link PurseHeadlessCheckoutError} `SET_WALLET_SESSION_FAILED` \
+	 * If setting the wallet session fails
+	 *
 	 * @example
 	 * ```ts
 	 * headlessCheckout.setWalletSession(walletSession);
 	 * ```
 	 */
-	setWalletSession(walletSession: WalletSessionModel): Promise<Wallet<WalletActions>> | undefined;
+	setWalletSession(walletSession: WalletSessionModel): Promise<void>;
 	/**
 	 * Remove all tokens from the provided wallet session
-	 * @throws {PurseHeadlessCheckoutWalletSessionMissingError} If the wallet session is missing
-	 * @throws {PurseHeadlessCheckoutError} If deleting the tokens fails
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_WALLET_SESSION` \
+	 * If the wallet session is missing
+	 * - {@link PurseHeadlessCheckoutError} `FAILED_TO_DELETE_ALL_TOKENS` \
+	 * If deleting the tokens fails
+	 *
 	 * @example
 	 * ```ts
 	 * headlessCheckout.deleteAllTokens();
@@ -3978,6 +4301,13 @@ export declare class PurseHeadlessCheckout {
 	/**
 	 * Updates the session with the provided session data.
 	 * @param {PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params['paymentSession']} widgetData - The session data. Can be either an encoded string (V2) or a payment session object (V1).
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_SESSION` \
+	 * If setting the session fails
+	 * - {@link PurseHeadlessCheckoutError} `UNKNOWN_ERROR` \
+	 * If an unknown error is caught during the session update
+	 *
 	 * @example
 	 * ```ts
 	 * headlessCheckout.setSession(paymentSession);
@@ -3990,11 +4320,17 @@ export declare class PurseHeadlessCheckout {
 	 * Submits the current payment configuration for processing.
 	 * This will validate and process all payment methods in the current split configuration.
 	 *
-	 * @throws {HeadlessCheckoutError} If:
-	 *  - No payment methods are configured
-	 *  - Payment validation fails
-	 *  - Payment processing fails
-	 *  - The total amount does not match the session amount
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_SESSION` \
+	 * If the session is missing
+	 * - {@link PurseHeadlessCheckoutError} `PAYMENT_NOT_FULFILLED_ON_SUBMIT` \
+	 * If submitting a payment not available for submission
+	 * - {@link PurseHeadlessCheckoutError} `POST_VALIDATE_FAILED` \
+	 * If the post-validation step of the payment process fails
+	 * - {@link PurseHeadlessCheckoutError} `UI_VALIDATION_FAILED_ERROR` \
+	 * If the pre-validation step of the payment process fails
+	 * - {@link PurseHeadlessCheckoutError} `VALIDATE_FAILED` \
+	 * If the validate step of the payment process fails
 	 *
 	 * @example
 	 * ```typescript
@@ -4029,118 +4365,198 @@ export declare class PurseHeadlessCheckout {
  * @param {PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params} sessionParams - The checkout session configuration.
  * @param hooks - Optional lifecycle hooks to customize checkout behavior
  *               See {@link PurseHeadlessCheckoutHooks} for available hooks
+ *
+ * @throws
+ * - {@link PurseHeadlessCheckoutError} `EXPIRED_SESSION` \
+ * If the session used to create the headless checkout instance is expired.
+ * - {@link PurseHeadlessCheckoutError} `INVALID_INIT_PARAMS` \
+ * If the parameters used to init the headless checkout are invalid.
+ * - {@link PurseHeadlessCheckoutError} `UNKNOWN_ERROR` \
+ * If tan unknown error is caught during the creation of the headless checkout instance.
+ *
  * @returns A promise that resolves to a configured checkout instance
  */
 export declare const createHeadlessCheckout: <T extends PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params, H extends PurseHeadlessCheckoutHooks>(sessionParams: T, hooks?: H, apiPaths?: APIPaths) => Promise<PurseHeadlessCheckout>;
 export declare function buildSecondaryTemporaryTokensPayload(checkoutTokensList: Readable<Array<PaymentToken>>, splits: PurseHeadlessCheckoutPaymentSplit[]): ItemPayload[];
-declare const PurseHeadlessSecondariesErrorCodes: {
-	readonly SECONDARIES_REQUIRED_CVV: "SECONDARIES_REQUIRED_CVV";
-	readonly SECONDARIES_WRONG_PAN_FORMAT: "SECONDARIES_WRONG_PAN_FORMAT";
-	readonly SECONDARIES_WRONG_CVV_FORMAT: "SECONDARIES_WRONG_CVV_FORMAT";
+declare const PurseHeadlessCheckoutErrors: {
+	readonly ELEMENT_NOT_FULFILLED: {
+		readonly code: "ELEMENT_NOT_FULFILLED";
+		readonly message: "Payment element must be fulfilled for this action.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#element_not_fulfilled";
+	};
+	readonly INVALID_LOAN_SIMULATION: {
+		readonly code: "INVALID_LOAN_SIMULATION";
+		readonly message: "The Load Simulation API response does not contain valid simulation data.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#invalid_loan_simulation";
+	};
+	readonly UI_VALIDATION_FAILED_ERROR: {
+		readonly code: "UI_VALIDATION_FAILED_ERROR";
+		readonly message: "Partner's form is not complete, sometimes the form internal state cannot be accessed and fulfilled is sent right on creation. Visual queues are displayed for the user.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#ui_validation_failed_error";
+	};
+	readonly USAGE_LIMIT_ERROR: {
+		readonly code: "USAGE_LIMIT_ERROR";
+		readonly message: "Usage limit reached for partner and method.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#usage_limit_error";
+	};
+	readonly SECONDARY_METHOD_REQUIRED_CVV: {
+		readonly code: "SECONDARY_METHOD_REQUIRED_CVV";
+		readonly message: "This method and pan combination requires a CVV.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_required_cvv";
+	};
+	readonly SECONDARY_METHOD_WRONG_PAN_FORMAT: {
+		readonly code: "SECONDARY_METHOD_WRONG_PAN_FORMAT";
+		readonly message: "The provided pan does not respect the expected format.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_wrong_pan_format";
+	};
+	readonly SECONDARY_METHOD_WRONG_CVV_FORMAT: {
+		readonly code: "SECONDARY_METHOD_WRONG_CVV_FORMAT";
+		readonly message: "The provided cvv does not respect the expected format.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_wrong_cvv_format";
+	};
+	readonly METHOD_NOT_IMPLEMENTED: {
+		readonly code: "METHOD_NOT_IMPLEMENTED";
+		readonly message: "The invoked method is not implemented.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#method_not_implemented";
+	};
+	readonly INVALID_TAKE_AMOUNT: {
+		readonly code: "INVALID_TAKE_AMOUNT";
+		readonly message: "Cannot perform \"take\" with an invalid amount.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#invalid_take_amount";
+	};
+	readonly PAYMENT_NOT_FULFILLED_ON_SUBMIT: {
+		readonly code: "PAYMENT_NOT_FULFILLED_ON_SUBMIT";
+		readonly message: "Payment not fulfilled while submitting payment.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#payment_not_fulfilled_on_submit";
+	};
+	readonly PAYMENT_METHOD_NOT_FOUND: {
+		readonly code: "PAYMENT_METHOD_NOT_FOUND";
+		readonly message: "Method not found.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#payment_method_not_found";
+	};
+	readonly UNKNOWN_ERROR: {
+		readonly code: "UNKNOWN_ERROR";
+		readonly message: "An error occurred.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#unknown_error";
+	};
+	readonly VALIDATE_FAILED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly POST_VALIDATE_FAILED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly INVALID_INIT_PARAMS: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly FAILED_TO_INIT_SECONDARY_TOKEN: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly TOKEN_NOT_REGISTERABLE: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly TOKEN_NOT_REGISTERED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly TOKEN_NAME_EXISTS: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly MISSING_TOKEN: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly INVALID_TOKEN_NAME: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly FAILED_TO_DELETE_ALL_TOKENS: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly FAILED_TO_ADD_TOKEN: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly EXPIRED_SESSION: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly MISSING_SESSION: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly MISSING_WALLET_SESSION: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SET_WALLET_SESSION_FAILED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SESSION_MALFORMED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
 };
-export type PurseHeadlessSecondariesErrorCodesValues = (typeof PurseHeadlessSecondariesErrorCodes)[keyof typeof PurseHeadlessSecondariesErrorCodes];
+export type PurseHeadlessCheckoutErrorCodes = keyof typeof PurseHeadlessCheckoutErrors;
+export type JsonSerializable = string | number | boolean | null | {
+	[key: string]: JsonSerializable | undefined;
+} | JsonSerializable[];
 /**
- * Available codes to check for headless checkout errors
+ * @description
+ * Custom error class for handling errors specific to the Purse Headless Checkout SDK.
  *
- * @group Errors
+ * @example
+ * ```ts
+ * let checkout: PurseHeadlessCheckout;
+ *
+ * try {
+ *   checkout = await Purse.createHeadlessCheckout({
+ *     ...
+ *   });
+ * } catch(e) {
+ *   if (e instanceof PurseHeadlessCheckoutError) {
+ *     switch(e.code) {
+ *       case 'INVALID_INIT_PARAMS':
+ *         // Handle expired session
+ *         break;
+ *       // Handle other error codes as needed
+ *       default:
+ *         console.error('An unexpected error occurred:', e);
+ *     }
+ *   } else {
+ *     console.error('A non-headless checkout error occurred:', e);
+ *   }
+ * }
+ * ```
  */
-export declare const PurseHeadlessCheckoutErrorCodes: {
-	readonly HEADLESS_CHECKOUT_EXPIRED_SESSION: "HEADLESS_CHECKOUT_EXPIRED_SESSION";
-	readonly HEADLESS_CHECKOUT_MISSING_SESSION: "HEADLESS_CHECKOUT_MISSING_SESSION";
-	readonly HEADLESS_CHECKOUT_MISSING_WALLET_SESSION: "HEADLESS_CHECKOUT_MISSING_WALLET_SESSION";
-	readonly HEADLESS_CHECKOUT_TOKEN_NOT_REGISTERABLE: "HEADLESS_CHECKOUT_TOKEN_NOT_REGISTERABLE";
-	readonly HEADLESS_CHECKOUT_TOKEN_NOT_REGISTERED: "HEADLESS_CHECKOUT_TOKEN_NOT_REGISTERED";
-	readonly HEADLESS_CHECKOUT_TOKEN_NAME_EXISTS: "HEADLESS_CHECKOUT_TOKEN_NAME_EXISTS";
-	readonly HEADLESS_CHECKOUT_ELEMENT_NOT_FULFILLED: "HEADLESS_CHECKOUT_ELEMENT_NOT_FULFILLED";
-	readonly HEADLESS_CHECKOUT_INVALID_LOAN_SIMULATION: "HEADLESS_CHECKOUT_INVALID_LOAN_SIMULATION";
-	readonly HEADLESS_CHECKOUT_UI_VALIDATION_FAILED_ERROR: "HEADLESS_CHECKOUT_UI_VALIDATION_FAILED_ERROR";
-	readonly HEADLESS_CHECKOUT_MISSING_TOKEN: "HEADLESS_CHECKOUT_MISSING_TOKEN";
-	readonly HEADLESS_CHECKOUT_INVALID_TOKEN_NAME: "HEADLESS_CHECKOUT_INVALID_TOKEN_NAME";
-};
-export type PurseHeadlessCheckoutErrorCodesValues = (typeof PurseHeadlessCheckoutErrorCodes)[keyof typeof PurseHeadlessCheckoutErrorCodes] | PurseHeadlessSecondariesErrorCodesValues;
-/**
- * Generic class for headless checkout
- * @group Errors
- * @param T - Error code
- */
-export declare class PurseHeadlessCheckoutError<T extends PurseHeadlessCheckoutErrorCodesValues | void = void> extends Error {
-	code?: PurseHeadlessCheckoutErrorCodesValues;
-	name: string;
-	origin?: Error;
-	constructor(message: string, code?: T | null, origin?: Error);
-}
-/**
- * This error is thrown when the session is expired
- * @group Errors
- */
-export declare class PurseHeadlessCheckoutExpiredSessionError extends PurseHeadlessCheckoutError<typeof PurseHeadlessCheckoutErrorCodes.HEADLESS_CHECKOUT_EXPIRED_SESSION> {
-	constructor();
-}
-/**
- * This error is thrown when the session is missing
- * @group Errors
- */
-export declare class PurseHeadlessCheckoutSessionMissingError extends PurseHeadlessCheckoutError<typeof PurseHeadlessCheckoutErrorCodes.HEADLESS_CHECKOUT_MISSING_SESSION> {
-	constructor();
-}
-/**
- * This error is thrown when the token is missing
- * @group Errors
- */
-export declare class PurseHeadlessCheckoutTokenMissingError extends PurseHeadlessCheckoutError<typeof PurseHeadlessCheckoutErrorCodes.HEADLESS_CHECKOUT_MISSING_TOKEN> {
-	constructor();
-}
-/**
- * This error is thrown when the wallet session is missing
- * @group Errors
- */
-export declare class PurseHeadlessCheckoutWalletSessionMissingError extends PurseHeadlessCheckoutError<typeof PurseHeadlessCheckoutErrorCodes.HEADLESS_CHECKOUT_MISSING_WALLET_SESSION> {
-	constructor();
-}
-/**
- * This error is thrown when the token registration is not allowed
- * @group Errors
- */
-export declare class PurseHeadlessCheckoutTokenNotRegisterableError extends PurseHeadlessCheckoutError<typeof PurseHeadlessCheckoutErrorCodes.HEADLESS_CHECKOUT_TOKEN_NOT_REGISTERABLE> {
-	constructor();
-}
-/**
- * This error is thrown when the token name already exists
- * @group Errors
- */
-export declare class PurseHeadlessCheckoutTokenNameExistsError extends PurseHeadlessCheckoutError<typeof PurseHeadlessCheckoutErrorCodes.HEADLESS_CHECKOUT_TOKEN_NAME_EXISTS> {
-	constructor();
-}
-/**
- * This error is thrown when the token is not registered
- * @group Errors
- */
-export declare class PurseHeadlessCheckoutTokenNotRegisteredError extends PurseHeadlessCheckoutError<typeof PurseHeadlessCheckoutErrorCodes.HEADLESS_CHECKOUT_TOKEN_NOT_REGISTERED> {
-	constructor();
-}
-/**
- * This error is thrown when the payment element is not fulfilled
- * @group Errors
- */
-export declare class PurseHeadlessCheckoutElementNotFulfilledError extends PurseHeadlessCheckoutError<typeof PurseHeadlessCheckoutErrorCodes.HEADLESS_CHECKOUT_ELEMENT_NOT_FULFILLED> {
-	constructor();
-}
-/**
- * This error is thrown when the payment element UI validation failed
- * @group Errors
- */
-export declare class PurseHeadlessCheckoutElementUIValidationFailedError extends PurseHeadlessCheckoutError<typeof PurseHeadlessCheckoutErrorCodes.HEADLESS_CHECKOUT_UI_VALIDATION_FAILED_ERROR> {
-	constructor();
-}
-/**
- * This error is thrown when the max usage limit is reached for a method
- * @group Errors
- */
-export declare class PurseHeadlessCheckoutUsageLimitError extends PurseHeadlessCheckoutError {
-	constructor(partner: string, method: string);
-}
-export declare class PurseHeadlessCheckoutInvalidTokenNameError extends PurseHeadlessCheckoutError<typeof PurseHeadlessCheckoutErrorCodes.HEADLESS_CHECKOUT_INVALID_TOKEN_NAME> {
-	constructor();
+export declare class PurseHeadlessCheckoutError extends Error {
+	readonly code: PurseHeadlessCheckoutErrorCodes;
+	readonly documentationLink: string;
+	readonly additionalPayload?: JsonSerializable | Error;
+	constructor(error: (typeof PurseHeadlessCheckoutErrors)[PurseHeadlessCheckoutErrorCodes], additionalPayload?: JsonSerializable | Error);
 }
 
 export {
