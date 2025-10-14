@@ -2088,6 +2088,28 @@ export type OwnerTokens = Array<IntegratedToken>;
 export type ServerDatetime = TypeOf<typeof ServerDatetime>;
 export type SimulationCandidatePayload = TypeOf<typeof SimulationCandidatePayload>;
 export type SimulationCandidate = TypeOf<typeof SimulationCandidate>;
+export interface LoanProduct {
+	amount: number;
+	currency_code: string;
+}
+export interface LoanSimulation {
+	/** first installment amount **/
+	initialInstallmentAmount: number;
+	/** last installment amount **/
+	finalInstallmentAmount: number;
+	/** Cost of recurrent installments **/
+	installmentAmount: number;
+	/** Cost of the loan (not including amount) **/
+	totalCost: number;
+	/** Total cost (loan + amount) **/
+	totalAmount: number;
+	/** Number of installments **/
+	installmentCount: number;
+	/** Some loan simulation will provide a legal text to display next to the offer **/
+	legalText?: string;
+	/** Annual Percentage Rate Cost **/
+	aprc?: number;
+}
 export type APIPaths = {
 	payment?: string;
 	wallet?: string;
@@ -2460,6 +2482,13 @@ declare class Checkout<Actions extends ItemActions = CheckoutActions> {
 		actionBuilder?: PaymentItemActionsBuilder<Actions>;
 		onExpires?: () => void;
 	}): Promise<Checkout<Actions>>;
+	runPrevalidationHook: (preValidate?: (d: {
+		participants: {
+			partner: string;
+			method: string;
+			amount: number;
+		}[];
+	}) => Promise<void> | void) => Promise<void>;
 	validatePayment(redirection?: RedirectionHandler, hooks?: {
 		preValidate?: (d: {
 			participants: {
@@ -2666,6 +2695,9 @@ export declare interface CreditCardValidateUiResult {
 export declare type DeepPartial<T> = T extends any[] ? T : {
 	[P in keyof T]?: DeepPartial<T[P]>;
 };
+export declare type ErrorPayload = {
+	reason?: string;
+} & Record<string, any>;
 export declare type EventCode = (typeof Events)[keyof typeof Events]["code"];
 declare const Events: {
 	readonly clientError: {
@@ -2813,6 +2845,27 @@ declare const Events: {
 			"info"
 		];
 	};
+	readonly methodSelected: {
+		readonly code: "methodSelected";
+		readonly topics: readonly [
+			"info",
+			"methodSelected"
+		];
+	};
+	readonly methodUnselected: {
+		readonly code: "methodUnselected";
+		readonly topics: readonly [
+			"info",
+			"methodUnselected"
+		];
+	};
+	readonly partnerError: {
+		readonly code: "partnerError";
+		readonly topics: readonly [
+			"error",
+			"partnerError"
+		];
+	};
 };
 export declare type GooglePayButtonOptions = Partial<Pick<ButtonOptions, "buttonColor" | "buttonType" | "buttonLocale" | "buttonRadius" | "buttonSizeMode">>;
 /* Excluded from this release type: HostedFormTextKeys */
@@ -2884,6 +2937,17 @@ declare interface HostedFormUIOptions {
 	phoneFormatError?: string;
 	phoneCannotBeEmptyError?: string;
 	/**
+	 * This value is interpolated with:
+	 * - first
+	 * - monthly
+	 * - nb
+	 * - total
+	 * - cost
+	 * - taeg
+	 * use {{variable}} to use interpolation
+	 */
+	loanSimulation?: string;
+	/**
 	 * implicit - Select in pan input with logo
 	 * explicit - Conventional select on top of the form
 	 * hidden   - Hide the brand selector
@@ -2909,6 +2973,15 @@ export declare interface ItemPayload {
 	payment_preferences: any;
 	step_id?: number | null;
 }
+export declare interface KRError {
+	errorCode: string;
+	errorMessage: string;
+	detailedErrorCode?: string;
+	detailedErrorMessage?: string;
+	field?: string;
+	children?: Array<KRError>;
+	metadata?: Record<string, any>;
+}
 export declare type Method = (typeof Methods)[keyof typeof Methods];
 declare const Methods: {
 	readonly applepay: "applepay";
@@ -2925,6 +2998,10 @@ declare const Methods: {
 	readonly cb3xsansfrais: "cb3xsansfrais";
 	readonly cb4x: "cb4x";
 	readonly cb4xsansfrais: "cb4xsansfrais";
+	readonly "3x": "3x";
+	readonly "6x": "6x";
+	readonly "9x": "9x";
+	readonly "12x": "12x";
 	readonly comptant: "comptant";
 	readonly creditcard: "creditcard";
 	readonly googlepay: "googlepay";
@@ -2951,6 +3028,7 @@ declare const Methods: {
 	readonly wallet: "wallet";
 	readonly "cb3x-paybylink": "cb3x-paybylink";
 	readonly "cb4x-paybylink": "cb4x-paybylink";
+	readonly xpay: "xpay";
 };
 /**
  * Options let you override theme configuration and translations on our UIs.
@@ -3135,6 +3213,10 @@ declare type PartnerUITheme = {
 export declare interface RedirectionUIOptions {
 	title?: string;
 }
+export declare type Source = {
+	type: "script" | "link";
+	attributes: Record<string, string>;
+};
 declare const THEME_SCOPES: readonly [
 	"global",
 	"input",
@@ -3236,6 +3318,56 @@ export declare type ThemeScopesVariants<Scope extends ThemeScopeName> = ThemeSco
 export declare type ThemeScopesVariantsMap = {
 	[K in ThemeScopeName]: (typeof THEME_SCOPES_VARIANTS)[K][number];
 };
+export declare interface UnifiedEventPayload {
+	clientError: ErrorPayload | null;
+	clientNotFound: ErrorPayload | null;
+	died: ErrorPayload | null;
+	disconnected: null;
+	environmentSet: Record<string, any> | null;
+	fulfilled: {
+		isFulfilled: boolean;
+	};
+	initFailed: ErrorPayload | null;
+	cantDownloadPluginSources: ErrorPayload | null;
+	loaded: Record<string, any> | null;
+	misconfigured: string | null;
+	modalIn: Record<string, any> | null;
+	modalOut: Record<string, any> | null;
+	optionsSet: Record<string, any> | null;
+	pluginClientDestroyed: Record<string, any> | null;
+	pluginExtraSourcesLoaded: Record<string, any> | null;
+	pluginIsIncompatibleWithClient: {
+		partner: Partner;
+		method: Method;
+	};
+	pluginPostValidation: Record<string, any> | null;
+	pluginPreValidation: Record<string, any> | null;
+	pluginSessionSet: Record<string, any> | null;
+	pluginSourcesLoaded: Record<string, any> | null;
+	ready: Record<string, any> | null;
+	redirect: Record<string, any> | null;
+	requestValidate: {
+		skipOnBeforeValidate?: boolean;
+	} | null;
+	sourceListLoaded: {
+		errors: Partial<Source>[] | false;
+	} | null;
+	sourceLoaded: {
+		source: Partial<Source>;
+		error: boolean;
+	} | null;
+	other: Record<string, any> | null;
+	methodSelected: {
+		method: string;
+	};
+	methodUnselected: {
+		method: string;
+	};
+	partnerError: {
+		error: Omit<KRError, "metadata">;
+		method: string;
+	};
+}
 /**
  * Apple, Google and PayPal buttons are treated differently and all the config is exposed through this object.
  */
@@ -3416,7 +3548,7 @@ export interface PurseHeadlessCheckoutSecondaryTokenProvider {
 	 */
 	getSecondaryToken(pan: string, cvv?: string): Promise<PurseHeadlessCheckoutSecondaryToken>;
 }
-export type PaymentElementEventName = "fatalError" | "formValid" | "validationRequested";
+export type PaymentElementEventName = "fatalError" | "formValid" | "validationRequested" | "methodSelected" | "methodUnselected" | "partnerError";
 export interface PaymentElementEventsPayload {
 	fatalError: {
 		code: string;
@@ -3426,7 +3558,10 @@ export interface PaymentElementEventsPayload {
 	formValid: {
 		isValid: boolean;
 	};
-	validationRequested: ItemPayload;
+	validationRequested: UnifiedEventPayload["requestValidate"];
+	methodSelected: UnifiedEventPayload["methodSelected"];
+	methodUnselected: UnifiedEventPayload["methodUnselected"];
+	partnerError: UnifiedEventPayload["partnerError"];
 }
 export interface PaymentElementEventsCallback {
 	/** Handler for fatal error events */
@@ -3435,6 +3570,12 @@ export interface PaymentElementEventsCallback {
 	formValid: (payload: PaymentElementEventsPayload["formValid"]) => void;
 	/** Handler for validation request events */
 	validationRequested: (payload: PaymentElementEventsPayload["validationRequested"]) => void;
+	/** Handler for method selected events */
+	methodSelected: (payload: PaymentElementEventsPayload["methodSelected"]) => void;
+	/** Handler for method unselected events */
+	methodUnselected: (payload: PaymentElementEventsPayload["methodUnselected"]) => void;
+	/** Handler for partner error events */
+	partnerError: (payload: PaymentElementEventsPayload["partnerError"]) => void;
 }
 /**
  * Secondaries are true Headless payment methods and are handled directly by the SDK for now.
@@ -3453,26 +3594,6 @@ export interface SecondarySpecificConfig {
 	 * Validates the pan of the card.
 	 */
 	validateCVV?: (cvv: string) => boolean;
-}
-export interface LoanProduct {
-	amount: number;
-	currency_code: string;
-}
-export interface LoanSimulation {
-	/** first installment amount **/
-	initialInstallmentAmount: number;
-	/** last installment amount **/
-	finalInstallmentAmount: number;
-	/** Cost of recurrent installments **/
-	installmentAmount: number;
-	/** Cost of the loan (not including amount) **/
-	totalCost: number;
-	/** Number of installments **/
-	installmentCount: number;
-	/** Some loan simulation will provide a legal text to display next to the offer **/
-	legalText?: string;
-	/** Annual Percentage Rate Cost **/
-	aprc?: number;
 }
 export type PurseHeadlessCheckoutV1SessionData = PaymentSessionModel;
 /**
@@ -4134,6 +4255,13 @@ export interface PurseHeadlessCheckoutEventPayload {
 		tokenId?: string;
 	};
 	HEADLESS_CHECKOUT_UNCAUGHT_ERROR: Record<never, never>;
+	HEADLESS_CHECKOUT_ON_BEFORE_VALIDATE_HOOK_FAILED: {
+		message: string;
+		error: {
+			message: string;
+			stack?: string;
+		};
+	};
 }
 export type PurseHeadlessCheckoutEventCode = keyof PurseHeadlessCheckoutEventPayload;
 declare const EventScopes: {
@@ -4197,7 +4325,7 @@ export declare class PurseHeadlessCheckout implements HeadlessCheckout {
 	 * List of available payment tokens for the checkout.
 	 * This property is a Writable object containing an array of PurseCheckoutPaymentToken.
 	 * Each payment-element in the array represents a payment token with its associated properties.
-	 * @type {Readable<Array<PurseCheckoutPaymentToken>>}
+	 * @type {Readable<Array<PurseHeadlessCheckoutPaymentToken>>}
 	 * @example
 	 * ```ts
 	 * headlessCheckout.paymentTokens.subscribe((tokens: PurseCheckoutPaymentToken[]) => {
@@ -4299,6 +4427,13 @@ export declare class PurseHeadlessCheckout implements HeadlessCheckout {
 	clearPrimarySplit(): void;
 	protected _setSession(session: PurseHeadlessCheckoutV1Params["paymentSession"]): Promise<void>;
 	/**
+	 * @internal
+	 * Manually trigger a hook out of the standard process
+	 * @param hookName
+	 * @private
+	 */
+	private manuallyTriggerHook;
+	/**
 	 * Updates the session with the provided session data.
 	 * @param {PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params['paymentSession']} widgetData - The session data. Can be either an encoded string (V2) or a payment session object (V1).
 	 *
@@ -4347,7 +4482,7 @@ export declare class PurseHeadlessCheckout implements HeadlessCheckout {
 	 * }
 	 * ```
 	 */
-	submitPayment(): Promise<void>;
+	submitPayment(skipOnBeforeValidateHook?: boolean): Promise<void>;
 	/**
 	 * @internal
 	 * Checks if a payment token is an integrated token.
@@ -4438,6 +4573,11 @@ declare const PurseHeadlessCheckoutErrors: {
 		readonly code: "UNKNOWN_ERROR";
 		readonly message: "An error occurred.";
 		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#unknown_error";
+	};
+	readonly ON_BEFORE_VALIDATE_HOOK_FAILED: {
+		readonly code: "ON_BEFORE_VALIDATE_HOOK_FAILED";
+		readonly message: "The hook onBeforeValidate failed.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#on_before_validate_hook_failed";
 	};
 	readonly VALIDATE_FAILED: {
 		code: string;
