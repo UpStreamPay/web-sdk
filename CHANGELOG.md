@@ -1,3 +1,16 @@
+## [0.3.3](https://github.com/UpStreamPay/web-sdk/compare/v0.3.2...v0.3.3) (2025-10-21)
+
+
+### Bug Fixes
+
+* **ci:** fixed permissions ([#42](https://github.com/UpStreamPay/web-sdk/issues/42)) ([0f97fe7](https://github.com/UpStreamPay/web-sdk/commit/0f97fe709e939da61d493278435ce5388ebf1b01))
+* **oktober:** bump types and packages dependencies  ([497f658](https://github.com/UpStreamPay/web-sdk/commit/497f658405220f356d591d00a5e5161feec2e3bc)), closes [#38](https://github.com/UpStreamPay/web-sdk/issues/38)
+* **pat:** use pat for release manager ([#45](https://github.com/UpStreamPay/web-sdk/issues/45)) ([eb21830](https://github.com/UpStreamPay/web-sdk/commit/eb21830197cb19572eb75c12cec4af57fd767c0b))
+* **release:** fix permission ([#43](https://github.com/UpStreamPay/web-sdk/issues/43)) ([5f61e31](https://github.com/UpStreamPay/web-sdk/commit/5f61e316351c2132652d7738c542590b92b1b30c))
+* **release:** fix permission ([#44](https://github.com/UpStreamPay/web-sdk/issues/44)) ([4fed34b](https://github.com/UpStreamPay/web-sdk/commit/4fed34b777257a13dc21c6524b84bc389cfbe60e))
+
+
+
 ## [0.3.2](https://github.com/UpStreamPay/web-sdk/compare/v0.3.1...v0.3.2) (2025-09-30)
 
 
