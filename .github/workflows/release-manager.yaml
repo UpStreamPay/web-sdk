@@ -124,7 +124,7 @@ jobs:
       # Checkout repository with CI user token in order to push on protected branch in the next step if needed
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
           fetch-depth: 0
 
       # Generate new version of the release, create tag and release associated
