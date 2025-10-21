@@ -18,25 +18,28 @@ export type Scheme = (typeof Schemes)[number];
  */
 export interface SubmitOptions {
 	/**
-	 * Expiration month of the card
-	 */
-	expiryMonth: number;
-	/**
-	 * Expiration year of the card. 2025 should be passed as 25.
-	 */
-	expiryYear: number;
-	/**
-	 * Card holder name
-	 */
-	cardHolderName: string;
-	/**
 	 * Card brand e.g. VISA, MASTERCARD ...
 	 */
 	selectedNetwork: string;
 	/**
 	 * Should the card be persisted or not
 	 */
-	saveToken: boolean;
+	saveToken?: boolean;
+	/**
+	 * @internal
+	 * Expiration month of the card
+	 */
+	expiryMonth?: number;
+	/**
+	 * @internal
+	 * Expiration year of the card. 2025 should be passed as 25.
+	 */
+	expiryYear?: number;
+	/**
+	 * @internal
+	 * Card holder name
+	 */
+	cardHolderName?: string;
 }
 /**
  * Submit result from the SecureFields SDK
@@ -198,7 +201,7 @@ export interface SecureFieldsStyles {
 	placeholderColor?: string;
 	backgroundColor?: string;
 }
-export type CSSPseudoClasses = ":empty" | ":focus" | ":valid" | ":invalid" | ":autocomplete" | "::placeholder" | ":brandDetected";
+export type CSSPseudoClasses = ":empty" | ":focus" | ":valid" | ":invalid" | ":autocomplete" | "::placeholder";
 /**
  * Configuration for each individual iframe field.
  * @category Configuration
@@ -236,10 +239,37 @@ export interface SecureFieldsConfig {
 	 */
 	fields: {
 		cardNumber?: SecureFieldsFieldConfig;
+		holderName?: SecureFieldsFieldConfig;
+		expDate?: SecureFieldsFieldConfig;
 		cvv: SecureFieldsFieldConfig;
 	};
 	/**
 	 * Applicable styles for the iframe fields.
+	 * You can specify pseudo classes
+	 * @example
+	 * ```ts
+	 * styles: {
+	 *   fontSrc: 'https://example.com/fonts.css',
+	 *   input: {
+	 *     fontSize: '16px',
+	 *     color: '#333',
+	 *     ':focus': {
+	 *       color: '#000',
+	 *     },
+	 *     '::placeholder': {
+	 *       color: '#999',
+	 *     },
+	 *   },
+	 * }
+	 * ```
+	 * CSS pseudoclasses supported:
+	 * - `:empty`
+	 * - `:focus`
+	 * - `:valid`
+	 * - `:invalid`
+	 * - `:autocomplete` // alias for :-webkit-autofill
+	 * - `::placeholder`
+	 *
 	 */
 	styles?: {
 		fontSrc?: string;
@@ -418,9 +448,6 @@ export declare const SecureFieldsErrors: {
 /**
  * @function
  * Initializes the Secure Fields SDK with the provided tenant ID and configuration.
- * @param sdkConfiguration
- * @param sdkConfiguration.tenantId - the tenant ID provided by Purse.
- * @param sdkConfiguration.config - configuration for the secure fields. See {@link SecureFieldsConfig} for supported options.
  * @returns A promise that resolves to an instance of the SDK identified for the tenantId.
  *
  * @category Entry Point
@@ -437,7 +464,17 @@ export declare const SecureFieldsErrors: {
  * @see {@link SecureFieldsErrors}
  */
 export declare const initSecureFields: (sdkConfiguration: {
+	/**
+	 *  Your tenant ID provided by Purse.
+	 *  **/
 	tenantId: string;
+	/**
+	 *   Api key provided by Purse for gateway access
+	 */
+	apiKey?: string;
+	/**
+	 * Configuration for the secure fields. See {@link SecureFieldsConfig} for supported options.
+	 */
 	config: SecureFieldsConfig;
 	vault_vendor?: Vendor;
 }) => Promise<SecureFieldsClient>;

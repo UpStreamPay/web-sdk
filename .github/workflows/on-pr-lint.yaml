@@ -8,6 +8,11 @@ on:
   pull_request:
     types: ['opened', 'edited', 'reopened', 'synchronize']
 
+
+permissions:
+  packages: write
+  contents: read
+
 jobs:
   # ------------------------------------ BUILD ---------------------------------------------- #
   BUILD-TEST:
@@ -25,7 +30,7 @@ jobs:
         id: checkout_service
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.USP_GITHUB_ADMIN_FINE_GRAINED_ACCES_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: '0'
 
       - name: Setup Node
@@ -37,13 +42,6 @@ jobs:
           cache: npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.USP_NPM_ADMIN_ACCES_TOKEN }}
-
-      - name: Setup git identity
-        run: |
-          git config --global user.name 'upStreamPay'
-          git config --global user.email 'upstreampay@users.noreply.github.com'
-        env:
-          GITHUB_TOKEN: ${{ secrets.USP_GITHUB_ADMIN_FINE_GRAINED_ACCES_TOKEN }}
 
       - name: Install
         run: npm ci --include=dev
