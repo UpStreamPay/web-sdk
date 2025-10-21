@@ -9,10 +9,6 @@ on:
     types: ['opened', 'edited', 'reopened', 'synchronize']
 
 
-permissions:
-  packages: write
-  contents: read
-
 jobs:
   # ------------------------------------ BUILD ---------------------------------------------- #
   BUILD-TEST:
