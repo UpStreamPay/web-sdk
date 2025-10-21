@@ -28,13 +28,6 @@ jobs:
           scope: 'purse-eu'
           token: ${{ secrets.NPM_AUTH_TOKEN }}
 
-      - name: Setup git identity
-        run: |
-          git config --global user.name 'upStreamPay'
-          git config --global user.email 'upstreampay@users.noreply.github.com'
-        env:
-          GITHUB_TOKEN: ${{ secrets.USP_GITHUB_ADMIN_FINE_GRAINED_ACCES_TOKEN }}
-
       - name: Install
         run: npm ci --include=dev
 
