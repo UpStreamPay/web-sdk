@@ -25,7 +25,7 @@ jobs:
         id: checkout_service
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.USP_GITHUB_ADMIN_FINE_GRAINED_ACCES_TOKEN }}
+          token: ${{ secrets.USP_GITHUB_ADMIN_ACCES_TOKEN }}
           fetch-depth: '0'
 
       - name: Setup Node
