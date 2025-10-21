@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
-          token: ${{ secrets.USP_GITHUB_ADMIN_ACCES_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: '0'
 
       - uses: actions/setup-node@v4
