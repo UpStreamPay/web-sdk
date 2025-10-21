@@ -9,6 +9,11 @@ on:
     branches:
       - main
 
+
+permissions:
+  packages: write
+  contents: read
+
 jobs:
   release-manager:
     permissions:

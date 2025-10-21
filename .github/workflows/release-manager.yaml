@@ -4,6 +4,10 @@ name: Release Manager
 ### Release Manager
 ###
 
+permissions:
+  packages: write
+  contents: read
+
 on:
   workflow_call:
     inputs:
