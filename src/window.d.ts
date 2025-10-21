@@ -1,4 +1,6 @@
+import { HeadlessCheckoutModule, SecurefieldsModule } from './types';
+
 interface Window {
-  Purse:any;
-  PurseSecureFields:any;
+  Purse:HeadlessCheckoutModule;
+  PurseSecureFields:SecurefieldsModule;
 }
