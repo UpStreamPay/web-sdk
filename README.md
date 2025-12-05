@@ -74,9 +74,8 @@ secure runtime.
 | SDK                                                                                                       | Description                                                                                                                            |   Loader    |    Types    |
 |-----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|:-----------:|:-----------:|
 | [Headless Checkout](https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/how-to-build) | Full control over checkout UI with secure payment orchestration by Purse. Ideal for custom payment experiences.                        | ✅ Available | ✅ Available |
-| Securefields                                                                                              | Session less credit card form to collect payment data                                                                                  | ✅ Available | ✅ Available |
-| [Drop-in UI](https://docs.purse.tech/docs/integrate/purse-checkout/widget-v3)                             | Pre-built, configurable payment interface with multiple payment methods.                                                               |  🚧 Coming  |  🚧 Coming  |
-| [Hosted Fields](https://docs.purse.tech/docs/integrate/purse-checkout/hosted-fields)                      | Lightweight integration for credit card payments with PCI-compliant fields. Customize the form while Purse handles the sensitive data. |  🚧 Coming  |  🚧 Coming  |
+| [Drop-in UI](https://docs.purse.tech/docs/integrate/purse-checkout/widget-v3)                             | Pre-built, configurable payment interface with multiple payment methods.                                                               |  🚧 Coming  |  🚧 Coming |
+| [Hosted Fields](https://docs.purse.tech/docs/integrate/purse-checkout/hosted-fields)                      | Lightweight integration for credit card payments with PCI-compliant fields. Customize the form while Purse handles the sensitive data. |  ✅ Available  |  ✅ Available  |
 
 ## Requirements
 
@@ -109,7 +108,7 @@ This includes:
 - Use cases and advanced examples
 
 ```ts
-import {loadHeadlessCheckout, loadSecureFields, type  PurseHeadlessCheckoutV1Params} from '@purse/web-sdk';
+import {loadHeadlessCheckout, type  PurseHeadlessCheckoutV1Params} from '@purse/web-sdk';
 
 //Loads the headless checkout sdk
 loadHeadlessCheckout('sandbox').then(async module => {
@@ -118,20 +117,6 @@ loadHeadlessCheckout('sandbox').then(async module => {
         entityId: 'YOUR_ENTITY_ID',
         environment: 'sandbox',
         paymentSession: 'YOUR_SESSION',
-    });
-});
-
-//Loads the securefields sdk
-loadSecureFields('sandbox').then(async module => {
-    const secureFields = await module.initSecureFields('merchant-id', {
-        cardNumber: {
-            target: '#pan',
-            placeholder: '0000 0000 0000 0000'
-        },
-        cvv: {
-            target: '#cvv',
-            placeholder: '123'
-        }
     });
 });
 ```
