@@ -2,6 +2,8 @@
 
 /// <reference types="googlepay" />
 
+import { AnyObject } from 'final-form';
+
 export type Any = number | string | Currency;
 export type Format = (currency?: Currency, opts?: Options) => string;
 export interface Options {
@@ -80,10 +82,11 @@ declare class Writable<T> implements Subscribable<T>, WithGetter<T>, SvelteWrita
 	getValue(): T;
 	subscribe(listener: Subscriber<T>, invalidate?: any): Unsubscriber;
 	set(value: T): void;
-	update(updater: StoreUpdater<T>): Writable<T>;
-	patchStore(patch: any): Writable<T>;
+	update(updater: StoreUpdater<T>): this;
+	patchStore(patch: any): this;
 }
 declare const EventType: {
+	readonly DEBUG: "DEBUG";
 	readonly INFO: "INFO";
 	readonly ERROR: "ERROR";
 	readonly SUCCESS: "SUCCESS";
@@ -92,11 +95,17 @@ declare const EventType: {
 	readonly UI: "UI";
 	readonly NETWORK: "NETWORK";
 };
-interface Event$1<Payload = any> {
-	code: string;
-	type: keyof typeof EventType;
+declare class Event$1<Payload = any, Code = string> {
+	code: Code;
 	dateString: string;
+	clientDate: string | null;
+	type: keyof typeof EventType;
 	payload?: Payload;
+	constructor({ code, payload, type }: {
+		code: Code;
+		type?: keyof typeof EventType;
+		payload?: Payload;
+	});
 }
 type EventListener$1<EventType extends Event$1> = (event: EventType) => void;
 export type EventListenerTerminator = () => void;
@@ -122,6 +131,7 @@ declare class EventBus<EventType extends Event$1 = Event$1> {
 	getReport(): {
 		history: EventType[];
 	};
+	private applyServerTimeOffset;
 	_sort(a: Event$1<any>, b: Event$1<any>): number;
 	_processQueue(): void;
 	_getListenersForScopes(scopes: string[]): EventListener$1<EventType>[];
@@ -236,7 +246,7 @@ export type BuiltSecondaryToken = {
 	balance: number;
 	partner: string;
 	currencyCode: string;
-	expirationDate: string;
+	expirationDate: string | Date;
 	pinCode?: string;
 };
 export interface ItemActions {
@@ -394,7 +404,7 @@ declare const Environments: readonly [
 	"sandbox",
 	"production"
 ];
-export type EnvironmentTarget = typeof Environments[number];
+export type EnvironmentTarget = (typeof Environments)[number];
 declare class Environment {
 	target: EnvironmentTarget;
 	apiKey: string;
@@ -407,8 +417,9 @@ export type APIResponse<T> = {
 	error?: any;
 	data?: T;
 	originalResponse?: string;
+	parsingErrors?: Error;
 	statusCode?: number;
-	errorCode?: "SERVER_ERROR" | "JSON_ERROR" | "PARSING_CONTENT_ERROR" | "CLIENT_ERROR";
+	errorCode?: "SERVER_ERROR" | "JSON_ERROR" | "CLIENT_ERROR";
 };
 export type APIHeader = {
 	"x-api-key"?: string;
@@ -1678,7 +1689,14 @@ declare enum StatusCode {
 	BAD_REQUEST = "BAD_REQUEST",
 	CARD_IS_NOT_ACTIVE = "CARD_IS_NOT_ACTIVE",
 	ABORTED_BY_CUSTOMER = "ABORTED_BY_CUSTOMER",
-	UNCERTAIN = "UNCERTAIN"
+	WRONG_DATA = "WRONG_DATA",
+	UNCERTAIN = "UNCERTAIN",
+	MAX_ATTEMPT_REACHED = "MAX_ATTEMPT_REACHED",
+	AUTHENTICATION_CHECK_FAIL = "AUTHENTICATION_CHECK_FAIL",
+	FRAUD = "FRAUD",
+	SUSPECTED_FRAUD = "SUSPECTED_FRAUD",
+	AUTHENTICATION_FAIL_DUE_TO_FRAUD = "AUTHENTICATION_FAIL_DUE_TO_FRAUD",
+	TRANSACTION_MISSING = "TRANSACTION_MISSING"
 }
 declare enum StatusState {
 	SUCCESS = "SUCCESS",
@@ -1696,16 +1714,6 @@ declare enum TransactionAction {
 	AUTHORIZE = "AUTHORIZE",
 	INIT_THREE_DS = "INIT_THREE_DS"
 }
-declare const ServerDatetime: ZodObject<{
-	utc: ZodString;
-	iso: ZodString;
-}, "strip", ZodTypeAny, {
-	utc: string;
-	iso: string;
-}, {
-	utc: string;
-	iso: string;
-}>;
 declare const PartnerPayload: ZodObject<{
 	method: ZodString;
 	partner: ZodString;
@@ -1734,6 +1742,7 @@ declare const PartnerPayload: ZodObject<{
 	paymentPreferences?: any;
 	step_id?: number | undefined;
 }>;
+export type PartnerPayload = TypeOf<typeof PartnerPayload>;
 declare const InitPayload: ZodObject<{
 	method: ZodString;
 	partner: ZodString;
@@ -1815,6 +1824,44 @@ declare const InitData: ZodObject<{
 	session_id?: string | undefined;
 	plugin_result?: any;
 }>;
+export type InitPayload = TypeOf<typeof InitPayload>;
+export type InitData<T = void> = Omit<TypeOf<typeof InitData>, "plugin_result"> & {
+	plugin_result: {
+		status?: any;
+		amount?: number;
+	} & (T extends void ? {
+		logs: any;
+		payment_data?: any;
+	} : T);
+};
+export interface SecondaryPluginInitPayload {
+	partner: string;
+	method: string;
+	amount: number;
+	order: any;
+	partner_data: any;
+	payment_preferences: any;
+	payment_data: {
+		card?: {
+			csc?: string;
+			number?: string;
+		};
+		voucher_number?: string;
+	};
+}
+export interface SecondaryPluginValidatePayload extends SecondaryPluginInitPayload {
+	payment_preferences: {
+		registration?: boolean;
+	};
+	payment_data: {
+		card?: {
+			csc?: string;
+			number?: string;
+			token_label?: string;
+		};
+		voucher_number?: string;
+	};
+}
 declare const ValidationPayload: ZodArray<ZodObject<{
 	method: ZodString;
 	partner: ZodString;
@@ -2017,6 +2064,9 @@ declare const ValidationData: ZodObject<{
 	global_status: StatusState;
 	errors?: any;
 }>;
+export type ValidationPayload = TypeOf<typeof ValidationPayload>;
+export type ItemValidationData = TypeOf<typeof ItemValidationData>;
+export type ValidationData = TypeOf<typeof ValidationData>;
 declare const SimulationCandidatePayload: ZodAny;
 declare const SimulationCandidate: ZodObject<{
 	plugin_result: ZodOptional<ZodNullable<ZodObject<{
@@ -2070,22 +2120,6 @@ declare const SimulationCandidate: ZodObject<{
 		legal_text?: string | undefined;
 	} | null | undefined;
 }>;
-export type PartnerPayload = TypeOf<typeof PartnerPayload>;
-export type InitPayload = TypeOf<typeof InitPayload>;
-export type InitData<T extends any = void> = Omit<TypeOf<typeof InitData>, "plugin_result"> & {
-	plugin_result: {
-		status?: any;
-		amount?: number;
-	} & (T extends void ? {
-		logs: any;
-		payment_data?: any;
-	} : T);
-};
-export type ValidationPayload = TypeOf<typeof ValidationPayload>;
-export type ItemValidationData = TypeOf<typeof ItemValidationData>;
-export type ValidationData = TypeOf<typeof ValidationData>;
-export type OwnerTokens = Array<IntegratedToken>;
-export type ServerDatetime = TypeOf<typeof ServerDatetime>;
 export type SimulationCandidatePayload = TypeOf<typeof SimulationCandidatePayload>;
 export type SimulationCandidate = TypeOf<typeof SimulationCandidate>;
 export interface LoanProduct {
@@ -2110,6 +2144,18 @@ export interface LoanSimulation {
 	/** Annual Percentage Rate Cost **/
 	aprc?: number;
 }
+declare const ServerDatetime: ZodObject<{
+	utc: ZodString;
+	iso: ZodString;
+}, "strip", ZodTypeAny, {
+	utc: string;
+	iso: string;
+}, {
+	utc: string;
+	iso: string;
+}>;
+export type ServerDatetime = TypeOf<typeof ServerDatetime>;
+export type OwnerTokens = Array<IntegratedToken>;
 export type APIPaths = {
 	payment?: string;
 	wallet?: string;
@@ -2211,11 +2257,13 @@ declare class FetchGatewayAPI extends API implements GatewayAPI {
 		paymentSessionId?: string;
 		walletSessionId?: string;
 		entityId?: string;
+		instanceId?: string;
 		env?: APIEnvironment;
 	}): void;
 }
 declare enum PaymentMethodSuspensions {
 	NONE = "NONE",
+	TECHNICAL_ERROR = "TECHNICAL_ERROR",
 	AMOUNT_OUT_OF_RANGE_MIN = "AMOUNT_OUT_OF_RANGE_MIN",
 	AMOUNT_OUT_OF_RANGE_MAX = "AMOUNT_OUT_OF_RANGE_MAX",
 	EXTERNAL_BREAK = "EXTERNAL_BREAK",
@@ -2238,7 +2286,7 @@ declare class Amount {
 		Writable<PaymentSplit[]>,
 		Writable<PaymentItemInterface<CheckoutActions> | null>
 	]>;
-	reset(amount: number | undefined, currencyCode: string): Amount;
+	reset(amount: number | undefined, currencyCode: string): this;
 	setPrimarySource(source: PaymentItemInterface<any> | null): PaymentSplit | null;
 	takeSplit(data: {
 		token: PaymentItemInterface;
@@ -2292,7 +2340,7 @@ declare class CheckoutActions implements ItemActions {
 	checkout: Checkout<any>;
 	suspension: Readable<PaymentMethodSuspensions>;
 	amountSuspension: Readable<number | undefined>;
-	externalSuspension: Writable<boolean>;
+	externalSuspension: Writable<PaymentMethodSuspensions | boolean>;
 	balance?: Writable<number>;
 	stepId: number | null;
 	constructor({ method, token, checkout, }: {
@@ -2346,16 +2394,7 @@ declare class CheckoutActions implements ItemActions {
 	getIsLimitedFromAmount(): Readable<boolean>;
 	setBalance(value: number): Promise<void>;
 }
-declare class CheckoutEvent<Payload = any> implements Event$1<Payload> {
-	code: string;
-	dateString: string;
-	type: keyof typeof EventType;
-	payload?: Payload;
-	constructor({ code, payload, type }: {
-		code: string;
-		type?: keyof typeof EventType;
-		payload?: Payload;
-	});
+declare class CheckoutEvent<Payload = any> extends Event$1<Payload> {
 }
 declare class CheckoutEventBus extends EventBus<CheckoutEvent> {
 	static CODES: {
@@ -2365,6 +2404,7 @@ declare class CheckoutEventBus extends EventBus<CheckoutEvent> {
 		CHECKOUT_VALIDATION_START: "CHECKOUT_VALIDATION_START";
 		CHECKOUT_API_START: "CHECKOUT_API_START";
 		CHECKOUT_API_END: "CHECKOUT_API_END";
+		CHECKOUT_API_HAD_PARSING_ERROR: "CHECKOUT_API_HAD_PARSING_ERROR";
 		CHECKOUT_API_INIT_SUCCEEDED: "CHECKOUT_API_INIT_SUCCEEDED";
 		CHECKOUT_API_INIT_FAILED: "CHECKOUT_API_INIT_FAILED";
 		CHECKOUT_API_VALIDATION_SUCCEEDED: "CHECKOUT_API_VALIDATION_SUCCEEDED";
@@ -2411,6 +2451,7 @@ declare class CheckoutEventBus extends EventBus<CheckoutEvent> {
 		WIDGET_UI_BUTTON_CLICK: "WIDGET_UI_BUTTON_CLICK";
 		WIDGET_UI_TOKEN_SELECTED: "WIDGET_UI_TOKEN_SELECTED";
 		WIDGET_UI_METHOD_SELECTED: "WIDGET_UI_METHOD_SELECTED";
+		WIDGET_UI_METHOD_SUSPENDED: "WIDGET_UI_METHOD_SUSPENDED";
 		WIDGET_UI_TOKEN_UNSELECTED: "WIDGET_UI_TOKEN_UNSELECTED";
 		WIDGET_UI_METHOD_UNSELECTED: "WIDGET_UI_METHOD_UNSELECTED";
 		WIDGET_UI_PARTNER_ERROR: "WIDGET_UI_PARTNER_ERROR";
@@ -2444,7 +2485,7 @@ declare class CheckoutEventBus extends EventBus<CheckoutEvent> {
 		WIDGET_MANAGER_SET_WIDGET_DATA: "WIDGET_MANAGER_SET_WIDGET_DATA";
 	};
 	static SCOPES: {
-		[x: string]: ("CHECKOUT_SESSION_SET" | "CHECKOUT_SESSION_EXPIRED")[] | ("CHECKOUT_PAYMENT_FULFILLED_CHANGES" | "CHECKOUT_PAYMENT_FULLFILLED_ERROR")[] | ("CHECKOUT_VALIDATION_START" | "CHECKOUT_VALIDATION_SUCCEEDED")[] | ("CHECKOUT_VALIDATION_SUCCEEDED" | "CHECKOUT_VALIDATION_FAILED")[] | "WALLET_SESSION_SET"[] | ("WALLET_TOKEN_DELETION_COMPLETE" | "WALLET_ALL_TOKENS_DELETION_COMPLETE")[] | "WIDGET_MANAGER_CREATE"[] | ("WIDGET_CREATE" | "WIDGET_CONFIG_SET")[] | ("WIDGET_UI_TOKEN_SELECTED" | "WIDGET_UI_METHOD_SELECTED" | "WIDGET_UI_TOKEN_UNSELECTED" | "WIDGET_UI_METHOD_UNSELECTED")[] | ("WIDGET_MERGE_NAVIGATION_SELECTION_SKIPPED" | "WIDGET_NAVIGATION_PRIMARY_UPDATE" | "WIDGET_NAVIGATION_SECONDARY_UPDATE" | "WIDGET_MERGE_NAVIGATION_SELECTION_UPDATE" | "WIDGET_MERGE_NAVIGATION_FOCUS_UPDATE" | "WIDGET_MERGE_NAVIGATION_OPEN_UPDATE")[] | ("HOSTED_FIELDS_CVV_ERROR" | "HOSTED_FIELDS_CVV_VALID" | "HOSTED_FIELDS_CARD_NUMBER_ERROR" | "HOSTED_FIELDS_CARD_NUMBER_VALID" | "HOSTED_FIELDS_EXPIRY_DATE_ERROR" | "HOSTED_FIELDS_EXPIRY_DATE_VALID" | "HOSTED_FIELDS_HOLDER_NAME_ERROR" | "HOSTED_FIELDS_HOLDER_NAME_VALID")[] | ("CHECKOUT_API_INIT_FAILED" | "CHECKOUT_SESSION_EXPIRED" | "CHECKOUT_PAYMENT_FULLFILLED_ERROR" | "CHECKOUT_VALIDATION_FAILED" | "CHECKOUT_POST_VALIDATION_FAILED" | "CHECKOUT_PRE_VALIDATION_FAILED" | "WALLET_SESSION_EXPIRED" | "UNCAUGHT_ERROR")[];
+		[x: string]: ("CHECKOUT_SESSION_SET" | "CHECKOUT_SESSION_EXPIRED")[] | ("WIDGET_UI_METHOD_SUSPENDED" | "CHECKOUT_PAYMENT_FULFILLED_CHANGES" | "CHECKOUT_PAYMENT_FULLFILLED_ERROR")[] | ("CHECKOUT_VALIDATION_START" | "CHECKOUT_VALIDATION_SUCCEEDED")[] | ("CHECKOUT_VALIDATION_SUCCEEDED" | "CHECKOUT_VALIDATION_FAILED")[] | "WALLET_SESSION_SET"[] | ("WALLET_TOKEN_DELETION_COMPLETE" | "WALLET_ALL_TOKENS_DELETION_COMPLETE")[] | "WIDGET_MANAGER_CREATE"[] | ("WIDGET_CREATE" | "WIDGET_CONFIG_SET")[] | ("WIDGET_UI_TOKEN_SELECTED" | "WIDGET_UI_METHOD_SELECTED" | "WIDGET_UI_TOKEN_UNSELECTED" | "WIDGET_UI_METHOD_UNSELECTED")[] | ("WIDGET_MERGE_NAVIGATION_SELECTION_SKIPPED" | "WIDGET_NAVIGATION_PRIMARY_UPDATE" | "WIDGET_NAVIGATION_SECONDARY_UPDATE" | "WIDGET_MERGE_NAVIGATION_SELECTION_UPDATE" | "WIDGET_MERGE_NAVIGATION_FOCUS_UPDATE" | "WIDGET_MERGE_NAVIGATION_OPEN_UPDATE")[] | ("HOSTED_FIELDS_CVV_ERROR" | "HOSTED_FIELDS_CVV_VALID" | "HOSTED_FIELDS_CARD_NUMBER_ERROR" | "HOSTED_FIELDS_CARD_NUMBER_VALID" | "HOSTED_FIELDS_EXPIRY_DATE_ERROR" | "HOSTED_FIELDS_EXPIRY_DATE_VALID" | "HOSTED_FIELDS_HOLDER_NAME_ERROR" | "HOSTED_FIELDS_HOLDER_NAME_VALID")[] | ("CHECKOUT_API_INIT_FAILED" | "CHECKOUT_SESSION_EXPIRED" | "CHECKOUT_PAYMENT_FULLFILLED_ERROR" | "CHECKOUT_VALIDATION_FAILED" | "CHECKOUT_POST_VALIDATION_FAILED" | "CHECKOUT_PRE_VALIDATION_FAILED" | "WALLET_SESSION_EXPIRED" | "UNCAUGHT_ERROR")[];
 	};
 	static _instance: CheckoutEventBus | null;
 	private constructor();
@@ -2455,7 +2496,6 @@ declare class CheckoutEventBus extends EventBus<CheckoutEvent> {
 	static getInstance(): CheckoutEventBus;
 }
 declare class Checkout<Actions extends ItemActions = CheckoutActions> {
-	#private;
 	session?: PaymentSession<Actions>;
 	payment: Amount;
 	api: FetchGatewayAPI;
@@ -2465,13 +2505,14 @@ declare class Checkout<Actions extends ItemActions = CheckoutActions> {
 	private _sessionExpiredUnsub?;
 	private _paymentFulfiledUnsub?;
 	private _currentActionBuilder?;
-	eventBus: CheckoutEventBus;
-	constructor({ apiKey, entityId, environment, paymentItemActionsBuilder, rootOverrides, }: {
+	readonly eventBus: CheckoutEventBus;
+	constructor({ apiKey, entityId, environment, paymentItemActionsBuilder, rootOverrides, eventBus, }: {
 		apiKey: string;
 		entityId: string;
 		environment: EnvironmentTarget;
 		paymentItemActionsBuilder?: PaymentItemActionsBuilder<Actions>;
 		rootOverrides?: APIPaths;
+		eventBus?: CheckoutEventBus;
 	});
 	get validated(): boolean;
 	get validationResult(): ValidationData | null;
@@ -2499,6 +2540,7 @@ declare class Checkout<Actions extends ItemActions = CheckoutActions> {
 		}) => Promise<void> | void;
 		postValidate?: () => Promise<void> | void;
 	}): Promise<ValidationData | null>;
+	isSessionExpired(): boolean;
 	getSimulationCandidates(product: SimulationCandidatePayload): Promise<APIResponse<SimulationCandidate[]>>;
 	getSimulation(partner: string, method: string, product: SimulationCandidatePayload): Promise<APIResponse<SimulationCandidate>>;
 	private setServerTimeOffset;
@@ -2532,16 +2574,7 @@ declare class WalletActions implements ItemActions {
 		name: string;
 	}): Promise<void>;
 }
-declare class WalletEvent<Payload = any> implements Event$1<Payload> {
-	code: string;
-	dateString: string;
-	type: keyof typeof EventType;
-	payload?: Payload;
-	constructor({ code, payload, type }: {
-		code: string;
-		type?: keyof typeof EventType;
-		payload?: Payload;
-	});
+declare class WalletEvent<Payload = any> extends Event$1<Payload> {
 }
 declare class WalletEventBus extends EventBus<WalletEvent> {
 	static CODES: {
@@ -2551,6 +2584,7 @@ declare class WalletEventBus extends EventBus<WalletEvent> {
 		CHECKOUT_VALIDATION_START: "CHECKOUT_VALIDATION_START";
 		CHECKOUT_API_START: "CHECKOUT_API_START";
 		CHECKOUT_API_END: "CHECKOUT_API_END";
+		CHECKOUT_API_HAD_PARSING_ERROR: "CHECKOUT_API_HAD_PARSING_ERROR";
 		CHECKOUT_API_INIT_SUCCEEDED: "CHECKOUT_API_INIT_SUCCEEDED";
 		CHECKOUT_API_INIT_FAILED: "CHECKOUT_API_INIT_FAILED";
 		CHECKOUT_API_VALIDATION_SUCCEEDED: "CHECKOUT_API_VALIDATION_SUCCEEDED";
@@ -2597,6 +2631,7 @@ declare class WalletEventBus extends EventBus<WalletEvent> {
 		WIDGET_UI_BUTTON_CLICK: "WIDGET_UI_BUTTON_CLICK";
 		WIDGET_UI_TOKEN_SELECTED: "WIDGET_UI_TOKEN_SELECTED";
 		WIDGET_UI_METHOD_SELECTED: "WIDGET_UI_METHOD_SELECTED";
+		WIDGET_UI_METHOD_SUSPENDED: "WIDGET_UI_METHOD_SUSPENDED";
 		WIDGET_UI_TOKEN_UNSELECTED: "WIDGET_UI_TOKEN_UNSELECTED";
 		WIDGET_UI_METHOD_UNSELECTED: "WIDGET_UI_METHOD_UNSELECTED";
 		WIDGET_UI_PARTNER_ERROR: "WIDGET_UI_PARTNER_ERROR";
@@ -2630,7 +2665,7 @@ declare class WalletEventBus extends EventBus<WalletEvent> {
 		WIDGET_MANAGER_SET_WIDGET_DATA: "WIDGET_MANAGER_SET_WIDGET_DATA";
 	};
 	static SCOPES: {
-		[x: string]: ("CHECKOUT_SESSION_SET" | "CHECKOUT_SESSION_EXPIRED")[] | ("CHECKOUT_PAYMENT_FULFILLED_CHANGES" | "CHECKOUT_PAYMENT_FULLFILLED_ERROR")[] | ("CHECKOUT_VALIDATION_START" | "CHECKOUT_VALIDATION_SUCCEEDED")[] | ("CHECKOUT_VALIDATION_SUCCEEDED" | "CHECKOUT_VALIDATION_FAILED")[] | "WALLET_SESSION_SET"[] | ("WALLET_TOKEN_DELETION_COMPLETE" | "WALLET_ALL_TOKENS_DELETION_COMPLETE")[] | "WIDGET_MANAGER_CREATE"[] | ("WIDGET_CREATE" | "WIDGET_CONFIG_SET")[] | ("WIDGET_UI_TOKEN_SELECTED" | "WIDGET_UI_METHOD_SELECTED" | "WIDGET_UI_TOKEN_UNSELECTED" | "WIDGET_UI_METHOD_UNSELECTED")[] | ("WIDGET_MERGE_NAVIGATION_SELECTION_SKIPPED" | "WIDGET_NAVIGATION_PRIMARY_UPDATE" | "WIDGET_NAVIGATION_SECONDARY_UPDATE" | "WIDGET_MERGE_NAVIGATION_SELECTION_UPDATE" | "WIDGET_MERGE_NAVIGATION_FOCUS_UPDATE" | "WIDGET_MERGE_NAVIGATION_OPEN_UPDATE")[] | ("HOSTED_FIELDS_CVV_ERROR" | "HOSTED_FIELDS_CVV_VALID" | "HOSTED_FIELDS_CARD_NUMBER_ERROR" | "HOSTED_FIELDS_CARD_NUMBER_VALID" | "HOSTED_FIELDS_EXPIRY_DATE_ERROR" | "HOSTED_FIELDS_EXPIRY_DATE_VALID" | "HOSTED_FIELDS_HOLDER_NAME_ERROR" | "HOSTED_FIELDS_HOLDER_NAME_VALID")[] | ("CHECKOUT_SESSION_EXPIRED" | "CHECKOUT_PAYMENT_FULLFILLED_ERROR" | "CHECKOUT_VALIDATION_FAILED" | "CHECKOUT_API_INIT_FAILED" | "CHECKOUT_POST_VALIDATION_FAILED" | "CHECKOUT_PRE_VALIDATION_FAILED" | "WALLET_SESSION_EXPIRED" | "UNCAUGHT_ERROR")[];
+		[x: string]: ("CHECKOUT_SESSION_SET" | "CHECKOUT_SESSION_EXPIRED")[] | ("CHECKOUT_PAYMENT_FULFILLED_CHANGES" | "CHECKOUT_PAYMENT_FULLFILLED_ERROR" | "WIDGET_UI_METHOD_SUSPENDED")[] | ("CHECKOUT_VALIDATION_START" | "CHECKOUT_VALIDATION_SUCCEEDED")[] | ("CHECKOUT_VALIDATION_SUCCEEDED" | "CHECKOUT_VALIDATION_FAILED")[] | "WALLET_SESSION_SET"[] | ("WALLET_TOKEN_DELETION_COMPLETE" | "WALLET_ALL_TOKENS_DELETION_COMPLETE")[] | "WIDGET_MANAGER_CREATE"[] | ("WIDGET_CREATE" | "WIDGET_CONFIG_SET")[] | ("WIDGET_UI_TOKEN_SELECTED" | "WIDGET_UI_METHOD_SELECTED" | "WIDGET_UI_TOKEN_UNSELECTED" | "WIDGET_UI_METHOD_UNSELECTED")[] | ("WIDGET_MERGE_NAVIGATION_SELECTION_SKIPPED" | "WIDGET_NAVIGATION_PRIMARY_UPDATE" | "WIDGET_NAVIGATION_SECONDARY_UPDATE" | "WIDGET_MERGE_NAVIGATION_SELECTION_UPDATE" | "WIDGET_MERGE_NAVIGATION_FOCUS_UPDATE" | "WIDGET_MERGE_NAVIGATION_OPEN_UPDATE")[] | ("HOSTED_FIELDS_CVV_ERROR" | "HOSTED_FIELDS_CVV_VALID" | "HOSTED_FIELDS_CARD_NUMBER_ERROR" | "HOSTED_FIELDS_CARD_NUMBER_VALID" | "HOSTED_FIELDS_EXPIRY_DATE_ERROR" | "HOSTED_FIELDS_EXPIRY_DATE_VALID" | "HOSTED_FIELDS_HOLDER_NAME_ERROR" | "HOSTED_FIELDS_HOLDER_NAME_VALID")[] | ("CHECKOUT_SESSION_EXPIRED" | "CHECKOUT_PAYMENT_FULLFILLED_ERROR" | "CHECKOUT_VALIDATION_FAILED" | "CHECKOUT_API_INIT_FAILED" | "CHECKOUT_POST_VALIDATION_FAILED" | "CHECKOUT_PRE_VALIDATION_FAILED" | "WALLET_SESSION_EXPIRED" | "UNCAUGHT_ERROR")[];
 	};
 	static _instance: WalletEventBus;
 	private constructor();
@@ -2670,6 +2705,12 @@ declare class Wallet<Actions extends ItemActions = WalletActions> {
 	private setServerTimeOffset;
 	private verifySessionExpiration;
 	private _onSessionValidityChanges;
+}
+declare class ApiError extends Error {
+	readonly error: InitError["error"] | "UNKNOWN_API_ERROR";
+	readonly error_description?: string;
+	readonly path: string;
+	constructor(message: string, error?: InitError["error"], error_description?: string, path?: string);
 }
 export declare type ButtonOptions = google.payments.api.ButtonOptions;
 export declare type CardScheme = (typeof CardSchemes)[keyof typeof CardSchemes];
@@ -2803,6 +2844,12 @@ declare const Events: {
 			"info"
 		];
 	};
+	readonly pluginIsIncompatibleWithInterface: {
+		readonly code: "pluginIsIncompatibleWithInterface";
+		readonly topics: readonly [
+			"info"
+		];
+	};
 	readonly pluginIsIncompatibleWithClient: {
 		readonly code: "pluginIsIncompatibleWithClient";
 		readonly topics: readonly [
@@ -2866,8 +2913,157 @@ declare const Events: {
 			"partnerError"
 		];
 	};
+	readonly change: {
+		readonly code: "change";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly focus: {
+		readonly code: "focus";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly blur: {
+		readonly code: "blur";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly keyup: {
+		readonly code: "keyup";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly keydown: {
+		readonly code: "keydown";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly brandDetected: {
+		readonly code: "brandDetected";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly supportedBrandsChanged: {
+		readonly code: "supportedBrandsChanged";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly selectedBrandChanged: {
+		readonly code: "selectedBrandChanged";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly error: {
+		readonly code: "error";
+		readonly topics: readonly [
+			"lethal"
+		];
+	};
+	readonly apiError: {
+		readonly code: "apiError";
+		readonly topics: readonly [
+			"lethal"
+		];
+	};
 };
+export declare type FrameName = (typeof Frames)[number];
+declare const Frames: readonly [
+	"cardNumber",
+	"cvv",
+	"expDate",
+	"holderName",
+	"brandSelector",
+	"birthDate"
+];
 export declare type GooglePayButtonOptions = Partial<Pick<ButtonOptions, "buttonColor" | "buttonType" | "buttonLocale" | "buttonRadius" | "buttonSizeMode">>;
+export declare interface HostedFieldOptions {
+	/**
+	 * The ID of the container element where the iframe will be rendered.
+	 */
+	target: string;
+	/**
+	 * (Optional) Placeholder text for the input field.
+	 */
+	placeholder?: string;
+	/**
+	 * (Optional) ARIA label for accessibility.
+	 */
+	ariaLabel?: string;
+}
+export declare type HostedFieldsEventPayload = {
+	fieldName: string;
+	length: number;
+	valid: boolean;
+	touched: boolean;
+	error: string;
+};
+export declare type HostedFieldsInputVariantCssKeys = Pick<ThemeScope<"input">, "fontSize" | "fontWeight" | "color">;
+/**
+ * A theme is carrying all the style variables used for hosted fields.
+ * global can be seen as a default values store on which the other scopes will rely on to fall back a value.
+ *
+ * @example
+ * ```typescript
+ * const exampleTheme: HostedFieldsTheme = {
+ *  global: {
+ *    fontSrc: 'https://fonts.googleapis.com/css?family=Roboto',
+ *  },
+ *  input: {
+ *    color: '#333',
+ *    fontSize: '16px',
+ *    fontFamily: 'Arial, sans-serif',
+ *    backgroundColor: '#fff',
+ *    fontWeight: '400',
+ *    ':valid': {
+ *      color: 'green',
+ *    },
+ *    ':invalid': {
+ *      color: 'red',
+ *    },
+ *    ':focus': {
+ *      color: 'black',
+ *    },
+ *    '::placeholder': {
+ *      color: '#aaa',
+ *    }
+ *  }
+ * };
+ * ```
+ */
+export declare type HostedFieldsTheme = {
+	global: {
+		/**
+		 * This is used to set the font url.
+		 * fontSrc is not a valid css style declaration key
+		 */
+		fontSrc?: string;
+	};
+	input: Pick<ThemeScope<"input">, "fontFamily" | "fontSize" | "fontWeight" | "color" | "backgroundColor"> & {
+		":valid"?: HostedFieldsInputVariantCssKeys;
+		":focus"?: HostedFieldsInputVariantCssKeys;
+		":invalid"?: HostedFieldsInputVariantCssKeys;
+		"::placeholder"?: HostedFieldsInputVariantCssKeys;
+	};
+};
+export declare interface HostedFieldsUIOptions {
+	/**
+	 * Targets and labels for the all desired fields.
+	 * The 'cvv' field is required; 'cardNumber' is optional.
+	 */
+	fields: {
+		[ke in Exclude<FrameName, "cvv">]?: HostedFieldOptions;
+	} & {
+		cvv: HostedFieldOptions;
+	};
+}
 /* Excluded from this release type: HostedFormTextKeys */
 /**
  * Some partners displays a complete form and let you configure the text through a JS configuration. We've mapped those
@@ -2958,21 +3154,17 @@ declare interface HostedFormUIOptions {
 		[key in CardScheme]?: string;
 	};
 }
+export declare type InitError = {
+	error: "SESSION_EXPIRED" | "SESSION_ALREADY_SUBMITTED_ERROR" | "NOT_FOUND" | string;
+	error_description?: string;
+	status: number;
+};
 declare const IntegrationTypes: {
 	readonly hostedForm: "hostedForm";
+	readonly hostedFields: "hostedFields";
 	readonly xPayButton: "xPayButton";
 	readonly redirection: "redirection";
 };
-export declare interface ItemPayload {
-	method: Method;
-	partner: Partner;
-	amount: number;
-	payment_data: any;
-	partner_data: any;
-	order?: any;
-	payment_preferences: any;
-	step_id?: number | null;
-}
 export declare interface KRError {
 	errorCode: string;
 	errorMessage: string;
@@ -3050,6 +3242,11 @@ declare type Options$1 = {
 	 */
 	[IntegrationTypes.redirection]?: RedirectionUIOptions;
 	/**
+	 * Hosted fields config, used to override the brand selector and the fields location
+	 * {@link HostedFieldsUIOptions}
+	 */
+	[IntegrationTypes.hostedFields]?: HostedFieldsUIOptions;
+	/**
 	 * This section holds the style configuration. Matters like, font, colors, spacing can be override using this config.
 	 * {@link PartnerUIOptionsTheme}
 	 */
@@ -3095,6 +3292,7 @@ declare const Partners: {
 	readonly sogenactif: "sogenactif";
 	readonly stripe: "stripe";
 	readonly systempay: "systempay";
+	readonly worldpay: "worldpay";
 };
 /**
  * A theme is carrying all the style variables use across our UIs.
@@ -3322,6 +3520,7 @@ export declare interface UnifiedEventPayload {
 	clientError: ErrorPayload | null;
 	clientNotFound: ErrorPayload | null;
 	died: ErrorPayload | null;
+	apiError: Pick<ApiError, "error" | "error_description" | "path"> | null;
 	disconnected: null;
 	environmentSet: Record<string, any> | null;
 	fulfilled: {
@@ -3335,7 +3534,17 @@ export declare interface UnifiedEventPayload {
 	modalOut: Record<string, any> | null;
 	optionsSet: Record<string, any> | null;
 	pluginClientDestroyed: Record<string, any> | null;
+	formStateChanged: Record<FrameName, string | null> & {
+		errors?: AnyObject;
+		active?: string;
+	};
 	pluginExtraSourcesLoaded: Record<string, any> | null;
+	pluginIsIncompatibleWithInterface: {
+		partner: Partner;
+		method: Method;
+		interface: string;
+		fallBackInterface: string;
+	};
 	pluginIsIncompatibleWithClient: {
 		partner: Partner;
 		method: Method;
@@ -3367,6 +3576,19 @@ export declare interface UnifiedEventPayload {
 		error: Omit<KRError, "metadata">;
 		method: string;
 	};
+	change: HostedFieldsEventPayload | null;
+	focus: HostedFieldsEventPayload | null;
+	blur: HostedFieldsEventPayload | null;
+	keyup: HostedFieldsEventPayload | null;
+	keydown: HostedFieldsEventPayload | null;
+	error: {
+		message: string;
+	} | null;
+	brandDetected: {
+		brands: string[];
+	} | null;
+	supportedBrandsChanged: string[];
+	selectedBrandChanged: string | null;
 }
 /**
  * Apple, Google and PayPal buttons are treated differently and all the config is exposed through this object.
@@ -3525,6 +3747,34 @@ export interface PurseHeadlessCheckoutPaymentElement {
 	 */
 	on<K extends PaymentElementEventName>(eventName: K, callback: PaymentElementEventsCallback[K]): void;
 }
+export interface PurseHeadlessCheckoutHostedFields extends Omit<PurseHeadlessCheckoutPaymentElement, "appendTo"> {
+	supportedBrands: Readable<CardScheme[]>;
+	detectedBrands: Readable<CardScheme[]>;
+	selectedBrand: Readable<CardScheme | null>;
+	/**
+	 * When the card is "co-branded" the user is allowed to set the selected brand.
+	 * @param brand - The brand to set as selected
+	 * @example
+	 * ```typescript
+	 * // Set the selected brand to "VISA"
+	 * hostedFields.setSelectedBrand('VISA');
+	 * ```
+	 * @throws {@link PurseHeadlessCheckoutError} `NOT_SUPPORTED_BRAND` when the provided brand is not in the supported brands list.
+	 * @throws {@link PurseHeadlessCheckoutError} `BRAND_NOT_BELONGS_TO_DETECTED` when brands are detected and the provided brand is not in the detected list.
+	 */
+	setSelectedBrand(brand: CardScheme): void;
+	/**
+	 * Renders the payment UI into the specified container element.
+	 * The container can be either a CSS selector string or a direct reference to an HTML element.
+	 *
+	 * @example
+	 * ```typescript
+	 * // Using a CSS selector
+	 * hostedFields.render();
+	 * ```
+	 */
+	render(): void;
+}
 export interface PurseHeadlessCheckoutSecondaryTokenProvider {
 	/**
 	 * @param pan
@@ -3548,7 +3798,7 @@ export interface PurseHeadlessCheckoutSecondaryTokenProvider {
 	 */
 	getSecondaryToken(pan: string, cvv?: string): Promise<PurseHeadlessCheckoutSecondaryToken>;
 }
-export type PaymentElementEventName = "fatalError" | "formValid" | "validationRequested" | "methodSelected" | "methodUnselected" | "partnerError";
+export type PaymentElementEventName = "fatalError" | "formValid" | "validationRequested" | "methodSelected" | "methodUnselected" | "change" | "focus" | "blur" | "ready" | "keyup" | "keydown" | "partnerError";
 export interface PaymentElementEventsPayload {
 	fatalError: {
 		code: string;
@@ -3562,6 +3812,12 @@ export interface PaymentElementEventsPayload {
 	methodSelected: UnifiedEventPayload["methodSelected"];
 	methodUnselected: UnifiedEventPayload["methodUnselected"];
 	partnerError: UnifiedEventPayload["partnerError"];
+	change: UnifiedEventPayload["change"];
+	focus: UnifiedEventPayload["focus"];
+	blur: UnifiedEventPayload["blur"];
+	ready: UnifiedEventPayload["ready"];
+	keyup: UnifiedEventPayload["keyup"];
+	keydown: UnifiedEventPayload["keydown"];
 }
 export interface PaymentElementEventsCallback {
 	/** Handler for fatal error events */
@@ -3576,7 +3832,14 @@ export interface PaymentElementEventsCallback {
 	methodUnselected: (payload: PaymentElementEventsPayload["methodUnselected"]) => void;
 	/** Handler for partner error events */
 	partnerError: (payload: PaymentElementEventsPayload["partnerError"]) => void;
+	change: (payload: PaymentElementEventsPayload["change"]) => void;
+	focus: (payload: PaymentElementEventsPayload["focus"]) => void;
+	blur: (payload: PaymentElementEventsPayload["blur"]) => void;
+	ready: (payload: PaymentElementEventsPayload["ready"]) => void;
+	keyup: (payload: PaymentElementEventsPayload["keyup"]) => void;
+	keydown: (payload: PaymentElementEventsPayload["keydown"]) => void;
 }
+export type SecondaryTakePolicy = "none" | "max";
 /**
  * Secondaries are true Headless payment methods and are handled directly by the SDK for now.
  * They are not handled by the partner UI.
@@ -3594,6 +3857,14 @@ export interface SecondarySpecificConfig {
 	 * Validates the pan of the card.
 	 */
 	validateCVV?: (cvv: string) => boolean;
+	/**
+	 * Take policy
+	 */
+	takePolicy: SecondaryTakePolicy;
+	/**
+	 * Map the method data to the payload.
+	 */
+	mapPaymentData?: (item: SecondaryPluginInitPayload, pan: string, cvv?: string) => SecondaryPluginInitPayload;
 }
 export type PurseHeadlessCheckoutV1SessionData = PaymentSessionModel;
 /**
@@ -3696,6 +3967,9 @@ export interface PurseHeadlessCheckoutMethod extends PurseHeadlessCheckoutBase {
 /**
  * Represents a saved payment token in the Purse checkout system.
  * Tokens are secure references to saved payment methods like stored credit cards or digital wallet accounts.
+ * @example
+ * ```typescript
+ * // Assume `token` is an instance of PurseHeadlessCheckoutToken
  * // Edit token name
  * await token.edit({ name: 'Personal Card' });
  *
@@ -3712,6 +3986,22 @@ export interface PurseHeadlessCheckoutToken extends PurseHeadlessCheckoutBase, P
 	 */
 	disabled: Readable<boolean>;
 }
+/**
+ * HostedFieldsOptions let you override theme configuration, render targets and placeholders for hosted fields.
+ * @see {@link Options.locale} for locale configuration
+ */
+export type HostedFieldsOptions = Pick<Options$1, "locale"> & HostedFieldsUIOptions & {
+	/**
+	 * This section holds the theme configuration. Matters like, font, colors, spacing can be override using this config.
+	 * {@link HostedFieldsTheme}
+	 */
+	theme: HostedFieldsTheme;
+};
+/**
+ * PaymentElementOptions let you override theme configuration and placeholders for hosted forms.
+ * {@link Options}
+ */
+export type PaymentElementOptions = Omit<Options$1, "hostedFields">;
 /**
  * Represents a primary payment method in the Purse checkout system.
  * Primary methods are the main payment options like credit cards, digital wallets, or bank transfers.
@@ -3754,7 +4044,48 @@ export interface PurseHeadlessCheckoutPrimaryMethod extends PurseHeadlessCheckou
 	 * await paymentElement.appendTo('#payment-container');
 	 * ```
 	 */
-	getPaymentElement(options?: Options$1): PurseHeadlessCheckoutPaymentElement;
+	getPaymentElement(options?: PaymentElementOptions): PurseHeadlessCheckoutPaymentElement;
+	/**
+	 * Creates and returns a hosted fields UI instance for this payment method.
+	 * @param options {@link HostedFieldsOptions}: settings for the hosted fields
+	 * @return A hosted fields instance for this payment method
+	 * @example
+	 * ```typescript
+	 *   const hostedFields = primaryMethod.getHostedFields({
+	 *      fields: {
+	 *        pan: {
+	 *          target: '#card-number',
+	 *          placeholder: 'Card number',
+	 *        },
+	 *        cvv: {
+	 *          target: '#card-cvv',
+	 *          placeholder: 'CVV',
+	 *        },
+	 *        expirationDate: {
+	 *          target: '#card-expiration-date',
+	 *          placeholder: 'MM / YY',
+	 *        },
+	 *      },
+	 *      theme: {
+	 *        global: {
+	 *          fontSrc: 'https://fonts.googleapis.com/css?family=Roboto',
+	 *        },
+	 *        input: {
+	 *          color: '#333',
+	 *          fontSize: '16px',
+	 *          fontFamily: 'Arial, sans-serif',
+	 *          backgroundColor: '#fff',
+	 *          fontWeight: '400',
+	 *          ':valid': {
+	 *            color: 'green',
+	 *          },
+	 *        }
+	 *      }
+	 *    });
+	 *   await hostedFields.render();
+	 * ```
+	 */
+	getHostedFields(options?: HostedFieldsOptions): PurseHeadlessCheckoutHostedFields;
 	/**
 	 * Changes the active primary payment source in the current payment split.
 	 * Use this when you have multiple primary payment elements mounted (e.g., Wallet AND installments).
@@ -3826,7 +4157,8 @@ export interface PurseHeadlessCheckoutPrimaryToken extends PurseHeadlessCheckout
 		 */
 		expiration_date: string;
 	};
-	/** Method to get the payment element. Creates the UI instance on first call.
+	/**
+	 * Method to get the payment element. Creates the UI instance on first call.
 	 * If you need to render a partner's UI, you will need a PaymentElement
 	 * @param options {Options | undefined}
 	 * @return {PurseHeadlessCheckoutPaymentElement}
@@ -3838,6 +4170,39 @@ export interface PurseHeadlessCheckoutPrimaryToken extends PurseHeadlessCheckout
 	 * ```
 	 * */
 	getPaymentElement(options?: Options$1): PurseHeadlessCheckoutPaymentElement;
+	/**
+	 * Creates and returns a hosted fields UI instance for this payment method.
+	 * @param options {@link HostedFieldsOptions}: settings for the hosted fields
+	 * @return A hosted fields instance for this payment method
+	 * @example
+	 * ```typescript
+	 *   const hostedFields = primaryMethod.getHostedFields({
+	 *      fields: {
+	 *        cvv: {
+	 *          target: '#card-cvv',
+	 *          placeholder: 'CVV',
+	 *        },
+	 *      },
+	 *      theme: {
+	 *        global: {
+	 *          fontSrc: 'https://fonts.googleapis.com/css?family=Roboto',
+	 *        },
+	 *        input: {
+	 *          color: '#333',
+	 *          fontSize: '16px',
+	 *          fontFamily: 'Arial, sans-serif',
+	 *          backgroundColor: '#fff',
+	 *          fontWeight: '400',
+	 *          ':valid': {
+	 *            color: 'green',
+	 *          },
+	 *        }
+	 *      }
+	 *    });
+	 *   await hostedFields.render();
+	 * ```
+	 */
+	getHostedFields(options?: HostedFieldsOptions): PurseHeadlessCheckoutHostedFields;
 	/** Use this method if you want to change which primary to use in the split.
 	 * This can be useful if you have mounted multiple primary payment elements (ie. Wallet AND installments for
 	 * instance).
@@ -3868,7 +4233,7 @@ export interface PurseHeadlessCheckoutPrimaryToken extends PurseHeadlessCheckout
 export interface PurseHeadlessCheckoutSecondaryToken extends PurseHeadlessCheckoutToken {
 	isSecondary: true;
 	limit?: number;
-	expiration_date: string;
+	expiration_date: string | Date;
 	/**
 	 * The amount available for use on the card.
 	 */
@@ -3881,6 +4246,21 @@ export interface PurseHeadlessCheckoutSecondaryToken extends PurseHeadlessChecko
 	 * the card cvv
 	 */
 	cvv?: string;
+	/**
+	 * Depending on the secondary method, the takable amount is constrained. Vouchers for instance can't be partially used.
+	 * | method                | take policy |
+	 * |-----------------------|-------------|
+	 * | easy2play - voucher   | max         |
+	 * | easy2play - giftcard  | none        |
+	 * | illicado - giftcard   | none        |
+	 * | ogloba - giftcard     | none        |
+	 * | buybox - giftcard     | none        |
+	 * | maxxing - loyaltycard | max         |
+	 *
+	 * Max: "All or nothing" the only takable amount is the full balance.
+	 * None: The take amount is not constrained (should still be less than the token's available balance').
+	 */
+	takePolicy: SecondaryTakePolicy;
 	/**
 	 * Applies a specified amount from this secondary token to the current payment session.
 	 * The amount will be deducted from the token's balance and added to the payment split.
@@ -3897,6 +4277,8 @@ export interface PurseHeadlessCheckoutSecondaryToken extends PurseHeadlessChecko
 	 * If the real token could not be fetched and a placeholder object was returned instead
 	 * - {@link PurseHeadlessCheckoutError} `USAGE_LIMIT_ERROR` \
 	 * If the usage limit of the secondary method was reached
+	 * - {@link PurseHeadlessCheckoutError} `SECONDARY_METHOD_TAKE_POLICY_VIOLATED` \
+	 * If the take amount requested violates the policy of the secondary method.
 	 *
 	 * @example
 	 * ```typescript
@@ -4164,6 +4546,11 @@ export interface PurseHeadlessCheckoutEventPayload {
 		method: string;
 		options?: string | Options$1;
 	};
+	HEADLESS_CHECKOUT_METHOD_GET_HOSTED_FIELDS: {
+		partner: string;
+		method: string;
+		options?: string | Options$1;
+	};
 	HEADLESS_CHECKOUT_METHOD_GET_SECONDARY_TOKEN: Record<never, never>;
 	HEADLESS_CHECKOUT_METHOD_LOAN_SIM: {
 		partner: string;
@@ -4180,6 +4567,11 @@ export interface PurseHeadlessCheckoutEventPayload {
 	};
 	HEADLESS_CHECKOUT_OTHER_ERROR: Record<never, never>;
 	HEADLESS_CHECKOUT_PAGE_UNLOAD: Record<never, never>;
+	HEADLESS_CHECKOUT_PARTNER_UI_EVENT: {
+		code: string;
+		partner: string;
+		method: string;
+	} & Record<string, string | number | undefined>;
 	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_APPEND_TO: {
 		partner: string;
 		method: string;
@@ -4198,9 +4590,18 @@ export interface PurseHeadlessCheckoutEventPayload {
 		partner: string;
 		method: string;
 	};
+	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_LISTENER_ATTACHED: {
+		partner: string;
+		method: string;
+		eventName?: string;
+	};
+	HEADLESS_CHECKOUT_VALIDATION_STARTED: Record<never, never>;
+	HEADLESS_CHECKOUT_PRE_VALIDATION_FAILED: Record<never, never>;
+	HEADLESS_CHECKOUT_VALIDATION_ENDED: Record<never, never>;
 	HEADLESS_CHECKOUT_PAYMENT_ERROR: {
 		message?: string;
 		api_status?: string;
+		stack?: string;
 	};
 	HEADLESS_CHECKOUT_PAYMENT_FULFILLED: {
 		isFulfilled: boolean;
@@ -4267,29 +4668,43 @@ export type PurseHeadlessCheckoutEventCode = keyof PurseHeadlessCheckoutEventPay
 declare const EventScopes: {
 	headlessCheckout: string[];
 };
-export interface PurseHeadlessCheckoutEventBusEvent<Code extends PurseHeadlessCheckoutEventCode> extends Event$1<PurseHeadlessCheckoutEventPayload[Code]> {
+export interface PurseHeadlessCheckoutEventBusEvent<Code extends PurseHeadlessCheckoutEventCode = PurseHeadlessCheckoutEventCode> extends Event$1<PurseHeadlessCheckoutEventPayload[Code], Code> {
 	code: Code;
 	payload?: PurseHeadlessCheckoutEventPayload[Code];
 }
-declare class PurseHeadlessCheckoutEventBus extends EventBus<PurseHeadlessCheckoutEventBusEvent<any>> {
+declare class PurseHeadlessCheckoutEventBus extends EventBus<PurseHeadlessCheckoutEventBusEvent> {
 	static readonly SCOPES: {
 		headlessCheckout: string[];
 	};
 	static _instance?: PurseHeadlessCheckoutEventBus;
 	private readonly _logQueue;
 	private readonly _windowErrorWatcher;
-	private extras;
 	private constructor();
-	patchExtrasData(payload: Partial<PurseHeadlessCheckoutEventBus["extras"]>): void;
 	post<T extends PurseHeadlessCheckoutEventCode>(event: PurseHeadlessCheckoutEventBusEvent<T>): void;
 	unsubscribeAll(): void;
-	subscribe(listener: EventListener$1<PurseHeadlessCheckoutEventBusEvent<any>>, scopes?: Array<keyof typeof EventScopes | "*">): EventListenerTerminator;
+	subscribe(listener: EventListener$1<PurseHeadlessCheckoutEventBusEvent>, scopes?: Array<keyof typeof EventScopes | "*">): EventListenerTerminator;
 	postFromCode<C extends PurseHeadlessCheckoutEventCode>(code: C, { type, payload, }?: {
 		type?: keyof typeof EventType;
 		payload?: PurseHeadlessCheckoutEventPayload[C];
 	}): void;
 	private beforeUnload;
-	static getInstance(extras?: PurseHeadlessCheckoutEventBus["extras"], processLog?: (e: PurseHeadlessCheckoutEventBusEvent<any>[]) => void): PurseHeadlessCheckoutEventBus;
+	static getInstance(processLog?: (e: PurseHeadlessCheckoutEventBusEvent[]) => void): PurseHeadlessCheckoutEventBus;
+}
+export interface PurseHeadlessCheckoutApiEventMessage {
+	instanceId?: string;
+	entityId?: string;
+	paymentSessionId?: string;
+	version?: string;
+	env?: EnvironmentTarget;
+	event: PurseHeadlessCheckoutEventBusEvent<any>;
+}
+declare class ApiLogger {
+	private readonly environment;
+	private readonly apiKey;
+	private extras;
+	constructor(env: EnvironmentTarget, apiKey: string);
+	patchExtrasData: (payload: Partial<Pick<PurseHeadlessCheckoutApiEventMessage, "instanceId" | "entityId" | "paymentSessionId" | "version">>) => void;
+	sendLogs: (events: PurseHeadlessCheckoutEventBusEvent<any>[]) => void;
 }
 export declare class PurseHeadlessCheckout implements HeadlessCheckout {
 	/**
@@ -4303,6 +4718,7 @@ export declare class PurseHeadlessCheckout implements HeadlessCheckout {
 	 */
 	protected _wallet: Wallet;
 	protected _eventBus: PurseHeadlessCheckoutEventBus;
+	protected _apiLogger: ApiLogger;
 	private readonly _paymentElementFactory;
 	private readonly _paymentTokenFactory;
 	private readonly _hooks?;
@@ -4512,12 +4928,20 @@ export declare class PurseHeadlessCheckout implements HeadlessCheckout {
  * @returns A promise that resolves to a configured checkout instance
  */
 export declare const createHeadlessCheckout: <T extends PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params, H extends PurseHeadlessCheckoutHooks>(sessionParams: T, hooks?: H, apiPaths?: APIPaths) => Promise<PurseHeadlessCheckout>;
-export declare function buildSecondaryTemporaryTokensPayload(checkoutTokensList: Readable<Array<PaymentToken>>, splits: PurseHeadlessCheckoutPaymentSplit[]): ItemPayload[];
+export declare function buildSecondaryTemporaryTokensPayload(checkoutTokensList: Readable<Array<PaymentToken>>, splits: PurseHeadlessCheckoutPaymentSplit[]): (Omit<SecondaryPluginValidatePayload, "method" | "partner"> & {
+	partner: Partner;
+	method: Method;
+})[];
 declare const PurseHeadlessCheckoutErrors: {
 	readonly ELEMENT_NOT_FULFILLED: {
 		readonly code: "ELEMENT_NOT_FULFILLED";
 		readonly message: "Payment element must be fulfilled for this action.";
 		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#element_not_fulfilled";
+	};
+	readonly ELEMENT_RENDER_FAILED: {
+		readonly code: "ELEMENT_RENDER_FAILED";
+		readonly message: "An error occurred while rendering the payment element";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#element_render_failed";
 	};
 	readonly INVALID_LOAN_SIMULATION: {
 		readonly code: "INVALID_LOAN_SIMULATION";
@@ -4549,6 +4973,11 @@ declare const PurseHeadlessCheckoutErrors: {
 		readonly message: "The provided cvv does not respect the expected format.";
 		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_wrong_cvv_format";
 	};
+	readonly SECONDARY_METHOD_TAKE_POLICY_VIOLATED: {
+		readonly code: "SECONDARY_METHOD_TAKE_POLICY_VIOLATED";
+		readonly message: "This method has a strict take policy and cannot be used with any amount.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_take_policy_violated";
+	};
 	readonly METHOD_NOT_IMPLEMENTED: {
 		readonly code: "METHOD_NOT_IMPLEMENTED";
 		readonly message: "The invoked method is not implemented.";
@@ -4578,6 +5007,16 @@ declare const PurseHeadlessCheckoutErrors: {
 		readonly code: "ON_BEFORE_VALIDATE_HOOK_FAILED";
 		readonly message: "The hook onBeforeValidate failed.";
 		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#on_before_validate_hook_failed";
+	};
+	readonly NOT_SUPPORTED_BRAND: {
+		readonly code: "NOT_SUPPORTED_BRAND";
+		readonly message: "The brand is not supported.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#not_supported_brand";
+	};
+	readonly BRAND_NOT_BELONGS_TO_DETECTED: {
+		readonly code: "BRAND_NOT_BELONGS_TO_DETECTED";
+		readonly message: "The brand is not one of the detected ones";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#brand_not_belongs_to_detected";
 	};
 	readonly VALIDATE_FAILED: {
 		code: string;
