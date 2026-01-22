@@ -109,29 +109,40 @@ This includes:
 - Use cases and advanced examples
 
 ```ts
-import {loadHeadlessCheckout, loadSecureFields, type  PurseHeadlessCheckoutV1Params} from '@purse/web-sdk';
+import { loadHeadlessCheckout, loadSecureFields, type  PurseHeadlessCheckoutV1Params } from '@purse/web-sdk';
 
 //Loads the headless checkout sdk
 loadHeadlessCheckout('sandbox').then(async module => {
-    const headlessCheckout = await module.createHeadlessCheckout<PurseHeadlessCheckoutV1Params>({
-        apiKey: 'YOUR_API_KEY',
-        entityId: 'YOUR_ENTITY_ID',
-        environment: 'sandbox',
-        paymentSession: 'YOUR_SESSION',
-    });
+  const headlessCheckout = await module.createHeadlessCheckout<PurseHeadlessCheckoutV1Params>({
+    apiKey: 'YOUR_API_KEY',
+    entityId: 'YOUR_ENTITY_ID',
+    environment: 'sandbox',
+    paymentSession: 'YOUR_SESSION',
+  });
 });
 
 //Loads the securefields sdk
 loadSecureFields('sandbox').then(async module => {
-    const secureFields = await module.initSecureFields('merchant-id', {
-        cardNumber: {
-            target: '#pan',
-            placeholder: '0000 0000 0000 0000'
-        },
-        cvv: {
-            target: '#cvv',
-            placeholder: '123'
-        }
-    });
+  const secureFields = await module.initSecureFields('merchant-id', {
+    cardNumber: {
+      target: '#pan',
+      placeholder: '0000 0000 0000 0000'
+    },
+    cvv: {
+      target: '#cvv',
+      placeholder: '123'
+    }
+  });
+});
+
+//Loads the dropin sdk
+loadDropInCheckout('sandbox').then(async module => {
+  const secureFields = await module.createDropinCheckout(session);
+  const a = await module.createDropinCheckout({
+    paymentSession: "...YOUR JSON SESSION HERE",
+    apiKey: 'api key',
+    entityId: 'entity id',
+    env: 'test',
+  });
 });
 ```
