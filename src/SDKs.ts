@@ -11,4 +11,10 @@ export const SDKs = {
     sandbox: 'https://cdn.purse-sandbox.com/secure-fields/latest/purse.js',
     production: 'https://cdn.purse-secure.com/secure-fields/stable/purse.js',
   },
+  dropin: {
+    namespace: 'Purse',
+    loadErrorMessage: "Can't load dropin SDK",
+    sandbox: 'https://cdn.purse-sandbox.com/dropin-checkout/latest/purse.js',
+    production: 'https://cdn.purse-secure.com/dropin-checkout/stable/purse.js',
+  },
 } as const;
