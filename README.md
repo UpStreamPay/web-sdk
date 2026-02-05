@@ -120,19 +120,6 @@ loadHeadlessCheckout('sandbox').then(async module => {
   });
 });
 
-//Loads the securefields sdk
-loadSecureFields('sandbox').then(async module => {
-  const secureFields = await module.initSecureFields('merchant-id', {
-    cardNumber: {
-      target: '#pan',
-      placeholder: '0000 0000 0000 0000'
-    },
-    cvv: {
-      target: '#cvv',
-      placeholder: '123'
-    }
-  });
-});
 
 //Loads the dropin sdk
 loadDropInCheckout('sandbox').then(async module => {
