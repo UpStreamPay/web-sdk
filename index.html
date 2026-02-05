@@ -5,13 +5,2130 @@
     <title>SDK ES Module Example</title>
   </head>
   <body>
+    <div id="container"></div>
     <script type="module">
-      import * as sdk from './dist/index.esm';
+      import * as sdk from './dist/index.esm.js';
 
       (async () => {
-        const module = await sdk.loadSecureFields('sandbox');
+        const module = await sdk.loadDropInCheckout('sandbox');
         console.log({ module });
-        document.body.append(!!module.initSecureFields() ? 'Module loaded' : 'Module not loaded');
+        const a = await module.createDropinCheckout({
+          paymentSession: {
+            id: '55c8aa03-3a28-4591-b3cd-fcd9dd751ed5',
+            amount: 480,
+            currency_code: 'EUR',
+            expiration_date: '2026-01-22T17:23:33.592122Z',
+            protocols: {
+              dalenys: {
+                creditcard: {
+                  contracts: {
+                    APPLY: {
+                      mandatory: {
+                        amount: 0,
+                        customer: {
+                          reference: 'CUSTOMER_REF',
+                          ip: '127.0.0.1',
+                          billing_address: {
+                            email: 'email',
+                          },
+                        },
+                      },
+                      optional: {
+                        customer: {
+                          gender_code: 'male',
+                          first_name: 'first_name',
+                          last_name: 'last_name',
+                          birthdate: '1995-08-25',
+                          billing_address: {
+                            address_lines: ['address_lines[]'],
+                            city: 'city',
+                            postal_code: 'postal_code',
+                            country_code: 'country_code',
+                            phone: 'phone',
+                            mobile_phone: 'mobile_phone',
+                          },
+                          account: {
+                            password_update_date_time: '2022-01-24T08:28:57.432',
+                            authentication_method: 'MERCHANT_CREDENTIALS',
+                          },
+                        },
+                        shipments: [
+                          {
+                            delivery_type_code: 'external_pickup',
+                            estimated_delivery_date_time: '2020-08-25T10:42:59',
+                            shipping_address: {
+                              first_name: 'first_name',
+                              last_name: 'last_name',
+                              gender_code: 'male',
+                              address_lines: ['address_lines[]'],
+                              city: 'city',
+                              postal_code: 'postal_code',
+                              country_code: 'FR',
+                              phone: 'phone',
+                              mobile_phone: 'mobile_phone',
+                            },
+                            item_lines: [
+                              {
+                                sku_reference: '2600218',
+                                price: 85,
+                                quantity: 1,
+                                amount: 85,
+                              },
+                            ],
+                            tax_lines: [
+                              {
+                                rate: 10,
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 2,
+                    accepted_decimals: 2,
+                    template: 'dalenys_creditcard',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['CARTE_BANCAIRE', 'MASTERCARD', 'VISA', 'AMERICAN_EXPRESS'],
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: true,
+                      payment_time: 'ON_ORDER',
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['dalenys', 'creditcard', 'primary'],
+                  },
+                },
+              },
+              aci: {
+                creditcard: {
+                  contracts: {
+                    INIT: {
+                      mandatory: {
+                        currency_code: 'EUR',
+                      },
+                      optional: {},
+                    },
+                    APPLY: {
+                      mandatory: {
+                        currency_code: 'EUR',
+                      },
+                      optional: {},
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 3,
+                    accepted_decimals: 2,
+                    template: 'aci_creditcard',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['CARTE_BANCAIRE', 'VISA', 'MASTERCARD', 'AMERICAN_EXPRESS'],
+                      token_scope: 'partner',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0.01,
+                      payment_max_amount: 9999999999.99,
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['aci', 'creditcard', 'primary'],
+                  },
+                  integrated_tokens: [
+                    {
+                      id: '137dc458-13ab-4782-b8e9-367446da8df8',
+                      value: '8ac7a49f96312944019634ad42ef5df6',
+                      uniqueness_token: 'pwass,0091,1901231999,420000,01234562',
+                      expiration_date: '2030-03-31T23:59:59.999999Z',
+                      owner_reference: '01234562',
+                      merchant: 'UpStreamTest',
+                      favorite: false,
+                      description: {
+                        brand_name: 'VISA',
+                        display_token: '420000******0091',
+                        holder_name: 'pwass',
+                      },
+                      status: 'ACTIVE',
+                      payment_id: {
+                        origin: 'partner',
+                        partner: 'aci',
+                        method: 'creditcard',
+                      },
+                      created_at: '2025-04-14T14:21:40.144412Z',
+                      updated_at: '2025-04-14T14:21:40.144412Z',
+                    },
+                  ],
+                },
+              },
+              payline: {
+                bancontact: {
+                  configurations: {
+                    stable: true,
+                    position: 39,
+                    accepted_decimals: 2,
+                    template: 'redirection',
+                    vault: {
+                      vendor: 'none',
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                    },
+                    labels: ['payline', 'bancontact', 'primary'],
+                  },
+                },
+                ideal: {
+                  configurations: {
+                    stable: true,
+                    position: 40,
+                    accepted_decimals: 2,
+                    template: 'redirection',
+                    vault: {
+                      vendor: 'none',
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                    },
+                    labels: ['payline', 'ideal', 'primary'],
+                  },
+                },
+                creditcard: {
+                  configurations: {
+                    stable: true,
+                    position: 29,
+                    accepted_decimals: 2,
+                    template: 'payline_creditcard',
+                    vault: {
+                      vendor: 'pci_proxy',
+                      supported_brands: ['CARTE_BANCAIRE', 'MASTERCARD', 'VISA'],
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                    },
+                    labels: ['payline', 'creditcard', 'primary'],
+                  },
+                },
+              },
+              easy2play: {
+                voucher: {
+                  contracts: {
+                    INIT: {
+                      mandatory: {},
+                    },
+                    APPLY: {
+                      mandatory: {
+                        amount: 10.2,
+                      },
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 116,
+                    accepted_decimals: 2,
+                    template: 'secondary',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0.01,
+                      payment_max_amount: 99999999.99,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'CREDIT',
+                      refund_backup: 'MANUAL',
+                      usage_per_session_limit: 0,
+                    },
+                    labels: ['easy2play', 'voucher', 'secondary'],
+                  },
+                },
+                giftcard: {
+                  contracts: {
+                    INIT: {
+                      mandatory: {},
+                    },
+                    APPLY: {
+                      mandatory: {
+                        amount: 10.2,
+                      },
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 8,
+                    accepted_decimals: 2,
+                    template: 'secondary',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0.01,
+                      payment_max_amount: 99999999.99,
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                      refund_type: 'CREDIT',
+                      refund_backup: 'MANUAL',
+                      usage_per_session_limit: 2,
+                    },
+                    labels: ['easy2play', 'giftcard', 'secondary'],
+                  },
+                },
+              },
+              paybox: {
+                creditcard: {
+                  configurations: {
+                    stable: true,
+                    position: 34,
+                    accepted_decimals: 2,
+                    template: 'paybox_creditcard',
+                    vault: {
+                      vendor: 'pci_proxy',
+                      supported_brands: ['CARTE_BANCAIRE', 'MASTERCARD', 'VISA'],
+                      token_scope: 'method',
+                      external_three_ds_enabled: true,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                      merchant_specifics: {
+                        paymentMode: 'ECOM',
+                      },
+                    },
+                    labels: ['paybox', 'creditcard', 'primary'],
+                  },
+                },
+              },
+              alma: {
+                cb2x: {
+                  configurations: {
+                    stable: true,
+                    position: 41,
+                    accepted_decimals: 2,
+                    template: 'alma',
+                    vault: {
+                      vendor: 'none',
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                    },
+                    labels: ['alma', 'cb2x', 'primary'],
+                  },
+                },
+              },
+              payzen: {
+                creditcard: {
+                  contracts: {
+                    INIT: {
+                      mandatory: {
+                        reference: 'order reference',
+                        amount: 0,
+                        currency_code: 'EUR',
+                      },
+                      optional: {
+                        customer: {
+                          reference: 'reference',
+                          type_code: 'customer',
+                          first_name: 'first_name',
+                          last_name: 'last_name',
+                          locale_code: 'fr-FR',
+                          billing_address: {
+                            address_lines: ['address_lines[]'],
+                            city: 'city',
+                            postal_code: 'postal_code',
+                            country_code: 'country_code',
+                            email: 'email',
+                            phone: 'phone',
+                            mobile_phone: 'mobile_phone',
+                          },
+                          additional_attributes: {
+                            national_identifier: 'national_identifier',
+                          },
+                        },
+                        shipments: [
+                          {
+                            shipping_address: {
+                              first_name: 'first_name',
+                              last_name: 'last_name',
+                              address_lines: ['address_lines[]'],
+                              city: 'city',
+                              postal_code: 'postal_code',
+                              country_code: 'FR',
+                              phone: 'phone',
+                              mobile_phone: 'mobile_phone',
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 12,
+                    accepted_decimals: 2,
+                    template: 'lyra',
+                    vault: {
+                      vendor: 'purse',
+                      supported_brands: ['CARTE_BANCAIRE', 'MASTERCARD', 'VISA', 'AMERICAN_EXPRESS'],
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 9999999999.99,
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['payzen', 'creditcard', 'primary'],
+                  },
+                },
+              },
+              stripe: {
+                creditcard: {
+                  configurations: {
+                    stable: true,
+                    position: 26,
+                    accepted_decimals: 2,
+                    template: 'stripe_creditcard',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['CARTE_BANCAIRE', 'MASTERCARD', 'VISA', 'AMERICAN_EXPRESS'],
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['stripe', 'creditcard', 'primary'],
+                  },
+                },
+              },
+              adyen: {
+                bancontact: {
+                  contracts: {
+                    INIT: {
+                      mandatory: {
+                        success: 'http://merchant-redirection-url.com',
+                        failure: 'http://merchant-redirection-url.com',
+                        redirection: 'http://merchant-redirection-url.com',
+                        reference: 'The order reference',
+                        amount: 0,
+                        currency_code: 'EUR',
+                        customer: {
+                          billing_address: {
+                            country_code: 'FR',
+                          },
+                        },
+                      },
+                      optional: {
+                        customer: {
+                          first_name: "The customer's first name.",
+                          last_name: "The customer's last name.",
+                          birthdate: '1970-01-01',
+                          billing_address: {
+                            address_lines: [''],
+                          },
+                          account: {
+                            creation_date_time: '1970-01-01T00:00:00',
+                            update_date_time: '1970-01-01T00:00:00',
+                            password_update_date_time: '1970-01-01T00:00:00',
+                            purchase_count_last_day: 0,
+                            purchase_count_last_six_months: 1,
+                            purchase_count_last_year: 3,
+                            different_card_count_last_day: 0,
+                            age_indicator: 'GUEST',
+                            change_indicator: 'MORE_60_DAYS',
+                            password_change_indicator: 'MORE_60_DAYS',
+                          },
+                          additional_attributes: {},
+                        },
+                        shipments: [
+                          {
+                            estimated_delivery_date_time: '1970-01-01T00:00:00',
+                            shipping_address: {
+                              address_lines: [''],
+                            },
+                            item_lines: [
+                              {
+                                quantity: 0,
+                                amount: 0,
+                                tax_lines: [
+                                  {
+                                    amount: 0,
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                    APPLY: {
+                      mandatory: {},
+                      optional: {},
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 9,
+                    accepted_decimals: 2,
+                    template: 'adyen_bancontact',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['CARTE_BANCAIRE', 'VISA', 'MASTERCARD', 'MAESTRO', 'AMERICAN_EXPRESS'],
+                      token_scope: 'partner',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'OFF_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                    },
+                    labels: ['adyen', 'bancontact', 'primary'],
+                  },
+                },
+                ideal: {
+                  contracts: {
+                    INIT: {
+                      mandatory: {
+                        success: 'http://merchant-redirection-url.com',
+                        failure: 'http://merchant-redirection-url.com',
+                        redirection: 'http://merchant-redirection-url.com',
+                        reference: 'The order reference',
+                        amount: 0,
+                        currency_code: 'EUR',
+                        customer: {
+                          billing_address: {
+                            country_code: 'FR',
+                          },
+                        },
+                      },
+                      optional: {
+                        customer: {
+                          first_name: "The customer's first name.",
+                          last_name: "The customer's last name.",
+                          birthdate: '1970-01-01',
+                          billing_address: {
+                            address_lines: [''],
+                          },
+                          account: {
+                            creation_date_time: '1970-01-01T00:00:00',
+                            update_date_time: '1970-01-01T00:00:00',
+                            password_update_date_time: '1970-01-01T00:00:00',
+                            purchase_count_last_day: 0,
+                            purchase_count_last_six_months: 1,
+                            purchase_count_last_year: 3,
+                            different_card_count_last_day: 0,
+                            age_indicator: 'GUEST',
+                            change_indicator: 'MORE_60_DAYS',
+                            password_change_indicator: 'MORE_60_DAYS',
+                          },
+                          additional_attributes: {},
+                        },
+                        shipments: [
+                          {
+                            estimated_delivery_date_time: '1970-01-01T00:00:00',
+                            shipping_address: {
+                              address_lines: [''],
+                            },
+                            item_lines: [
+                              {
+                                quantity: 0,
+                                amount: 0,
+                                tax_lines: [
+                                  {
+                                    amount: 0,
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                    APPLY: {
+                      mandatory: {},
+                      optional: {},
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 10,
+                    accepted_decimals: 2,
+                    template: 'redirection',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'OFF_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                    },
+                    labels: ['adyen', 'ideal', 'primary'],
+                  },
+                },
+                googlepay: {
+                  contracts: {
+                    INIT: {
+                      mandatory: {
+                        success: 'http://merchant-redirection-url.com',
+                        failure: 'http://merchant-redirection-url.com',
+                        redirection: 'http://merchant-redirection-url.com',
+                        reference: 'The order reference',
+                        amount: 0,
+                        currency_code: 'EUR',
+                        customer: {
+                          billing_address: {
+                            country_code: 'FR',
+                          },
+                        },
+                      },
+                      optional: {
+                        customer: {
+                          first_name: "The customer's first name.",
+                          last_name: "The customer's last name.",
+                          birthdate: '1970-01-01',
+                          billing_address: {
+                            address_lines: [''],
+                          },
+                          account: {
+                            creation_date_time: '1970-01-01T00:00:00',
+                            update_date_time: '1970-01-01T00:00:00',
+                            password_update_date_time: '1970-01-01T00:00:00',
+                            purchase_count_last_day: 0,
+                            purchase_count_last_six_months: 1,
+                            purchase_count_last_year: 3,
+                            different_card_count_last_day: 0,
+                            age_indicator: 'GUEST',
+                            change_indicator: 'MORE_60_DAYS',
+                            password_change_indicator: 'MORE_60_DAYS',
+                          },
+                          additional_attributes: {},
+                        },
+                        shipments: [
+                          {
+                            estimated_delivery_date_time: '1970-01-01T00:00:00',
+                            shipping_address: {
+                              address_lines: [''],
+                            },
+                            item_lines: [
+                              {
+                                quantity: 0,
+                                amount: 0,
+                                tax_lines: [
+                                  {
+                                    amount: 0,
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                    APPLY: {
+                      mandatory: {},
+                      optional: {},
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 4,
+                    accepted_decimals: 2,
+                    template: 'googlepay',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['CARTE_BANCAIRE', 'VISA', 'MASTERCARD', 'AMERICAN_EXPRESS'],
+                      token_scope: 'partner',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'OFF_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0.01,
+                      payment_max_amount: 9999999999.99,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['adyen', 'googlepay', 'primary'],
+                  },
+                },
+                creditcard: {
+                  contracts: {
+                    INIT: {
+                      mandatory: {
+                        success: 'http://merchant-redirection-url.com',
+                        failure: 'http://merchant-redirection-url.com',
+                        redirection: 'http://merchant-redirection-url.com',
+                        reference: 'The order reference',
+                        amount: 0,
+                        currency_code: 'EUR',
+                        customer: {
+                          billing_address: {
+                            country_code: 'FR',
+                          },
+                        },
+                      },
+                      optional: {
+                        customer: {
+                          first_name: "The customer's first name.",
+                          last_name: "The customer's last name.",
+                          birthdate: '1970-01-01',
+                          billing_address: {
+                            address_lines: [''],
+                          },
+                          account: {
+                            creation_date_time: '1970-01-01T00:00:00',
+                            update_date_time: '1970-01-01T00:00:00',
+                            password_update_date_time: '1970-01-01T00:00:00',
+                            purchase_count_last_day: 0,
+                            purchase_count_last_six_months: 1,
+                            purchase_count_last_year: 3,
+                            different_card_count_last_day: 0,
+                            age_indicator: 'GUEST',
+                            change_indicator: 'MORE_60_DAYS',
+                            password_change_indicator: 'MORE_60_DAYS',
+                          },
+                          additional_attributes: {},
+                        },
+                        shipments: [
+                          {
+                            estimated_delivery_date_time: '1970-01-01T00:00:00',
+                            shipping_address: {
+                              address_lines: [''],
+                            },
+                            item_lines: [
+                              {
+                                quantity: 0,
+                                amount: 0,
+                                tax_lines: [
+                                  {
+                                    amount: 0,
+                                  },
+                                ],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                    APPLY: {
+                      mandatory: {},
+                      optional: {},
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 15,
+                    accepted_decimals: 2,
+                    template: 'adyen_creditcard',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['VISA', 'MASTERCARD', 'AMERICAN_EXPRESS'],
+                      token_scope: 'method',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'OFF_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                    },
+                    labels: ['adyen', 'creditcard', 'primary'],
+                  },
+                },
+              },
+              redsys: {
+                bizum: {
+                  configurations: {
+                    stable: true,
+                    position: 23,
+                    accepted_decimals: 2,
+                    template: 'redirection',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: true,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                    },
+                    labels: ['redsys', 'bizum', 'primary'],
+                  },
+                },
+              },
+              checkout: {
+                creditcard: {
+                  contracts: {
+                    APPLY: {
+                      mandatory: {
+                        amount: 20,
+                      },
+                      optional: {},
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 19,
+                    accepted_decimals: 2,
+                    template: 'checkout_creditcard',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['VISA', 'MASTERCARD'],
+                      token_scope: 'method',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 9999999.99,
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['checkout', 'creditcard', 'primary'],
+                  },
+                },
+              },
+              paypal: {
+                wallet: {
+                  configurations: {
+                    stable: true,
+                    position: 0,
+                    accepted_decimals: 2,
+                    template: 'paypal_wallet',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['CARTE_BANCAIRE', 'VISA', 'MASTERCARD', 'AMERICAN_EXPRESS'],
+                      token_scope: 'partner',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 99999.99,
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                      merchant_specifics: {
+                        client_id: 'AeQhiYXqFwFJSD9g7p6MW4kVo13QEk-cDdUSDhW6M3HehnAO0OQUue7hPC92dJKcIwMBflSmIR7IhJ40',
+                        merchant_id: 'FC2SPR7QCY8TC',
+                        save_token_mode: 'billing_agreement',
+                        fraudnet_enabled: 'false',
+                        integration_mode: 'popup',
+                        data_partner_attribution_id: 'UpStreamPay_SP_PPCP',
+                      },
+                    },
+                    labels: ['paypal', 'wallet', 'primary'],
+                  },
+                  integrated_tokens: [
+                    {
+                      id: 'a1eb224a-0db1-420f-a761-7796701ad9cc',
+                      value: 'B-9C977555KJ1761743',
+                      uniqueness_token: 'B-9C977555KJ1761743',
+                      expiration_date: '2056-01-19T14:21:50.317504Z',
+                      owner_reference: '01234562',
+                      merchant: 'UpStreamTest',
+                      favorite: false,
+                      description: {
+                        brand_name: 'PAYPAL',
+                        display_token: 'john.doe@test.fr',
+                        holder_name: 'James Wolverine',
+                      },
+                      status: 'ACTIVE',
+                      payment_id: {
+                        origin: 'partner',
+                        partner: 'paypal',
+                        method: 'wallet',
+                      },
+                      created_at: '2026-01-19T14:21:50.365892Z',
+                      updated_at: '2026-01-19T14:21:50.365892Z',
+                    },
+                  ],
+                },
+              },
+              centralpay: {
+                creditcard: {
+                  configurations: {
+                    stable: true,
+                    position: 33,
+                    accepted_decimals: 2,
+                    template: 'centralpay_creditcard',
+                    vault: {
+                      vendor: 'pci_proxy',
+                      supported_brands: ['VISA', 'MASTERCARD'],
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['centralpay', 'creditcard', 'primary'],
+                  },
+                },
+              },
+              axepta: {
+                creditcard: {
+                  configurations: {
+                    stable: true,
+                    position: 38,
+                    accepted_decimals: 2,
+                    template: 'axepta_creditcard',
+                    vault: {
+                      vendor: 'pci_proxy',
+                      supported_brands: ['VISA', 'MASTERCARD'],
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'OFF_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                    },
+                    labels: ['axepta', 'creditcard', 'primary'],
+                  },
+                },
+              },
+              oneycard: {
+                comptant: {
+                  contracts: {
+                    APPLY: {
+                      mandatory: {
+                        amount: 0,
+                        currency_code: 'EUR',
+                        customer: {
+                          gender_code: 'unknown',
+                          locale_code: 'und',
+                          billing_address: {
+                            address_lines: ['line1', 'line2'],
+                          },
+                        },
+                        shipments: [
+                          {
+                            delivery_type_code: 'user_delivery',
+                            delivery_quickness_code: 'regular',
+                            shipping_address: {
+                              address_lines: ['line1', 'line2'],
+                            },
+                            item_lines: [
+                              {
+                                price: 10,
+                                quantity: 1,
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                      optional: {},
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 5,
+                    accepted_decimals: 2,
+                    template: 'oneycard_comptant',
+                    vault: {
+                      vendor: 'pci_proxy',
+                      supported_brands: ['CARTE_BANCAIRE', 'VISA', 'MASTERCARD', 'AMERICAN_EXPRESS', 'MAESTRO'],
+                      token_scope: 'partner',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token_mode: 'PREFER_NO',
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                      merchant_specifics: {
+                        opc: '00001',
+                        opc_description:
+                          'Le montant de vos achats est prélevé en immédiat ou en différé selon les conditions d’utilisation habituelles de votre carte',
+                      },
+                    },
+                    labels: ['oneycard', 'comptant', 'primary'],
+                  },
+                },
+              },
+              ingenico: {
+                applepay: {
+                  configurations: {
+                    stable: true,
+                    position: 31,
+                    accepted_decimals: 2,
+                    template: 'applepay',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                    },
+                    labels: ['ingenico', 'applepay', 'primary'],
+                  },
+                },
+                bancontact: {
+                  configurations: {
+                    stable: true,
+                    position: 13,
+                    accepted_decimals: 2,
+                    template: 'redirection',
+                    vault: {
+                      vendor: 'pci_proxy',
+                      supported_brands: ['CARTE_BANCAIRE', 'MAESTRO', 'MASTERCARD', 'VISA', 'AMERICAN_EXPRESS'],
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: true,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                    },
+                    labels: ['ingenico', 'bancontact', 'primary'],
+                  },
+                },
+                creditcard: {
+                  configurations: {
+                    stable: true,
+                    position: 30,
+                    accepted_decimals: 2,
+                    template: 'ingenico_creditcard',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['CARTE_BANCAIRE', 'MASTERCARD', 'VISA', 'AMERICAN_EXPRESS'],
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'OFF_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                    },
+                    labels: ['ingenico', 'creditcard', 'primary'],
+                  },
+                  integrated_tokens: [
+                    {
+                      id: '5ecbc8a7-6fd3-47d2-9817-b3c1c7733bf1',
+                      value: 'c352b01d-7eee-4974-a93c-efe05b14592e',
+                      uniqueness_token: 'pwass,************2022,1803859199,48749706,01234562',
+                      expiration_date: '2027-02-28T23:59:59.999999Z',
+                      owner_reference: '01234562',
+                      merchant: 'UpStreamTest',
+                      favorite: false,
+                      description: {
+                        brand_name: 'BankCard',
+                        display_token: '48749706******2022',
+                        holder_name: 'pwass',
+                      },
+                      status: 'ACTIVE',
+                      payment_id: {
+                        origin: 'partner',
+                        partner: 'ingenico',
+                        method: 'creditcard',
+                      },
+                      created_at: '2025-05-21T14:15:25.494827Z',
+                      updated_at: '2025-05-21T14:15:25.494827Z',
+                    },
+                  ],
+                },
+                bizum: {
+                  configurations: {
+                    stable: true,
+                    position: 24,
+                    accepted_decimals: 2,
+                    template: 'redirection',
+                    vault: {
+                      vendor: 'none',
+                      token_scope: 'method',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                    },
+                    labels: ['ingenico', 'bizum', 'primary'],
+                  },
+                },
+              },
+              oney: {
+                '10xsansfraisiban': {
+                  configurations: {
+                    stable: true,
+                    instant: false,
+                    position: 123,
+                    accepted_decimals: 2,
+                    template: 'template_simulator',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      save_token_mode: 'PREFER_NO',
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['primary', 'oney', '10xsansfraisiban'],
+                  },
+                },
+                '20xsansfraisiban': {
+                  configurations: {
+                    stable: true,
+                    instant: false,
+                    position: 122,
+                    accepted_decimals: 2,
+                    template: 'template_simulator',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      save_token_mode: 'PREFER_NO',
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['primary', 'oney', '20xsansfraisiban'],
+                  },
+                },
+                '10xiban': {
+                  configurations: {
+                    stable: true,
+                    instant: false,
+                    position: 87,
+                    accepted_decimals: 2,
+                    template: 'redirection',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                      merchant_specifics: {
+                        opc: 'ALO10',
+                      },
+                    },
+                    labels: ['primary', 'oney', '10xiban'],
+                  },
+                },
+                cb3x: {
+                  configurations: {
+                    stable: true,
+                    instant: false,
+                    position: 16,
+                    accepted_decimals: 2,
+                    template: 'template_simulator',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      save_token_mode: 'PREFER_NO',
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                      merchant_specifics: {
+                        opc: '3XP',
+                        opc_description: 'Facilypay commercial code',
+                      },
+                    },
+                    labels: ['primary', 'oney', 'cb3x'],
+                  },
+                },
+                '20xiban': {
+                  configurations: {
+                    stable: true,
+                    instant: false,
+                    position: 121,
+                    accepted_decimals: 2,
+                    template: 'redirection',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      save_token_mode: 'PREFER_NO',
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['primary', 'oney', 'simulable', '20xiban'],
+                  },
+                },
+              },
+              floa: {
+                cb3x: {
+                  contracts: {
+                    INIT: {
+                      mandatory: {},
+                      optional: {},
+                    },
+                    APPLY: {
+                      mandatory: {},
+                      optional: {},
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 17,
+                    accepted_decimals: 2,
+                    template: 'redirection',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 100,
+                      payment_max_amount: 4000,
+                      save_token_mode: 'PREFER_NO',
+                      refund_priority: 0,
+                    },
+                    labels: ['floa', 'cb3x', 'primary'],
+                  },
+                },
+              },
+              sipsv2: {
+                creditcard: {
+                  configurations: {
+                    stable: true,
+                    position: 2,
+                    accepted_decimals: 2,
+                    template: 'sipsv2_creditcard',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['CARTE_BANCAIRE', 'VISA', 'MASTERCARD', 'AMERICAN_EXPRESS'],
+                      token_scope: 'partner',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0.01,
+                      payment_max_amount: 9999999999.99,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['sipsv2', 'creditcard', 'primary'],
+                  },
+                },
+              },
+              hipay: {
+                mbway: {
+                  configurations: {
+                    stable: true,
+                    position: 121,
+                    accepted_decimals: 2,
+                    template: 'hipay_mbway',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 2,
+                      payment_max_amount: 999999,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                      merchant_specifics: {
+                        integration_mode: 'embeded',
+                      },
+                    },
+                    labels: ['hipay', 'mbway', 'primary'],
+                  },
+                },
+                creditcard: {
+                  configurations: {
+                    stable: true,
+                    position: 18,
+                    accepted_decimals: 2,
+                    template: 'hipay_creditcard',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['CARTE_BANCAIRE', 'MASTERCARD', 'VISA', 'AMERICAN_EXPRESS'],
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 2,
+                      payment_max_amount: 999999,
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['hipay', 'creditcard', 'primary'],
+                  },
+                },
+                multibanco: {
+                  configurations: {
+                    stable: true,
+                    position: 22,
+                    accepted_decimals: 2,
+                    template: 'hipay_multibanco',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 2,
+                      payment_max_amount: 999999,
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['hipay', 'multibanco', 'primary'],
+                  },
+                },
+              },
+              maxxing: {
+                loyaltycard: {
+                  configurations: {
+                    stable: true,
+                    position: 36,
+                    accepted_decimals: 2,
+                    template: 'maxxing_loyaltycard',
+                    vault: {
+                      vendor: 'none',
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      usage_per_session_limit: 0,
+                    },
+                    labels: ['maxxing', 'loyaltycard', 'secondary'],
+                  },
+                },
+              },
+              riverty: {
+                '3x': {
+                  configurations: {
+                    stable: true,
+                    position: 119,
+                    accepted_decimals: 2,
+                    template: 'riverty_cb3x',
+                    vault: {
+                      vendor: 'none',
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['riverty', 'cb3x', 'primary'],
+                  },
+                },
+                installments: {
+                  configurations: {
+                    stable: true,
+                    position: 47,
+                    accepted_decimals: 2,
+                    template: 'riverty_installments',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['riverty', 'installments', 'primary'],
+                  },
+                },
+                '12x': {
+                  configurations: {
+                    stable: true,
+                    position: 118,
+                    accepted_decimals: 2,
+                    template: 'redirection',
+                    vault: {
+                      vendor: 'none',
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['riverty', 'cb12x', 'simulable', 'primary'],
+                  },
+                },
+                installment: {
+                  configurations: {
+                    stable: true,
+                    position: 116,
+                    accepted_decimals: 2,
+                    template: 'riverty_installment',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['riverty', 'installment', 'primary'],
+                  },
+                },
+                invoice: {
+                  configurations: {
+                    stable: true,
+                    position: 48,
+                    accepted_decimals: 2,
+                    template: 'riverty_invoice',
+                    vault: {
+                      vendor: 'none',
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['riverty', 'invoice', 'primary'],
+                  },
+                },
+                '9x': {
+                  configurations: {
+                    stable: true,
+                    position: 120,
+                    accepted_decimals: 2,
+                    template: 'riverty_cb9x',
+                    vault: {
+                      vendor: 'none',
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['riverty', 'cb9x', 'primary'],
+                  },
+                },
+              },
+              fintecture: {
+                instantpayment: {
+                  contracts: {
+                    APPLY: {
+                      mandatory: {},
+                      optional: {},
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 1,
+                    accepted_decimals: 2,
+                    template: 'redirection',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['CARTE_BANCAIRE', 'VISA', 'MASTERCARD', 'AMERICAN_EXPRESS'],
+                      token_scope: 'partner',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0.01,
+                      payment_max_amount: 9999999999.99,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['fintecture', 'instantpayment', 'primary'],
+                  },
+                },
+              },
+              klarna: {
+                installments: {
+                  contracts: {
+                    INIT: {
+                      mandatory: {},
+                      optional: {},
+                    },
+                    APPLY: {
+                      mandatory: {},
+                      optional: {},
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 7,
+                    accepted_decimals: 2,
+                    template: 'klarna_installments',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 99999.99,
+                      save_token_mode: 'PREFER_NO',
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['klarna', 'installments', 'primary'],
+                  },
+                },
+              },
+              scalapay: {
+                'cb4x-paybylink': {
+                  configurations: {
+                    stable: true,
+                    position: 122,
+                    accepted_decimals: 2,
+                    template: 'scalapay_cb4x_paybylink',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: true,
+                      payment_time: 'ON_ORDER',
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['scalapay', 'cb4x_paybylink', 'primary'],
+                  },
+                },
+                'cb3x-paybylink': {
+                  configurations: {
+                    stable: true,
+                    position: 123,
+                    accepted_decimals: 2,
+                    template: 'scalapay_cb3x_paybylink',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: true,
+                      payment_time: 'ON_ORDER',
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['scalapay', 'cb3x_paybylink', 'primary'],
+                  },
+                },
+                cb3x: {
+                  configurations: {
+                    stable: true,
+                    position: 20,
+                    accepted_decimals: 2,
+                    template: 'scalapay_cb3x',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: true,
+                      payment_time: 'ON_ORDER',
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['scalapay', 'cb3x', 'primary'],
+                  },
+                },
+                cb4x: {
+                  configurations: {
+                    stable: true,
+                    position: 21,
+                    accepted_decimals: 2,
+                    template: 'scalapay_cb4x_paybylink',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: true,
+                      payment_time: 'ON_ORDER',
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['scalapay', 'cb4x_paybylink', 'primary'],
+                  },
+                },
+              },
+              slimpay: {
+                sepa: {
+                  configurations: {
+                    stable: true,
+                    position: 25,
+                    accepted_decimals: 2,
+                    template: 'redirection',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['slimpay', 'sepa', 'primary'],
+                  },
+                },
+              },
+              scellius: {
+                sepainstant: {
+                  contracts: {
+                    INIT: {
+                      mandatory: {
+                        reference: 'order reference',
+                        amount: 0,
+                        currency_code: 'EUR',
+                      },
+                      optional: {
+                        customer: {
+                          reference: 'reference',
+                          type_code: 'customer',
+                          first_name: 'first_name',
+                          last_name: 'last_name',
+                          locale_code: 'fr-FR',
+                          billing_address: {
+                            address_lines: ['address_lines[]'],
+                            city: 'city',
+                            postal_code: 'postal_code',
+                            country_code: 'country_code',
+                            email: 'email',
+                            phone: 'phone',
+                            mobile_phone: 'mobile_phone',
+                          },
+                          additional_attributes: {
+                            national_identifier: 'national_identifier',
+                          },
+                        },
+                        shipments: [
+                          {
+                            shipping_address: {
+                              first_name: 'first_name',
+                              last_name: 'last_name',
+                              address_lines: ['address_lines[]'],
+                              city: 'city',
+                              postal_code: 'postal_code',
+                              country_code: 'FR',
+                              phone: 'phone',
+                              mobile_phone: 'mobile_phone',
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 14,
+                    accepted_decimals: 2,
+                    template: 'scellius_sepainstant',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['CARTE_BANCAIRE', 'MASTERCARD', 'VISA', 'AMERICAN_EXPRESS'],
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 9999999999.99,
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['scellius', 'sepainstant', 'primary'],
+                  },
+                },
+                creditcard: {
+                  contracts: {
+                    INIT: {
+                      mandatory: {
+                        reference: 'order reference',
+                        amount: 0,
+                        currency_code: 'EUR',
+                      },
+                      optional: {
+                        customer: {
+                          reference: 'reference',
+                          type_code: 'customer',
+                          first_name: 'first_name',
+                          last_name: 'last_name',
+                          locale_code: 'fr-FR',
+                          billing_address: {
+                            address_lines: ['address_lines[]'],
+                            city: 'city',
+                            postal_code: 'postal_code',
+                            country_code: 'country_code',
+                            email: 'email',
+                            phone: 'phone',
+                            mobile_phone: 'mobile_phone',
+                          },
+                          additional_attributes: {
+                            national_identifier: 'national_identifier',
+                          },
+                        },
+                        shipments: [
+                          {
+                            shipping_address: {
+                              first_name: 'first_name',
+                              last_name: 'last_name',
+                              address_lines: ['address_lines[]'],
+                              city: 'city',
+                              postal_code: 'postal_code',
+                              country_code: 'FR',
+                              phone: 'phone',
+                              mobile_phone: 'mobile_phone',
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 115,
+                    accepted_decimals: 2,
+                    template: 'scellius_creditcard',
+                    vault: {
+                      vendor: 'none',
+                      supported_brands: ['CARTE_BANCAIRE', 'MASTERCARD', 'VISA', 'AMERICAN_EXPRESS'],
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 9999999999.99,
+                      save_token: true,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['scellius', 'creditcard', 'primary'],
+                  },
+                },
+              },
+              cofidis: {
+                '4x': {
+                  contracts: {
+                    APPLY: {
+                      mandatory: {
+                        amount: 0,
+                        currency_code: 'EUR',
+                        customer: {
+                          gender_code: 'unknown',
+                          locale_code: 'und',
+                          billing_address: {
+                            address_lines: ['line1', 'line2'],
+                          },
+                        },
+                        shipments: [
+                          {
+                            delivery_type_code: 'user_delivery',
+                            delivery_quickness_code: 'regular',
+                            shipping_address: {
+                              address_lines: ['line1', 'line2'],
+                            },
+                            item_lines: [
+                              {
+                                price: 10,
+                                quantity: 1,
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                      optional: {},
+                    },
+                  },
+                  configurations: {
+                    stable: true,
+                    position: 43,
+                    accepted_decimals: 2,
+                    template: 'redirection',
+                    vault: {
+                      vendor: 'none',
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: true,
+                      refund_priority: 0,
+                      refund_type: 'AUTO',
+                      refund_backup: 'MANUAL',
+                    },
+                    labels: ['cofidis', '4x', 'primary', 'simulable'],
+                  },
+                },
+              },
+              worldpay: {
+                creditcard: {
+                  configurations: {
+                    stable: true,
+                    position: 116,
+                    accepted_decimals: 2,
+                    template: 'worldpay_creditcard',
+                    vault: {
+                      vendor: 'pci_proxy',
+                      supported_brands: ['CARTE_BANCAIRE', 'VISA', 'MASTERCARD'],
+                      token_scope: 'method',
+                      external_three_ds_enabled: false,
+                    },
+                    settings: {
+                      session_types: ['PAYMENT', 'INFORMATION_REQUEST', 'RECURRING_PAYMENT'],
+                      registration_mode: 'ON_SESSION',
+                      direct_debit: false,
+                      payment_time: 'ON_ORDER',
+                      payment_min_amount: 0,
+                      payment_max_amount: 999999999999,
+                      save_token: false,
+                      save_token_mode: 'PREFER_NO',
+                      pay_token: false,
+                    },
+                    labels: ['worldpay', 'creditcard', 'primary'],
+                  },
+                },
+              },
+            },
+            vault: {
+              vendor_front_data: {
+                purse: {
+                  tenant_id: '39ff89aa-1e3f-40de-9828-c72863c77e61',
+                },
+                pci_proxy: {
+                  merchant_id: '1110008616',
+                },
+              },
+            },
+            success: 'https://localhost:8000/widgets/confirmation',
+            failure: 'https://localhost:8000/widgets/confirmation',
+          },
+          apiKey: 'a0440cda-d3d4-489a-a3fe-3f00738ecc38',
+          entityId: '1ae76db8-1e57-424d-8db5-84d545e2f914',
+          env: 'test',
+        });
+        await a.mount(document.getElementById('container'));
       })();
     </script>
   </body>
