@@ -16,10 +16,7 @@ the runtime capabilities of the SDK itself.
 | SDK                                                                                                       | Description                                                                                                                            |   Loader    |    Types    |
 |-----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|:-----------:|:-----------:|
 | [Headless Checkout](https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/how-to-build) | Full control over checkout UI with secure payment orchestration by Purse. Ideal for custom payment experiences.                        | ✅ Available | ✅ Available |
-| Securefields                                                                                              | Session less credit card form to collect payment data                                                                                  | ✅ Available | ✅ Available |
 | [Drop-in UI](https://docs.purse.tech/docs/integrate/purse-checkout/widget-v3)                             | Pre-built, configurable payment interface with multiple payment methods.                                                               |  🚧 Coming  |  🚧 Coming  |
-| [Hosted Fields](https://docs.purse.tech/docs/integrate/purse-checkout/hosted-fields)                      | Lightweight integration for credit card payments with PCI-compliant fields. Customize the form while Purse handles the sensitive data. |  🚧 Coming  |  🚧 Coming  |
-
 ## Requirements
 
 To use @purse-eu/web-sdk in your project, ensure the following:
@@ -58,10 +55,7 @@ integration.
 The main function exposed by this package is:
 
 ```ts
-loadHeadlessCheckout(environment
-:
-'sandbox' | 'production'
-)
+loadHeadlessCheckout(environment: 'sandbox' | 'production') 
 ```
 
 It dynamically loads the latest version of the Headless Checkout SDK from the correct CDN and returns a ready-to-use
@@ -69,14 +63,7 @@ module.
 This decouples your integration from the package version of @purse-eu/web-sdk, and ensures you always use the latest
 secure runtime.
 
-## Available SDKs
-
-| SDK                                                                                                       | Description                                                                                                                            |   Loader    |    Types    |
-|-----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|:-----------:|:-----------:|
-| [Headless Checkout](https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/how-to-build) | Full control over checkout UI with secure payment orchestration by Purse. Ideal for custom payment experiences.                        | ✅ Available | ✅ Available |
-| Securefields                                                                                              | Session less credit card form to collect payment data                                                                                  | ✅ Available | ✅ Available |
-| [Drop-in UI](https://docs.purse.tech/docs/integrate/purse-checkout/widget-v3)                             | Pre-built, configurable payment interface with multiple payment methods.                                                               |  🚧 Coming  |  🚧 Coming  |
-| [Hosted Fields](https://docs.purse.tech/docs/integrate/purse-checkout/hosted-fields)                      | Lightweight integration for credit card payments with PCI-compliant fields. Customize the form while Purse handles the sensitive data. |  🚧 Coming  |  🚧 Coming  |
+You can also use the `loadDropInCheckout` to preview the upcoming Dropin Checkout 
 
 ## Requirements
 
@@ -121,19 +108,6 @@ loadHeadlessCheckout('sandbox').then(async module => {
   });
 });
 
-//Loads the securefields sdk
-loadSecureFields('sandbox').then(async module => {
-  const secureFields = await module.initSecureFields('merchant-id', {
-    cardNumber: {
-      target: '#pan',
-      placeholder: '0000 0000 0000 0000'
-    },
-    cvv: {
-      target: '#cvv',
-      placeholder: '123'
-    }
-  });
-});
 
 //Loads the dropin sdk
 loadDropInCheckout('sandbox').then(async module => {
