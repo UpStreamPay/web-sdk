@@ -184,13 +184,18 @@ export interface SecureFieldsEventsPayload {
 	brandDetected: {
 		brands?: Brand[];
 	};
+	/**
+	 * Undocumented - internal use only.
+	 * Triggered when no brand is detected in the card number field but the card passes luhn validation.
+	 */
+	brandNotDetected: void;
 }
 /**
  * Events emitted by the Secure Fields SDK.
  * @see {@link SecureFieldsEventsPayload} for the payload of each event.
  * @category Events
  */
-export type SecureFieldsEvents = "ready" | "success" | "error" | "formValid" | "focus" | "blur" | "autocomplete" | "keyup" | "keydown" | "change" | "brandDetected";
+export type SecureFieldsEvents = "ready" | "success" | "error" | "formValid" | "focus" | "blur" | "autocomplete" | "keyup" | "keydown" | "change" | "brandDetected" | "brandNotDetected";
 /**
  * CSS styles applicable to the iframe fields.
  * Each property is optional;
