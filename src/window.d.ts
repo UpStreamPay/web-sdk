@@ -1,6 +1,6 @@
-import { HeadlessCheckoutModule, SecurefieldsModule } from './types';
+import { HeadlessCheckoutModule, SecurefieldsModule, DropinModule } from './types';
 
 interface Window {
-  Purse:HeadlessCheckoutModule;
+  Purse:HeadlessCheckoutModule | DropinModule;
   PurseSecureFields:SecurefieldsModule;
 }
