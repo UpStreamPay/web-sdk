@@ -1,3 +1,12 @@
+## [0.5.1](https://github.com/UpStreamPay/web-sdk/compare/v0.5.0...v0.5.1) (2026-02-10)
+
+
+### Bug Fixes
+
+* **ci:** bump ci to trusted publishing ([#69](https://github.com/UpStreamPay/web-sdk/issues/69)) ([d0935d0](https://github.com/UpStreamPay/web-sdk/commit/d0935d027f5858a817ba2087242aa0e8dd1a5027))
+
+
+
 # [0.5.0](https://github.com/UpStreamPay/web-sdk/compare/v0.4.0...v0.5.0) (2026-02-10)
 
 
