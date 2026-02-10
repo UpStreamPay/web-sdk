@@ -1,3 +1,12 @@
+# [0.5.0](https://github.com/UpStreamPay/web-sdk/compare/v0.4.0...v0.5.0) (2026-02-10)
+
+
+### Features
+
+* **sdk:** release 0.5.0 ([6e3cb10](https://github.com/UpStreamPay/web-sdk/commit/6e3cb10ad59f1383f52744b8eb94b2db63948acb)), closes [#67](https://github.com/UpStreamPay/web-sdk/issues/67) [#66](https://github.com/UpStreamPay/web-sdk/issues/66) [#63](https://github.com/UpStreamPay/web-sdk/issues/63) [#57](https://github.com/UpStreamPay/web-sdk/issues/57)
+
+
+
 # [0.4.0](https://github.com/UpStreamPay/web-sdk/compare/v0.3.3...v0.4.0) (2025-11-18)
 
 
