@@ -16,7 +16,7 @@ the runtime capabilities of the SDK itself.
 | SDK                                                                                                       | Description                                                                                                                            |   Loader    |    Types    |
 |-----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|:-----------:|:-----------:|
 | [Headless Checkout](https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/how-to-build) | Full control over checkout UI with secure payment orchestration by Purse. Ideal for custom payment experiences.                        | ✅ Available | ✅ Available |
-| [Drop-in UI](https://docs.purse.tech/docs/integrate/purse-checkout/widget-v3)                             | Pre-built, configurable payment interface with multiple payment methods.                                                               |  🚧 Coming  |  🚧 Coming  |
+| [Drop-in UI](https://docs.purse.tech/docs/integrate/purse-checkout/widget-v3)                             | Pre-built, configurable payment interface with multiple payment methods.                                                               |   ✅ Available  | ✅ Available  |
 ## Requirements
 
 To use @purse-eu/web-sdk in your project, ensure the following:
