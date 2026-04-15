@@ -1,3 +1,12 @@
+# [0.6.0](https://github.com/UpStreamPay/web-sdk/compare/v0.5.1...v0.6.0) (2026-04-15)
+
+
+### Features
+
+* **securefields-js-sdk:** sync references 1.7.0 ([#73](https://github.com/UpStreamPay/web-sdk/issues/73)) ([afdbc6b](https://github.com/UpStreamPay/web-sdk/commit/afdbc6beced0e311c83b48c4a759c8e17d564362))
+
+
+
 ## [0.5.1](https://github.com/UpStreamPay/web-sdk/compare/v0.5.0...v0.5.1) (2026-02-10)
 
 
