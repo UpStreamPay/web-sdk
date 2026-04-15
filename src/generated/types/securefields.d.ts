@@ -66,6 +66,12 @@ export type SubmitResultSuccess = {
 	 * @see {@link CardInfo}
 	 */
 	card?: CardInfo;
+	/**
+	 * The cardholder's birth date in ISO 8601 format (YYYY-MM-DD).
+	 * Only present for Oney private-label cards, where the birth date replaces the CVV.
+	 * This value is not sent to the vault — it must be forwarded by the merchant when creating the payment.
+	 */
+	birth_date?: string;
 };
 /**
  * Card informations after tokenization
@@ -185,6 +191,15 @@ export interface SecureFieldsEventsPayload {
 		brands?: Brand[];
 	};
 	/**
+	 * Triggered when the user selects a brand manually (co-brand case).
+	 */
+	brandUserSelection: {
+		selected: Brand;
+		matchedBrands: Brand[];
+	};
+	/**
+	 * @ignore
+	 * @private
 	 * Undocumented - internal use only.
 	 * Triggered when no brand is detected in the card number field but the card passes luhn validation.
 	 */
@@ -195,7 +210,7 @@ export interface SecureFieldsEventsPayload {
  * @see {@link SecureFieldsEventsPayload} for the payload of each event.
  * @category Events
  */
-export type SecureFieldsEvents = "ready" | "success" | "error" | "formValid" | "focus" | "blur" | "autocomplete" | "keyup" | "keydown" | "change" | "brandDetected" | "brandNotDetected";
+export type SecureFieldsEvents = "ready" | "success" | "error" | "formValid" | "focus" | "blur" | "autocomplete" | "keyup" | "keydown" | "change" | "brandDetected" | "brandUserSelection" | "brandNotDetected";
 /**
  * CSS styles applicable to the iframe fields.
  * Each property is optional;
