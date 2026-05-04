@@ -1,3 +1,12 @@
+## [0.6.1](https://github.com/UpStreamPay/web-sdk/compare/v0.6.0...v0.6.1) (2026-05-04)
+
+
+### Bug Fixes
+
+* **dropin:** manual type update before automatic pr magic ([#76](https://github.com/UpStreamPay/web-sdk/issues/76)) ([dc109cc](https://github.com/UpStreamPay/web-sdk/commit/dc109ccf733be82f9b9188e821ee88ad256285dd))
+
+
+
 # [0.6.0](https://github.com/UpStreamPay/web-sdk/compare/v0.5.1...v0.6.0) (2026-04-15)
 
 
