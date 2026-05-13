@@ -4,574 +4,575 @@ import { AnyObject } from 'final-form';
 import { ZodIssue, z } from 'zod';
 
 declare const Environments: readonly [
-  "development",
-  "test",
-  "sandbox",
-  "production"
+	"development",
+	"test",
+	"sandbox",
+	"production"
 ];
 export type EnvironmentTarget = (typeof Environments)[number];
 export interface Environment {
-  target: EnvironmentTarget;
-  apiKey: string;
-  entityId: string;
+	target: EnvironmentTarget;
+	apiKey: string;
+	entityId: string;
 }
 declare const Partners: {
-  readonly aci: "aci";
-  readonly adyen: "adyen";
-  readonly alma: "alma";
-  readonly ancv: "ancv";
-  readonly axepta: "axepta";
-  readonly braintree: "braintree";
-  readonly centralpay: "centralpay";
-  readonly checkout: "checkout";
-  readonly cofidis: "cofidis";
-  readonly dalenys: "dalenys";
-  readonly easycollect: "easycollect";
-  readonly easy2play: "easy2play";
-  readonly fintecture: "fintecture";
-  readonly floa: "floa";
-  readonly gocardless: "gocardless";
-  readonly hipay: "hipay";
-  readonly illicado: "illicado";
-  readonly ingenico: "ingenico";
-  readonly klarna: "klarna";
-  readonly mercanet: "mercanet";
-  readonly oney: "oney";
-  readonly oneycard: "oneycard";
-  readonly paybox: "paybox";
-  readonly payline: "payline";
-  readonly paypal: "paypal";
-  readonly payzen: "payzen";
-  readonly purse: "purse";
-  readonly redsys: "redsys";
-  readonly riverty: "riverty";
-  readonly scalapay: "scalapay";
-  readonly scellius: "scellius";
-  readonly sipsv2: "sipsv2";
-  readonly slimpay: "slimpay";
-  readonly sogecommerce: "sogecommerce";
-  readonly sogenactif: "sogenactif";
-  readonly stripe: "stripe";
-  readonly systempay: "systempay";
-  readonly worldpay: "worldpay";
-  readonly younited: "younited";
+	readonly aci: "aci";
+	readonly adyen: "adyen";
+	readonly alma: "alma";
+	readonly ancv: "ancv";
+	readonly axepta: "axepta";
+	readonly braintree: "braintree";
+	readonly centralpay: "centralpay";
+	readonly checkout: "checkout";
+	readonly cofidis: "cofidis";
+	readonly dalenys: "dalenys";
+	readonly easycollect: "easycollect";
+	readonly easy2play: "easy2play";
+	readonly fintecture: "fintecture";
+	readonly floa: "floa";
+	readonly gocardless: "gocardless";
+	readonly hipay: "hipay";
+	readonly illicado: "illicado";
+	readonly ingenico: "ingenico";
+	readonly klarna: "klarna";
+	readonly mercanet: "mercanet";
+	readonly oney: "oney";
+	readonly oneycard: "oneycard";
+	readonly paybox: "paybox";
+	readonly payline: "payline";
+	readonly paypal: "paypal";
+	readonly payzen: "payzen";
+	readonly purse: "purse";
+	readonly redsys: "redsys";
+	readonly riverty: "riverty";
+	readonly scalapay: "scalapay";
+	readonly scellius: "scellius";
+	readonly sipsv2: "sipsv2";
+	readonly slimpay: "slimpay";
+	readonly sogecommerce: "sogecommerce";
+	readonly sogenactif: "sogenactif";
+	readonly stripe: "stripe";
+	readonly systempay: "systempay";
+	readonly worldpay: "worldpay";
+	readonly younited: "younited";
 };
 export type Partner = (typeof Partners)[keyof typeof Partners];
 declare const Methods: {
-  readonly connect: "connect";
-  readonly applepay: "applepay";
-  readonly bancontact: "bancontact";
-  readonly bizum: "bizum";
-  readonly bnpl: "bnpl";
-  readonly buybox: "buybox";
-  readonly cb10x: "cb10x";
-  readonly cb10xsansfrais: "cb10xsansfrais";
-  readonly cb12x: "cb12x";
-  readonly cb12xsansfrais: "cb12xsansfrais";
-  readonly cb2x: "cb2x";
-  readonly cb3x: "cb3x";
-  readonly cb3xsansfrais: "cb3xsansfrais";
-  readonly cb4x: "cb4x";
-  readonly cb4xsansfrais: "cb4xsansfrais";
-  readonly "3x": "3x";
-  readonly "6x": "6x";
-  readonly "9x": "9x";
-  readonly "12x": "12x";
-  readonly comptant: "comptant";
-  readonly creditcard: "creditcard";
-  readonly giftcard: "giftcard";
-  readonly googlepay: "googlepay";
-  readonly ideal: "ideal";
-  readonly installments: "installments";
-  readonly instantpayment: "instantpayment";
-  readonly invoice: "invoice";
-  readonly loan: "loan";
-  readonly maxxing: "maxxing";
-  readonly mbway: "mbway";
-  readonly multibanco: "multibanco";
-  readonly paybylink: "paybylink";
-  readonly paylater: "paylater";
-  readonly paypal: "paypal";
-  readonly revolving: "revolving";
-  readonly sepa: "sepa";
-  readonly sdd: "sdd";
-  readonly sepainstant: "sepainstant";
-  readonly separecurrent: "separecurrent";
-  readonly sepasingle: "sepasingle";
-  readonly slimcollect: "slimcollect";
-  readonly smart_transfer: "smart_transfer";
-  readonly twint: "twint";
-  readonly voucher: "voucher";
-  readonly wallet: "wallet";
-  readonly "cb3x-paybylink": "cb3x-paybylink";
-  readonly "cb4x-paybylink": "cb4x-paybylink";
-  readonly xpay: "xpay";
+	readonly connect: "connect";
+	readonly applepay: "applepay";
+	readonly bancontact: "bancontact";
+	readonly bizum: "bizum";
+	readonly bnpl: "bnpl";
+	readonly buybox: "buybox";
+	readonly cb10x: "cb10x";
+	readonly cb10xsansfrais: "cb10xsansfrais";
+	readonly cb12x: "cb12x";
+	readonly cb12xsansfrais: "cb12xsansfrais";
+	readonly cb2x: "cb2x";
+	readonly cb3x: "cb3x";
+	readonly cb3xsansfrais: "cb3xsansfrais";
+	readonly cb4x: "cb4x";
+	readonly cb4xsansfrais: "cb4xsansfrais";
+	readonly "3x": "3x";
+	readonly "6x": "6x";
+	readonly "9x": "9x";
+	readonly "12x": "12x";
+	readonly comptant: "comptant";
+	readonly creditcard: "creditcard";
+	readonly giftcard: "giftcard";
+	readonly googlepay: "googlepay";
+	readonly ideal: "ideal";
+	readonly installments: "installments";
+	readonly instantpayment: "instantpayment";
+	readonly invoice: "invoice";
+	readonly loan: "loan";
+	readonly maxxing: "maxxing";
+	readonly mbway: "mbway";
+	readonly multibanco: "multibanco";
+	readonly paybylink: "paybylink";
+	readonly paylater: "paylater";
+	readonly paypal: "paypal";
+	readonly revolving: "revolving";
+	readonly sepa: "sepa";
+	readonly sdd: "sdd";
+	readonly sepainstant: "sepainstant";
+	readonly separecurrent: "separecurrent";
+	readonly sepasingle: "sepasingle";
+	readonly slimcollect: "slimcollect";
+	readonly smart_transfer: "smart_transfer";
+	readonly twint: "twint";
+	readonly voucher: "voucher";
+	readonly wallet: "wallet";
+	readonly "cb3x-paybylink": "cb3x-paybylink";
+	readonly "cb4x-paybylink": "cb4x-paybylink";
+	readonly xpay: "xpay";
 };
 export type Method = (typeof Methods)[keyof typeof Methods];
 declare const VaultVendors: {
-  readonly pci_proxy: "pci_proxy";
-  readonly purse: "purse";
+	readonly pci_proxy: "pci_proxy";
+	readonly purse: "purse";
 };
 export type VaultVendor = keyof typeof VaultVendors;
 declare const CardSchemes: {
-  readonly CARTE_BANCAIRE: "CARTE_BANCAIRE";
-  readonly VISA: "VISA";
-  readonly MASTERCARD: "MASTERCARD";
-  readonly AMERICAN_EXPRESS: "AMERICAN_EXPRESS";
-  readonly MAESTRO: "MAESTRO";
-  readonly DINERS_CLUB: "DINERS_CLUB";
-  readonly DISCOVER: "DISCOVER";
-  readonly UNIONPAY: "UNIONPAY";
-  readonly JCB: "JCB";
-  readonly ONEY: "ONEY";
-  readonly OTHER: "OTHER";
+	readonly CARTE_BANCAIRE: "CARTE_BANCAIRE";
+	readonly VISA: "VISA";
+	readonly MASTERCARD: "MASTERCARD";
+	readonly AMERICAN_EXPRESS: "AMERICAN_EXPRESS";
+	readonly MAESTRO: "MAESTRO";
+	readonly DINERS_CLUB: "DINERS_CLUB";
+	readonly DISCOVER: "DISCOVER";
+	readonly UNIONPAY: "UNIONPAY";
+	readonly JCB: "JCB";
+	readonly ONEY: "ONEY";
+	readonly OTHER: "OTHER";
 };
 export type CardScheme = (typeof CardSchemes)[keyof typeof CardSchemes];
 export type IntegratedToken = {
-  id: string;
-  value: string;
-  uniqueness_token: string;
-  expiration_date: string;
-  owner_reference: string;
-  merchant: string;
-  favorite: boolean;
-  pin_code?: string;
-  description: {
-    brand_name?: string;
-    display_token?: string;
-    holder_name?: string;
-    masked_pan?: string;
-  };
-  payment_id: {
-    origin: string;
-    partner: Partner;
-    method?: Method;
-  };
-  name?: string;
-  source?: "MERCHANT" | "SHARED_WALLET";
-  savable_to_shared_wallet?: boolean;
+	id: string;
+	value: string;
+	uniqueness_token: string;
+	expiration_date: string;
+	owner_reference: string;
+	merchant: string;
+	favorite: boolean;
+	pin_code?: string;
+	description: {
+		brand_name?: string;
+		display_token?: string;
+		holder_name?: string;
+		masked_pan?: string;
+	};
+	payment_id: {
+		origin: string;
+		partner: Partner;
+		method?: Method;
+	};
+	name?: string;
+	source?: "MERCHANT" | "SHARED_WALLET";
+	savable_to_shared_wallet?: boolean;
 };
 export interface MethodConfiguration {
-  stable: boolean;
-  template: string;
-  labels: string[];
-  position: number;
-  vault?: {
-    supported_brands: CardScheme[];
-    token_scope: string;
-    vendor: VaultVendor | "none";
-    external_three_ds_enabled?: boolean;
-  };
-  settings: {
-    registration_mode?: string;
-    save_token?: boolean;
-    direct_debit?: boolean;
-    payment_min_amount?: number;
-    payment_max_amount?: number;
-    usage_per_session_limit?: number;
-    merchant_specifics?: {
-      integration_mode?: "redirection" | "popup";
-    };
-  };
+	stable: boolean;
+	template: string;
+	labels: string[];
+	position: number;
+	vault?: {
+		supported_brands: CardScheme[];
+		token_scope: string;
+		vendor: VaultVendor | "none";
+		external_three_ds_enabled?: boolean;
+	};
+	settings: {
+		registration_mode?: string;
+		save_token?: boolean;
+		direct_debit?: boolean;
+		payment_min_amount?: number;
+		payment_max_amount?: number;
+		usage_per_session_limit?: number;
+		merchant_specifics?: {
+			integration_mode?: "redirection" | "popup";
+		};
+	};
 }
 export type LegacyPaymentSession = {
-  id: string;
-  amount?: number;
-  information_request?: boolean;
-  redirection?: string;
-  expiration_date: string;
-  success?: string;
-  failure?: string;
-  currency_code: string;
-  protocols: {
-    [key in Partner]?: {
-      [key in Method]?: {
-        configurations: MethodConfiguration;
-        integrated_tokens?: IntegratedToken[];
-      };
-    };
-  };
-  vault?: SessionVault;
-  wallet?: {
-    shared_wallet_user?: boolean;
-  };
+	id: string;
+	amount?: number;
+	information_request?: boolean;
+	redirection?: string;
+	expiration_date: string;
+	success?: string;
+	failure?: string;
+	currency_code: string;
+	protocols: {
+		[key in Partner]?: {
+			[key in Method]?: {
+				configurations: MethodConfiguration;
+				integrated_tokens?: IntegratedToken[];
+			};
+		};
+	};
+	vault?: SessionVault;
+	wallet?: {
+		shared_wallet_user?: boolean;
+	};
 };
 export type SessionVault = {
-  vendor_front_data: {
-    purse?: {
-      tenant_id: string;
-    };
-    pci_proxy: {
-      merchant_id: string;
-    };
-  };
+	vendor_front_data: {
+		purse?: {
+			tenant_id: string;
+		};
+		pci_proxy: {
+			merchant_id: string;
+		};
+	};
 };
 export type OrchestrationPaymentSession = string;
 export type OnePayWalletSession = {
-  expiration_date: string;
-  session_id: string;
-  owner_reference: string;
-  merchant: string;
+	expiration_date: string;
+	session_id: string;
+	owner_reference: string;
+	merchant: string;
 };
 declare const PurseErrors: {
-  readonly SESSION_MALFORMED: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly WIDGET_DATA_MALFORMED: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly SESSION_NOT_SET_YET: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly SESSION_EXPIRED: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly SESSION_ALREADY_SUBMITTED_ERROR: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly API_404: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly API_ROOT_IS_MISSING: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly PAYMENT_METHOD_NOT_FOUND_IN_SESSION: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly PAYMENT_TOKEN_NOT_FOUND_IN_SESSION: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly METHOD_IS_NOT_SIMULABLE: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly INVALID_LOAN_SIMULATION: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly MEAN_OF_PAYMENT_CANT_BE_REGISTERED: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly INVALID_TAKE_AMOUNT: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly TOKEN_NOT_REGISTERABLE: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly TOKEN_NOT_REGISTERED: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly TOKEN_NAME_EXISTS: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly MISSING_TOKEN: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly MISSING_WALLET_SESSION: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly INVALID_TOKEN_NAME: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly FAILED_TO_DELETE_ALL_TOKENS: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly FAILED_TO_ADD_TOKEN: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly SECONDARY_METHOD_REQUIRED_CVV: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly SECONDARY_METHOD_WRONG_PAN_FORMAT: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly SECONDARY_METHOD_WRONG_CVV_FORMAT: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly SECONDARY_METHOD_TAKE_POLICY_VIOLATED: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly MISSING_SESSION: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly USAGE_LIMIT_ERROR: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
+	readonly SESSION_MALFORMED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly WIDGET_DATA_MALFORMED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SESSION_NOT_SET_YET: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SESSION_EXPIRED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SESSION_ALREADY_SUBMITTED_ERROR: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly API_404: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly API_ROOT_IS_MISSING: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly PAYMENT_METHOD_NOT_FOUND_IN_SESSION: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly PAYMENT_TOKEN_NOT_FOUND_IN_SESSION: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly METHOD_IS_NOT_SIMULABLE: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly INVALID_LOAN_SIMULATION: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly MEAN_OF_PAYMENT_CANT_BE_REGISTERED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly INVALID_TAKE_AMOUNT: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly TOKEN_NOT_REGISTERABLE: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly TOKEN_NOT_REGISTERED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly TOKEN_NAME_EXISTS: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly MISSING_TOKEN: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly MISSING_WALLET_SESSION: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly INVALID_TOKEN_NAME: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly FAILED_TO_DELETE_ALL_TOKENS: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly FAILED_TO_ADD_TOKEN: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SECONDARY_METHOD_REQUIRED_CVV: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SECONDARY_METHOD_WRONG_PAN_FORMAT: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SECONDARY_METHOD_WRONG_CVV_FORMAT: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SECONDARY_METHOD_TAKE_POLICY_VIOLATED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly MISSING_SESSION: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly USAGE_LIMIT_ERROR: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
 };
 export type PurseErrorCodes = keyof typeof PurseErrors;
 export type JsonSerializable = string | number | boolean | null | {
-  [key: string]: JsonSerializable | undefined;
+	[key: string]: JsonSerializable | undefined;
 } | JsonSerializable[];
 declare class PurseError extends Error {
-  readonly code: PurseErrorCodes;
-  readonly documentationLink: string;
-  readonly additionalPayload?: JsonSerializable | Error;
-  constructor(error: (typeof PurseErrors)[PurseErrorCodes], additionalPayload?: JsonSerializable | Error);
+	readonly code: PurseErrorCodes;
+	readonly documentationLink: string;
+	readonly additionalPayload?: JsonSerializable | Error;
+	constructor(error: (typeof PurseErrors)[PurseErrorCodes], additionalPayload?: JsonSerializable | Error);
 }
 declare const StatusCodes: {
-  readonly SUCCEEDED: "SUCCEEDED";
-  readonly FAILED: "FAILED";
-  readonly CARD_EXPIRED: "CARD_EXPIRED";
-  readonly UNKNOWN: "UNKNOWN";
-  readonly FORCED: "FORCED";
-  readonly AMOUNT_EXCEEDED: "AMOUNT_EXCEEDED";
-  readonly BLOCKED_BY_CUSTOMER: "BLOCKED_BY_CUSTOMER";
-  readonly BLOCKED_CARD: "BLOCKED_CARD";
-  readonly DUPLICATED_TRANSACTION: "DUPLICATED_TRANSACTION";
-  readonly EXPIRED_AUTHORIZATION: "EXPIRED_AUTHORIZATION";
-  readonly INSUFFICIENT_FUNDS: "INSUFFICIENT_FUNDS";
-  readonly REFUND_REQUESTED_TOO_LATE: "REFUND_REQUESTED_TOO_LATE";
-  readonly REJECTED_BANK: "REJECTED_BANK";
-  readonly REJECTED_BY_RISK_CHECKS: "REJECTED_BY_RISK_CHECKS";
-  readonly TECHNICAL_ISSUE_TO_CONTACT_PARTNER: "TECHNICAL_ISSUE_TO_CONTACT_PARTNER";
-  readonly TRANSACTION_NOT_SUPPORTED_BY_CARD: "TRANSACTION_NOT_SUPPORTED_BY_CARD";
-  readonly TRANSACTION_NOT_SUPPORTED_BY_MERCHANT_ACCOUNT: "TRANSACTION_NOT_SUPPORTED_BY_MERCHANT_ACCOUNT";
-  readonly UNKNOWN_CARD: "UNKNOWN_CARD";
-  readonly WAITING_PARTNER_RESPONSE: "WAITING_PARTNER_RESPONSE";
-  readonly WAITING_ONEPAY_ACTION: "WAITING_ONEPAY_ACTION";
-  readonly CARD_ALREADY_ACTIVE: "CARD_ALREADY_ACTIVE";
-  readonly TECHNICAL_ISSUE_DURING_AUTHENTICATION_CHECK: "TECHNICAL_ISSUE_DURING_AUTHENTICATION_CHECK";
-  readonly WRONG_CARD_DATA: "WRONG_CARD_DATA";
-  readonly BAD_REQUEST: "BAD_REQUEST";
-  readonly CARD_IS_NOT_ACTIVE: "CARD_IS_NOT_ACTIVE";
-  readonly ABORTED_BY_CUSTOMER: "ABORTED_BY_CUSTOMER";
-  readonly UNCERTAIN: "UNCERTAIN";
+	readonly SUCCEEDED: "SUCCEEDED";
+	readonly FAILED: "FAILED";
+	readonly CARD_EXPIRED: "CARD_EXPIRED";
+	readonly UNKNOWN: "UNKNOWN";
+	readonly FORCED: "FORCED";
+	readonly AMOUNT_EXCEEDED: "AMOUNT_EXCEEDED";
+	readonly BLOCKED_BY_CUSTOMER: "BLOCKED_BY_CUSTOMER";
+	readonly BLOCKED_CARD: "BLOCKED_CARD";
+	readonly DUPLICATED_TRANSACTION: "DUPLICATED_TRANSACTION";
+	readonly EXPIRED_AUTHORIZATION: "EXPIRED_AUTHORIZATION";
+	readonly INSUFFICIENT_FUNDS: "INSUFFICIENT_FUNDS";
+	readonly REFUND_REQUESTED_TOO_LATE: "REFUND_REQUESTED_TOO_LATE";
+	readonly REJECTED_BANK: "REJECTED_BANK";
+	readonly REJECTED_BY_RISK_CHECKS: "REJECTED_BY_RISK_CHECKS";
+	readonly TECHNICAL_ISSUE_TO_CONTACT_PARTNER: "TECHNICAL_ISSUE_TO_CONTACT_PARTNER";
+	readonly TRANSACTION_NOT_SUPPORTED_BY_CARD: "TRANSACTION_NOT_SUPPORTED_BY_CARD";
+	readonly TRANSACTION_NOT_SUPPORTED_BY_MERCHANT_ACCOUNT: "TRANSACTION_NOT_SUPPORTED_BY_MERCHANT_ACCOUNT";
+	readonly UNKNOWN_CARD: "UNKNOWN_CARD";
+	readonly WAITING_PARTNER_RESPONSE: "WAITING_PARTNER_RESPONSE";
+	readonly WAITING_ONEPAY_ACTION: "WAITING_ONEPAY_ACTION";
+	readonly CARD_ALREADY_ACTIVE: "CARD_ALREADY_ACTIVE";
+	readonly TECHNICAL_ISSUE_DURING_AUTHENTICATION_CHECK: "TECHNICAL_ISSUE_DURING_AUTHENTICATION_CHECK";
+	readonly WRONG_CARD_DATA: "WRONG_CARD_DATA";
+	readonly BAD_REQUEST: "BAD_REQUEST";
+	readonly CARD_IS_NOT_ACTIVE: "CARD_IS_NOT_ACTIVE";
+	readonly ABORTED_BY_CUSTOMER: "ABORTED_BY_CUSTOMER";
+	readonly UNCERTAIN: "UNCERTAIN";
 };
 export type StatusCode = (typeof StatusCodes)[keyof typeof StatusCodes];
 declare const StatusStates: {
-  readonly SUCCESS: "SUCCESS";
-  readonly ERROR: "ERROR";
-  readonly UNCERTAIN: "UNCERTAIN";
-  readonly FAILED: "FAILED";
-  readonly WAITING: "WAITING";
+	readonly SUCCESS: "SUCCESS";
+	readonly ERROR: "ERROR";
+	readonly UNCERTAIN: "UNCERTAIN";
+	readonly FAILED: "FAILED";
+	readonly WAITING: "WAITING";
 };
 export type StatusState = (typeof StatusStates)[keyof typeof StatusStates];
 declare const TransactionActions: {
-  readonly INIT: "INIT";
-  readonly APPLY: "APPLY";
-  readonly VOID: "VOID";
-  readonly CAPTURE: "CAPTURE";
-  readonly REFUND: "REFUND";
-  readonly AUTHORIZE: "AUTHORIZE";
+	readonly INIT: "INIT";
+	readonly APPLY: "APPLY";
+	readonly VOID: "VOID";
+	readonly CAPTURE: "CAPTURE";
+	readonly REFUND: "REFUND";
+	readonly AUTHORIZE: "AUTHORIZE";
 };
 export type TransactionAction = (typeof TransactionActions)[keyof typeof TransactionActions];
 export type ActionStatus = {
-  action: TransactionAction;
-  state: StatusState;
-  description?: string;
-  code: StatusCode;
+	action: TransactionAction;
+	state: StatusState;
+	description?: string;
+	code: StatusCode;
 };
 export interface ItemPayload {
-  method: Method;
-  partner: Partner;
-  amount: number;
-  payment_data: any;
-  partner_data: any;
-  order?: any;
-  payment_preferences: any;
-  step_id?: number | null;
+	method: Method;
+	partner: Partner;
+	amount: number;
+	payment_data: any;
+	partner_data: any;
+	order?: any;
+	payment_preferences: any;
+	step_id?: number | null;
 }
 export type ValidateItemPayload = ItemPayload;
 export type InitData<PluginResult = Record<never, never>> = {
-  id: string;
-  session_id?: string;
-  date: string;
-  method: string;
-  partner: string;
-  step_id: number;
-  status: ActionStatus;
-  plugin_result: PluginResult & {
-    status?: string;
-    amount?: number;
-  };
+	id: string;
+	session_id?: string;
+	date: string;
+	method: string;
+	partner: string;
+	step_id: number;
+	status: ActionStatus;
+	plugin_result: PluginResult & {
+		status?: string;
+		amount?: number;
+	};
 };
 export type InitXPaysData<Logs = Record<never, never>> = InitData<Logs> & {
-  vault_vendor_token_id: string;
+	vault_vendor_token_id: string;
 };
 export type Init3DSData<Logs = Record<never, never>> = InitData<Logs>;
 export type ItemValidationData<Result = Record<never, never>> = {
-  id: string;
-  date: string;
-  method: string;
-  partner: string;
-  session_id: string;
-  transaction_id: string;
-  plugin_result: Result;
-  status: {
-    action: TransactionAction;
-    state: StatusState;
-    description?: string;
-    code: StatusCode;
-  };
+	id: string;
+	date: string;
+	method: string;
+	partner: string;
+	session_id: string;
+	transaction_id: string;
+	plugin_result: Result;
+	status: {
+		action: TransactionAction;
+		state: StatusState;
+		description?: string;
+		code: StatusCode;
+	};
 };
 export interface SecondaryPluginInitPayload {
-  partner: Partner;
-  method: Method;
-  amount: number;
-  order: any;
-  partner_data: any;
-  payment_preferences: any;
-  payment_data: {
-    card?: {
-      csc?: string;
-      number?: string;
-    };
-    voucher_number?: string;
-  };
+	partner: Partner;
+	method: Method;
+	amount: number;
+	order: any;
+	partner_data: any;
+	payment_preferences: any;
+	payment_data: {
+		card?: {
+			csc?: string;
+			number?: string;
+		};
+		voucher_number?: string;
+	};
 }
 export type ValidationResultData<PluginLogs = void> = {
-  results: ItemValidationData<PluginLogs extends void ? Record<never, never> : {
-    logs: PluginLogs;
-  }>[];
-  redirection: {
-    should_submit_widget?: boolean;
-    url?: string;
-    form?: string;
-    name?: string;
-  };
-  global_status: StatusState;
+	results: ItemValidationData<PluginLogs extends void ? Record<never, never> : {
+		logs: PluginLogs;
+	}>[];
+	redirection: {
+		should_submit_widget?: boolean;
+		url?: string;
+		form?: string;
+		name?: string;
+	};
+	global_status: StatusState;
 };
 export type APIEnv = Environment & {
-  paymentAPIRoot?: string;
-  datetimeAPIRoot?: string;
-  walletAPIRoot?: string;
+	paymentAPIRoot?: string;
+	datetimeAPIRoot?: string;
+	walletAPIRoot?: string;
 };
 export interface LoanProduct {
-  amount: number;
-  currency_code: string;
+	amount: number;
+	currency_code: string;
 }
 export interface LoanSimulation {
-  /** first installment amount **/
-  initialInstallmentAmount: number;
-  /** last installment amount **/
-  finalInstallmentAmount: number;
-  /** Cost of recurrent installments **/
-  installmentAmount: number;
-  /** Cost of the loan (not including amount) **/
-  totalCost: number;
-  /** Amount of the loan (including cost) **/
-  totalAmount: number;
-  /** Number of installments **/
-  installmentCount: number;
-  /** Some loan simulation will provide a legal text to display next to the offer **/
-  legalText?: string;
-  /** Annual Percentage Rate Cost **/
-  aprc?: number;
+	/** first installment amount **/
+	initialInstallmentAmount: number;
+	/** last installment amount **/
+	finalInstallmentAmount: number;
+	/** Cost of recurrent installments **/
+	installmentAmount: number;
+	/** Cost of the loan (not including amount) **/
+	totalCost: number;
+	/** Amount of the loan (including cost) **/
+	totalAmount: number;
+	/** Number of installments **/
+	installmentCount: number;
+	/** Some loan simulation will provide a legal text to display next to the offer **/
+	legalText?: string;
+	/** Annual Percentage Rate Cost **/
+	aprc?: number;
 }
 export type WalletItem = {
-  id: string;
-  name?: string;
+	id: string;
+	name?: string;
 };
 declare class ApiError extends PurseError {
-  readonly path: string;
-  readonly error: string;
-  constructor(error: (typeof PurseErrors)[PurseErrorCodes], path?: string, errorCode?: string, message?: string);
+	readonly path: string;
+	readonly error: string;
+	responseHeaders?: Record<string, string | null>;
+	constructor(error: (typeof PurseErrors)[PurseErrorCodes], path?: string, errorCode?: string, message?: string);
 }
 export interface MonitoringApiEventMessage<Event> {
-  instanceId?: string;
-  entityId?: string;
-  paymentSessionId?: string;
-  version?: string;
-  env?: EnvironmentTarget;
-  event: Event;
+	instanceId?: string;
+	entityId?: string;
+	paymentSessionId?: string;
+	version?: string;
+	env?: EnvironmentTarget;
+	event: Event;
 }
 export interface PaymentAPI {
-  env: Pick<APIEnv, "apiKey" | "paymentAPIRoot" | "entityId" | "target">;
-  setSessionId(id: string): void;
-  init<Logs = Record<never, never>>(data: ItemPayload): Promise<InitData<Logs>>;
-  initXPays<Logs = Record<never, never>>(data: ItemPayload): Promise<InitXPaysData<Logs>>;
-  init3DS<Logs = Record<never, never>>(data: ItemPayload): Promise<Init3DSData<Logs>>;
-  validate(data: ValidateItemPayload[]): Promise<ValidationResultData>;
-  getSimulation(partner: string, method: string, body: LoanProduct): Promise<LoanSimulation>;
-  getSimulationMulti(partner: string, method: string, body: LoanProduct): Promise<Array<LoanSimulation>>;
+	env: Pick<APIEnv, "apiKey" | "paymentAPIRoot" | "entityId" | "target">;
+	setSessionId(id: string): void;
+	init<Logs = Record<never, never>>(data: ItemPayload): Promise<InitData<Logs>>;
+	initXPays<Logs = Record<never, never>>(data: ItemPayload): Promise<InitXPaysData<Logs>>;
+	init3DS<Logs = Record<never, never>>(data: ItemPayload): Promise<Init3DSData<Logs>>;
+	validate(data: ValidateItemPayload[]): Promise<ValidationResultData>;
+	getSimulation(partner: string, method: string, body: LoanProduct): Promise<LoanSimulation>;
+	getSimulationMulti(partner: string, method: string, body: LoanProduct): Promise<Array<LoanSimulation>>;
 }
 export interface WalletAPI {
-  setSession(session: {
-    id: string;
-  }): void;
-  getTokens(): Promise<WalletItem[]>;
-  deleteToken(data: {
-    id: string;
-  }): Promise<void>;
-  editTokenName(data: {
-    id: string;
-    name: string;
-    reason?: string;
-  }): Promise<void>;
-  deleteAllTokens(): Promise<void>;
+	setSession(session: {
+		id: string;
+	}): void;
+	getTokens(): Promise<WalletItem[]>;
+	deleteToken(data: {
+		id: string;
+	}): Promise<void>;
+	editTokenName(data: {
+		id: string;
+		name: string;
+		reason?: string;
+	}): Promise<void>;
+	deleteAllTokens(): Promise<void>;
 }
 export interface MonitoringAPI<E> {
-  getApiKey(): string;
-  patchExtrasData(E: Pick<MonitoringApiEventMessage<E>, "instanceId" | "entityId" | "paymentSessionId" | "version">): void;
-  sendLogs(E: E[]): void;
+	getApiKey(): string;
+	patchExtrasData(E: Pick<MonitoringApiEventMessage<E>, "instanceId" | "entityId" | "paymentSessionId" | "version">): void;
+	sendLogs(E: E[]): void;
 }
 export type APIPaths = {
-  payment?: string;
-  wallet?: string;
-  logs?: string;
-  datetime?: string;
+	payment?: string;
+	wallet?: string;
+	logs?: string;
+	datetime?: string;
 };
 declare class FetchMonitoringAPI<Event> implements MonitoringAPI<Event> {
-  private readonly root;
-  private readonly env;
-  private readonly apiKey;
-  private extras;
-  constructor(env: EnvironmentTarget, root: string, apiKey: string);
-  getApiKey(): string;
-  patchExtrasData: (payload: Partial<Pick<MonitoringApiEventMessage<Event>, "instanceId" | "entityId" | "paymentSessionId" | "version">>) => void;
-  sendLogs: (events: Event[]) => void;
+	private readonly root;
+	private readonly env;
+	private readonly apiKey;
+	private extras;
+	constructor(env: EnvironmentTarget, root: string, apiKey: string);
+	getApiKey(): string;
+	patchExtrasData: (payload: Partial<Pick<MonitoringApiEventMessage<Event>, "instanceId" | "entityId" | "paymentSessionId" | "version">>) => void;
+	sendLogs: (events: Event[]) => void;
 }
 export type Subscriber<T> = (value: T) => void;
 export type Unsubscriber = () => void;
@@ -580,412 +581,430 @@ export type StoreUnsubscriber = () => void;
 export type StoreUpdater<T> = (value: T) => T;
 export type StoreInvalidator<T> = (value?: T) => void;
 export interface WithGetter<T> {
-  get value(): T;
-  getValue(): T;
+	get value(): T;
+	getValue(): T;
 }
 export interface Subscribable<T> {
-  subscribe(run: StoreSubscriber<T>, invalidate?: StoreInvalidator<T>): StoreUnsubscriber;
+	subscribe(run: StoreSubscriber<T>, invalidate?: StoreInvalidator<T>): StoreUnsubscriber;
 }
 export type Stores = Subscribable<any> | [
-  Subscribable<any>,
-  ...Array<Subscribable<any>>
+	Subscribable<any>,
+	...Array<Subscribable<any>>
 ] | Array<Subscribable<any>>;
 export type Readable<T> = WithGetter<T> & Subscribable<T>;
 export type StoresValues<T> = T extends Subscribable<infer U> ? U : {
-  [K in keyof T]: T[K] extends Subscribable<infer U> ? U : never;
+	[K in keyof T]: T[K] extends Subscribable<infer U> ? U : never;
 };
 declare class Derived<T, S extends Stores = Stores> implements Subscribable<T>, WithGetter<T> {
-  store: Subscribable<T>;
-  constructor(stores: S, updater: (values: StoresValues<S>) => T, defaultValue?: T);
-  get value(): T;
-  getValue(): T;
-  subscribe(run: StoreSubscriber<T>, invalidate?: any): Unsubscriber;
+	store: Subscribable<T>;
+	constructor(stores: S, updater: (values: StoresValues<S>) => T, defaultValue?: T);
+	get value(): T;
+	getValue(): T;
+	subscribe(run: StoreSubscriber<T>, invalidate?: any): Unsubscriber;
 }
 export interface SvelteWritable<T> extends Subscribable<T> {
-  /**
-   * Set value and inform subscribers.
-   * @param value to set
-   */
-  set(value: T): void;
-  /**
-   * Update value using callback and inform subscribers.
-   * @param updater callback
-   */
-  update(updater: StoreUpdater<T>): void;
+	/**
+	 * Set value and inform subscribers.
+	 * @param value to set
+	 */
+	set(value: T): void;
+	/**
+	 * Update value using callback and inform subscribers.
+	 * @param updater callback
+	 */
+	update(updater: StoreUpdater<T>): void;
 }
 declare class Writable<T> implements Subscribable<T>, WithGetter<T>, SvelteWritable<T> {
-  store: SvelteWritable<T>;
-  constructor(defaultValue?: T);
-  get value(): T;
-  set value(value: T);
-  getValue(): T;
-  subscribe(listener: Subscriber<T>, invalidate?: any): Unsubscriber;
-  set(value: T): void;
-  update(updater: StoreUpdater<T>): this;
-  patchStore(patch: any): this;
+	store: SvelteWritable<T>;
+	constructor(defaultValue?: T);
+	get value(): T;
+	set value(value: T);
+	getValue(): T;
+	subscribe(listener: Subscriber<T>, invalidate?: any): Unsubscriber;
+	set(value: T): void;
+	update(updater: StoreUpdater<T>): this;
+	patchStore(patch: any): this;
 }
 declare const EventType: {
-  readonly DEBUG: "DEBUG";
-  readonly INFO: "INFO";
-  readonly ERROR: "ERROR";
-  readonly SUCCESS: "SUCCESS";
-  readonly WARNING: "WARNING";
-  readonly PERFORMANCE: "PERFORMANCE";
-  readonly UI: "UI";
-  readonly NETWORK: "NETWORK";
+	readonly DEBUG: "DEBUG";
+	readonly INFO: "INFO";
+	readonly ERROR: "ERROR";
+	readonly SUCCESS: "SUCCESS";
+	readonly WARNING: "WARNING";
+	readonly PERFORMANCE: "PERFORMANCE";
+	readonly UI: "UI";
+	readonly NETWORK: "NETWORK";
 };
 declare class Event$1<Payload = any, Code = string> {
-  code: Code;
-  dateString: string;
-  clientDate: string | null;
-  type: keyof typeof EventType;
-  payload?: Payload;
-  constructor({ code, payload, type }: {
-    code: Code;
-    type?: keyof typeof EventType;
-    payload?: Payload;
-  });
+	code: Code;
+	dateString: string;
+	clientDate: string | null;
+	type: keyof typeof EventType;
+	payload?: Payload;
+	constructor({ code, payload, type }: {
+		code: Code;
+		type?: keyof typeof EventType;
+		payload?: Payload;
+	});
 }
 type EventListener$1<EventType extends Event$1> = (event: EventType) => void;
 export type EventListenerTerminator = () => void;
 export type EventBusScopes = {
-  [key: string]: string[];
+	[key: string]: string[];
 };
 declare class EventBus<EventType extends Event$1 = Event$1> {
-  listeners: {
-    [key: string]: EventListener$1<EventType>[];
-  };
-  history: EventType[];
-  queue: EventType[];
-  scopes: EventBusScopes;
-  private _buses;
-  constructor({ scopes }: {
-    scopes: EventBusScopes;
-  });
-  subscribe(listener: EventListener$1<EventType>, scopes?: string[]): EventListenerTerminator;
-  unsubscribe(listener: EventListener$1<EventType>, scopes?: string[]): void;
-  post(event: EventType): void;
-  forwardToBus(bus: EventBus): () => void;
-  addScopes(scopes: EventBusScopes): void;
-  getReport(): {
-    history: EventType[];
-  };
-  private applyServerTimeOffset;
-  _sort(a: Event$1<any>, b: Event$1<any>): number;
-  _processQueue(): void;
-  _getListenersForScopes(scopes: string[]): EventListener$1<EventType>[];
-  _getScopesForCode(code: string): string[];
-  flush(): void;
+	listeners: {
+		[key: string]: EventListener$1<EventType>[];
+	};
+	history: EventType[];
+	queue: EventType[];
+	scopes: EventBusScopes;
+	private _buses;
+	constructor({ scopes }: {
+		scopes: EventBusScopes;
+	});
+	subscribe(listener: EventListener$1<EventType>, scopes?: string[]): EventListenerTerminator;
+	unsubscribe(listener: EventListener$1<EventType>, scopes?: string[]): void;
+	post(event: EventType): void;
+	forwardToBus(bus: EventBus): () => void;
+	addScopes(scopes: EventBusScopes): void;
+	getReport(): {
+		history: EventType[];
+	};
+	private applyServerTimeOffset;
+	_sort(a: Event$1<any>, b: Event$1<any>): number;
+	_processQueue(): void;
+	_getListenersForScopes(scopes: string[]): EventListener$1<EventType>[];
+	_getScopesForCode(code: string): string[];
+	flush(): void;
 }
 export declare type ButtonOptions = google.payments.api.ButtonOptions;
 export declare interface CreditCardValidateUiResult {
-  cardNumber: string | null;
-  cvv: string | null;
-  expiryDate: string | null;
-  holderName: string | null;
+	cardNumber: string | null;
+	cvv: string | null;
+	expiryDate: string | null;
+	holderName: string | null;
 }
 export declare type DeepPartial<T> = T extends any[] ? T : {
-  [P in keyof T]?: DeepPartial<T[P]>;
+	[P in keyof T]?: DeepPartial<T[P]>;
 };
 export declare type ErrorPayload = {
-  reason?: string;
+	reason?: string;
 } & Record<string, any>;
 export declare type EventCode = (typeof Events)[keyof typeof Events]["code"];
 declare const Events: {
-  readonly clientError: {
-    readonly code: "clientError";
-    readonly topics: readonly [
-      "lethal"
-    ];
-  };
-  readonly clientNotFound: {
-    readonly code: "clientNotFound";
-    readonly topics: readonly [
-      "lethal"
-    ];
-  };
-  readonly cantDownloadPluginSources: {
-    readonly code: "cantDownloadPluginSources";
-    readonly topics: readonly [
-      "lethal"
-    ];
-  };
-  readonly clientNotProperlyDestroyed: {
-    readonly code: "clientNotProperlyDestroyed";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly disconnected: {
-    readonly code: "disconnected";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly died: {
-    readonly code: "died";
-    readonly topics: readonly [
-      "lethal"
-    ];
-  };
-  readonly formDataChanged: {
-    readonly code: "formDataChanged";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly fulfilled: {
-    readonly code: "fulfilled";
-    readonly topics: readonly [
-      "info",
-      "fulfilled"
-    ];
-  };
-  readonly initFailed: {
-    readonly code: "initFailed";
-    readonly topics: readonly [
-      "lethal"
-    ];
-  };
-  readonly misconfigured: {
-    readonly code: "misconfigured";
-    readonly topics: readonly [
-      "lethal"
-    ];
-  };
-  readonly modalIn: {
-    readonly code: "modalIn";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly modalOut: {
-    readonly code: "modalOut";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly optionsSet: {
-    readonly code: "optionsSet";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly pluginClientDestroyed: {
-    readonly code: "pluginClientDestroyed";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly pluginExtraSourcesLoaded: {
-    readonly code: "pluginExtraSourcesLoaded";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly pluginPostValidation: {
-    readonly code: "pluginPostValidation";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly pluginPreValidation: {
-    readonly code: "pluginPreValidation";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly pluginSessionSet: {
-    readonly code: "pluginSessionSet";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly pluginSourcesLoaded: {
-    readonly code: "pluginSourcesLoaded";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly pluginIsIncompatibleWithInterface: {
-    readonly code: "pluginIsIncompatibleWithInterface";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly pluginIsIncompatibleWithClient: {
-    readonly code: "pluginIsIncompatibleWithClient";
-    readonly topics: readonly [
-      "lethal"
-    ];
-  };
-  readonly ready: {
-    readonly code: "ready";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly redirect: {
-    readonly code: "redirect";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly requestValidate: {
-    readonly code: "requestValidate";
-    readonly topics: readonly [
-      "requestValidate"
-    ];
-  };
-  readonly sourceListLoaded: {
-    readonly code: "sourceListLoaded";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly sourceLoaded: {
-    readonly code: "sourceLoaded";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly other: {
-    readonly code: "other";
-    readonly topics: readonly [
-      "info"
-    ];
-  };
-  readonly methodSelected: {
-    readonly code: "methodSelected";
-    readonly topics: readonly [
-      "info",
-      "methodSelected"
-    ];
-  };
-  readonly methodUnselected: {
-    readonly code: "methodUnselected";
-    readonly topics: readonly [
-      "info",
-      "methodUnselected"
-    ];
-  };
-  readonly partnerError: {
-    readonly code: "partnerError";
-    readonly topics: readonly [
-      "error",
-      "partnerError"
-    ];
-  };
-  readonly change: {
-    readonly code: "change";
-    readonly topics: readonly [
-      "hostedFields"
-    ];
-  };
-  readonly focus: {
-    readonly code: "focus";
-    readonly topics: readonly [
-      "hostedFields"
-    ];
-  };
-  readonly blur: {
-    readonly code: "blur";
-    readonly topics: readonly [
-      "hostedFields"
-    ];
-  };
-  readonly keyup: {
-    readonly code: "keyup";
-    readonly topics: readonly [
-      "hostedFields"
-    ];
-  };
-  readonly keydown: {
-    readonly code: "keydown";
-    readonly topics: readonly [
-      "hostedFields"
-    ];
-  };
-  readonly brandDetected: {
-    readonly code: "brandDetected";
-    readonly topics: readonly [
-      "hostedFields"
-    ];
-  };
-  readonly supportedBrandsChanged: {
-    readonly code: "supportedBrandsChanged";
-    readonly topics: readonly [
-      "hostedFields"
-    ];
-  };
-  readonly selectedBrandChanged: {
-    readonly code: "selectedBrandChanged";
-    readonly topics: readonly [
-      "hostedFields"
-    ];
-  };
-  readonly error: {
-    readonly code: "error";
-    readonly topics: readonly [
-      "lethal"
-    ];
-  };
-  readonly apiError: {
-    readonly code: "apiError";
-    readonly topics: readonly [
-      "lethal"
-    ];
-  };
-  readonly endOfSession: {
-    readonly code: "endOfSession";
-    readonly topics: readonly [
-      "endOfSession"
-    ];
-  };
+	readonly clientError: {
+		readonly code: "clientError";
+		readonly topics: readonly [
+			"lethal"
+		];
+	};
+	readonly clientNotFound: {
+		readonly code: "clientNotFound";
+		readonly topics: readonly [
+			"lethal"
+		];
+	};
+	readonly cantDownloadPluginSources: {
+		readonly code: "cantDownloadPluginSources";
+		readonly topics: readonly [
+			"lethal"
+		];
+	};
+	readonly clientNotProperlyDestroyed: {
+		readonly code: "clientNotProperlyDestroyed";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly disconnected: {
+		readonly code: "disconnected";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly died: {
+		readonly code: "died";
+		readonly topics: readonly [
+			"lethal"
+		];
+	};
+	readonly formDataChanged: {
+		readonly code: "formDataChanged";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly fulfilled: {
+		readonly code: "fulfilled";
+		readonly topics: readonly [
+			"info",
+			"fulfilled"
+		];
+	};
+	readonly initFailed: {
+		readonly code: "initFailed";
+		readonly topics: readonly [
+			"lethal"
+		];
+	};
+	readonly misconfigured: {
+		readonly code: "misconfigured";
+		readonly topics: readonly [
+			"lethal"
+		];
+	};
+	readonly apiCallStart: {
+		readonly code: "apiCallStart";
+		readonly topics: readonly [
+			"debug"
+		];
+	};
+	readonly apiCallEnd: {
+		readonly code: "apiCallEnd";
+		readonly topics: readonly [
+			"debug"
+		];
+	};
+	readonly cancelled: {
+		readonly code: "cancelled";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly modalIn: {
+		readonly code: "modalIn";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly modalOut: {
+		readonly code: "modalOut";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly optionsSet: {
+		readonly code: "optionsSet";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly pluginClientDestroyed: {
+		readonly code: "pluginClientDestroyed";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly pluginExtraSourcesLoaded: {
+		readonly code: "pluginExtraSourcesLoaded";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly pluginPostValidation: {
+		readonly code: "pluginPostValidation";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly pluginPreValidation: {
+		readonly code: "pluginPreValidation";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly pluginSessionSet: {
+		readonly code: "pluginSessionSet";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly pluginSourcesLoaded: {
+		readonly code: "pluginSourcesLoaded";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly pluginIsIncompatibleWithInterface: {
+		readonly code: "pluginIsIncompatibleWithInterface";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly pluginIsIncompatibleWithClient: {
+		readonly code: "pluginIsIncompatibleWithClient";
+		readonly topics: readonly [
+			"lethal"
+		];
+	};
+	readonly ready: {
+		readonly code: "ready";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly redirect: {
+		readonly code: "redirect";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly requestValidate: {
+		readonly code: "requestValidate";
+		readonly topics: readonly [
+			"requestValidate"
+		];
+	};
+	readonly sourceListLoaded: {
+		readonly code: "sourceListLoaded";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly sourceLoaded: {
+		readonly code: "sourceLoaded";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly other: {
+		readonly code: "other";
+		readonly topics: readonly [
+			"info"
+		];
+	};
+	readonly methodSelected: {
+		readonly code: "methodSelected";
+		readonly topics: readonly [
+			"info",
+			"methodSelected"
+		];
+	};
+	readonly methodUnselected: {
+		readonly code: "methodUnselected";
+		readonly topics: readonly [
+			"info",
+			"methodUnselected"
+		];
+	};
+	readonly partnerError: {
+		readonly code: "partnerError";
+		readonly topics: readonly [
+			"error",
+			"partnerError"
+		];
+	};
+	readonly change: {
+		readonly code: "change";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly focus: {
+		readonly code: "focus";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly blur: {
+		readonly code: "blur";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly keyup: {
+		readonly code: "keyup";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly keydown: {
+		readonly code: "keydown";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly brandDetected: {
+		readonly code: "brandDetected";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly supportedBrandsChanged: {
+		readonly code: "supportedBrandsChanged";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly selectedBrandChanged: {
+		readonly code: "selectedBrandChanged";
+		readonly topics: readonly [
+			"hostedFields"
+		];
+	};
+	readonly error: {
+		readonly code: "error";
+		readonly topics: readonly [
+			"lethal"
+		];
+	};
+	readonly apiError: {
+		readonly code: "apiError";
+		readonly topics: readonly [
+			"lethal"
+		];
+	};
+	readonly endOfSession: {
+		readonly code: "endOfSession";
+		readonly topics: readonly [
+			"endOfSession"
+		];
+	};
 };
 export declare type FieldValidationError = (typeof FieldValidationErrors)[keyof typeof FieldValidationErrors];
 declare const FieldValidationErrors: {
-  readonly cannotBeEmpty: "cannotBeEmpty";
-  readonly dateOutOfRange: "dateOutOfRange";
-  readonly format: "format";
-  readonly lengthOutOfRange: "lengthOutOfRange";
+	readonly cannotBeEmpty: "cannotBeEmpty";
+	readonly dateOutOfRange: "dateOutOfRange";
+	readonly format: "format";
+	readonly lengthOutOfRange: "lengthOutOfRange";
 };
 export declare type FrameName = (typeof Frames)[number];
 declare const Frames: readonly [
-  "cardNumber",
-  "cvv",
-  "expDate",
-  "holderName",
-  "brandSelector"
+	"cardNumber",
+	"cvv",
+	"expDate",
+	"holderName",
+	"brandSelector"
 ];
 export declare type GooglePayButtonOptions = Partial<Pick<ButtonOptions, "buttonColor" | "buttonType" | "buttonLocale" | "buttonRadius" | "buttonSizeMode">>;
 export declare interface HostedFieldOptions {
-  /**
-   * The ID of the container element where the iframe will be rendered.
-   */
-  target: string;
-  /**
-   * (Optional) Placeholder text for the input field.
-   */
-  placeholder?: string;
-  /**
-   * (Optional) ARIA label for accessibility.
-   */
-  ariaLabel?: string;
+	/**
+	 * The ID of the container element where the iframe will be rendered.
+	 */
+	target: string;
+	/**
+	 * (Optional) Placeholder text for the input field.
+	 */
+	placeholder?: string;
+	/**
+	 * (Optional) ARIA label for accessibility.
+	 */
+	ariaLabel?: string;
 }
 export declare type HostedFieldsEventPayload = {
-  fieldName: string;
-  length: number;
-  valid: boolean;
-  touched: boolean;
-  error: string;
+	fieldName: string;
+	length: number;
+	valid: boolean;
+	touched: boolean;
+	error: string;
 };
 export declare type HostedFieldsFormValues = {
-  cardNumber: ManagedHostedFieldValue;
-  cvv: ManagedHostedFieldValue;
-  holderName: string;
-  expDate: string;
-  brandSelector: string;
+	cardNumber: ManagedHostedFieldValue;
+	cvv: ManagedHostedFieldValue;
+	holderName: string;
+	expDate: string;
+	brandSelector: string;
 };
 export declare type HostedFieldsInputVariantCssKeys = Pick<ThemeScope<"input">, "fontSize" | "fontWeight" | "color">;
 /**
@@ -1021,30 +1040,30 @@ export declare type HostedFieldsInputVariantCssKeys = Pick<ThemeScope<"input">, 
  * ```
  */
 export declare type HostedFieldsTheme = {
-  global: {
-    /**
-     * This is used to set the font url.
-     * fontSrc is not a valid css style declaration key
-     */
-    fontSrc?: string;
-  };
-  input: Pick<ThemeScope<"input">, "fontFamily" | "fontSize" | "fontWeight" | "color" | "backgroundColor"> & {
-    ":valid"?: HostedFieldsInputVariantCssKeys;
-    ":focus"?: HostedFieldsInputVariantCssKeys;
-    ":invalid"?: HostedFieldsInputVariantCssKeys;
-    "::placeholder"?: HostedFieldsInputVariantCssKeys;
-  };
+	global: {
+		/**
+		 * This is used to set the font url.
+		 * fontSrc is not a valid css style declaration key
+		 */
+		fontSrc?: string;
+	};
+	input: Pick<ThemeScope<"input">, "fontFamily" | "fontSize" | "fontWeight" | "color" | "backgroundColor"> & {
+		":valid"?: HostedFieldsInputVariantCssKeys;
+		":focus"?: HostedFieldsInputVariantCssKeys;
+		":invalid"?: HostedFieldsInputVariantCssKeys;
+		"::placeholder"?: HostedFieldsInputVariantCssKeys;
+	};
 };
 export declare interface HostedFieldsUIOptions {
-  /**
-   * Targets and labels for the all desired fields.
-   * The 'cvv' field is required; 'cardNumber' is optional.
-   */
-  fields: {
-    [ke in Exclude<FrameName, "cvv">]?: HostedFieldOptions;
-  } & {
-    cvv: HostedFieldOptions;
-  };
+	/**
+	 * Targets and labels for the all desired fields.
+	 * The 'cvv' field is required; 'cardNumber' is optional.
+	 */
+	fields: {
+		[ke in Exclude<FrameName, "cvv">]?: HostedFieldOptions;
+	} & {
+		cvv: HostedFieldOptions;
+	};
 }
 /* Excluded from this release type: HostedFormTextKeys */
 /**
@@ -1053,145 +1072,145 @@ export declare interface HostedFieldsUIOptions {
  * the variables might not be used, it depends on the context.
  */
 export declare interface HostedFormUIOptions {
-  panPlaceholder?: string;
-  panInputLabel?: string;
-  panRequiredError?: string;
-  panFormatError?: string;
-  panCannotBeEmptyError?: string;
-  panTooltipText?: string;
-  birthdatePlaceholder?: string;
-  birthdateInputLabel?: string;
-  birthdateRequiredError?: string;
-  birthdateFormatError?: string;
-  birthdateCannotBeEmptyError?: string;
-  birthdateOutOfRangeError?: string;
-  birthdateTooltipText?: string;
-  cvvPlaceholder?: string;
-  cvvInputLabel?: string;
-  consentInputLabel?: string;
-  consentRequiredError?: string;
-  /**
-   * This value is interpolated with {url:string}
-   * use {{variable}} to use interpolation
-   * @example 'Your will agree to the <a href={{url}} target="_blank">tos</a> '
-   */
-  consentText?: string;
-  /**
-   * placeholder variant for cvv of length 4 (e.g. amex)
-   */
-  cvv4Placeholder?: string;
-  /**
-   * label variant for cvv of length 4 (e.g. amex)
-   */
-  cvv4InputLabel?: string;
-  cvvRequiredError?: string;
-  cvvFormatError?: string;
-  cvvCannotBeEmptyError?: string;
-  cvvTooltipText?: string;
-  /**
-   * When true, the CVV field is hidden and not required for payment.
-   * Useful for payment methods that do not require CVV verification.
-   */
-  noCVV?: boolean;
-  expirationPlaceholder?: string;
-  expirationInputLabel?: string;
-  expirationRequiredError?: string;
-  expirationFormatError?: string;
-  expirationCannotBeEmptyError?: string;
-  expirationOutOfRangeError?: string;
-  expirationTooltipText?: string;
-  holderPlaceholder?: string;
-  holderInputLabel?: string;
-  holderRequiredError?: string;
-  holderFormatError?: string;
-  holderCannotBeEmptyError?: string;
-  ibanPlaceholder?: string;
-  ibanInputLabel?: string;
-  ibanRequiredError?: string;
-  ibanFormatError?: string;
-  ibanCannotBeEmptyError?: string;
-  emailPlaceholder?: string;
-  emailInputLabel?: string;
-  emailRequiredError?: string;
-  emailFormatError?: string;
-  emailCannotBeEmptyError?: string;
-  phonePlaceholder?: string;
-  phoneInputLabel?: string;
-  phoneRequiredError?: string;
-  phoneFormatError?: string;
-  phoneCannotBeEmptyError?: string;
-  /**
-   * This value is interpolated with:
-   * - first
-   * - monthly
-   * - nb
-   * - total
-   * - cost
-   * - taeg
-   * use {{variable}} to use interpolation
-   */
-  loanSimulation?: string;
-  /**
-   * implicit - Select in pan input with logo
-   * explicit - Conventional select on top of the form
-   * hidden   - Hide the brand selector
-   */
-  brandSelectionMode?: "implicit" | "explicit" | "hidden";
-  explicitBrandText?: string;
-  brandLabels?: {
-    [key in CardScheme]?: string;
-  };
+	panPlaceholder?: string;
+	panInputLabel?: string;
+	panRequiredError?: string;
+	panFormatError?: string;
+	panCannotBeEmptyError?: string;
+	panTooltipText?: string;
+	birthdatePlaceholder?: string;
+	birthdateInputLabel?: string;
+	birthdateRequiredError?: string;
+	birthdateFormatError?: string;
+	birthdateCannotBeEmptyError?: string;
+	birthdateOutOfRangeError?: string;
+	birthdateTooltipText?: string;
+	cvvPlaceholder?: string;
+	cvvInputLabel?: string;
+	consentInputLabel?: string;
+	consentRequiredError?: string;
+	/**
+	 * This value is interpolated with {url:string}
+	 * use {{variable}} to use interpolation
+	 * @example 'Your will agree to the <a href={{url}} target="_blank">tos</a> '
+	 */
+	consentText?: string;
+	/**
+	 * placeholder variant for cvv of length 4 (e.g. amex)
+	 */
+	cvv4Placeholder?: string;
+	/**
+	 * label variant for cvv of length 4 (e.g. amex)
+	 */
+	cvv4InputLabel?: string;
+	cvvRequiredError?: string;
+	cvvFormatError?: string;
+	cvvCannotBeEmptyError?: string;
+	cvvTooltipText?: string;
+	/**
+	 * When true, the CVV field is hidden and not required for payment.
+	 * Useful for payment methods that do not require CVV verification.
+	 */
+	noCVV?: boolean;
+	expirationPlaceholder?: string;
+	expirationInputLabel?: string;
+	expirationRequiredError?: string;
+	expirationFormatError?: string;
+	expirationCannotBeEmptyError?: string;
+	expirationOutOfRangeError?: string;
+	expirationTooltipText?: string;
+	holderPlaceholder?: string;
+	holderInputLabel?: string;
+	holderRequiredError?: string;
+	holderFormatError?: string;
+	holderCannotBeEmptyError?: string;
+	ibanPlaceholder?: string;
+	ibanInputLabel?: string;
+	ibanRequiredError?: string;
+	ibanFormatError?: string;
+	ibanCannotBeEmptyError?: string;
+	emailPlaceholder?: string;
+	emailInputLabel?: string;
+	emailRequiredError?: string;
+	emailFormatError?: string;
+	emailCannotBeEmptyError?: string;
+	phonePlaceholder?: string;
+	phoneInputLabel?: string;
+	phoneRequiredError?: string;
+	phoneFormatError?: string;
+	phoneCannotBeEmptyError?: string;
+	/**
+	 * This value is interpolated with:
+	 * - first
+	 * - monthly
+	 * - nb
+	 * - total
+	 * - cost
+	 * - taeg
+	 * use {{variable}} to use interpolation
+	 */
+	loanSimulation?: string;
+	/**
+	 * implicit - Select in pan input with logo
+	 * explicit - Conventional select on top of the form
+	 * hidden   - Hide the brand selector
+	 */
+	brandSelectionMode?: "implicit" | "explicit" | "hidden";
+	explicitBrandText?: string;
+	brandLabels?: {
+		[key in CardScheme]?: string;
+	};
 }
 declare const IntegrationTypes: {
-  readonly hostedForm: "hostedForm";
-  readonly hostedFields: "hostedFields";
-  readonly xPayButton: "xPayButton";
-  readonly redirection: "redirection";
+	readonly hostedForm: "hostedForm";
+	readonly hostedFields: "hostedFields";
+	readonly xPayButton: "xPayButton";
+	readonly redirection: "redirection";
 };
 export declare interface KRError_2 {
-  errorCode: string;
-  errorMessage: string;
-  detailedErrorCode?: string;
-  detailedErrorMessage?: string;
-  field?: string;
-  children?: Array<KRError_2>;
-  metadata?: Record<string, any>;
+	errorCode: string;
+	errorMessage: string;
+	detailedErrorCode?: string;
+	detailedErrorMessage?: string;
+	field?: string;
+	children?: Array<KRError_2>;
+	metadata?: Record<string, any>;
 }
 export declare type ManagedHostedFieldValue = "valid" | Extract<FieldValidationError, "cannotBeEmpty" | "format"> | null;
 /**
  * Options let you override theme configuration and translations on our UIs.
  */
 export declare type Options = {
-  /**
-   * Labels that can be found in a form
-   * {@link HostedFormUIOptions}
-   */
-  [IntegrationTypes.hostedForm]?: HostedFormUIOptions;
-  /**
-   * Transparent config toward XPay partners (e.g. GooglePay ApplePay ...)
-   * {@link XPayButtonUIOptions}
-   */
-  [IntegrationTypes.xPayButton]?: XPayButtonUIOptions;
-  /**
-   * Redirection config, used to override the title of the redirection
-   * {@link RedirectionUIOptions}
-   */
-  [IntegrationTypes.redirection]?: RedirectionUIOptions;
-  /**
-   * Hosted fields config, used to override the brand selector and the fields location
-   * {@link HostedFieldsUIOptions}
-   */
-  [IntegrationTypes.hostedFields]?: HostedFieldsUIOptions;
-  /**
-   * This section holds the style configuration. Matters like, font, colors, spacing can be override using this config.
-   * {@link PartnerUIOptionsTheme}
-   */
-  theme?: PartnerUIOptionsTheme;
-  /**
-   * Locale code is a combination of ISO 639-1 language code and ISO 3166-1 country code . For example, fr_FR is a locale code for French language in France.
-   * @example 'fr-FR'
-   */
-  locale?: string;
+	/**
+	 * Labels that can be found in a form
+	 * {@link HostedFormUIOptions}
+	 */
+	[IntegrationTypes.hostedForm]?: HostedFormUIOptions;
+	/**
+	 * Transparent config toward XPay partners (e.g. GooglePay ApplePay ...)
+	 * {@link XPayButtonUIOptions}
+	 */
+	[IntegrationTypes.xPayButton]?: XPayButtonUIOptions;
+	/**
+	 * Redirection config, used to override the title of the redirection
+	 * {@link RedirectionUIOptions}
+	 */
+	[IntegrationTypes.redirection]?: RedirectionUIOptions;
+	/**
+	 * Hosted fields config, used to override the brand selector and the fields location
+	 * {@link HostedFieldsUIOptions}
+	 */
+	[IntegrationTypes.hostedFields]?: HostedFieldsUIOptions;
+	/**
+	 * This section holds the style configuration. Matters like, font, colors, spacing can be override using this config.
+	 * {@link PartnerUIOptionsTheme}
+	 */
+	theme?: PartnerUIOptionsTheme;
+	/**
+	 * Locale code is a combination of ISO 639-1 language code and ISO 3166-1 country code . For example, fr_FR is a locale code for French language in France.
+	 * @example 'fr-FR'
+	 */
+	locale?: string;
 };
 /**
  * A theme is carrying all the style variables use across our UIs.
@@ -1295,240 +1314,257 @@ export declare type Options = {
  */
 export declare type PartnerUIOptionsTheme = DeepPartial<PartnerUITheme>;
 export declare type PartnerUITheme = {
-  global: ThemeScope<"global"> & {
-    /**
-     * This is passed down to eligible partners to set the font url.
-     * fontSrc is not a valid css style declaration key
-     */
-    fontSrc?: string;
-  };
-  input: ThemeScope<"input">;
-  label: ThemeScope<"label">;
-  helperText: ThemeScope<"helperText">;
-  tooltip: ThemeScope<"tooltip">;
+	global: ThemeScope<"global"> & {
+		/**
+		 * This is passed down to eligible partners to set the font url.
+		 * fontSrc is not a valid css style declaration key
+		 */
+		fontSrc?: string;
+	};
+	input: ThemeScope<"input">;
+	label: ThemeScope<"label">;
+	helperText: ThemeScope<"helperText">;
+	tooltip: ThemeScope<"tooltip">;
 };
 export declare interface RedirectionUIOptions {
-  title?: string;
+	title?: string;
 }
 export declare type Source = {
-  type: "script" | "link";
-  attributes: Record<string, string>;
+	type: "script" | "link";
+	attributes: Record<string, string>;
 };
 declare const THEME_SCOPES: readonly [
-  "global",
-  "input",
-  "label",
-  "helperText",
-  "tooltip"
+	"global",
+	"input",
+	"label",
+	"helperText",
+	"tooltip"
 ];
 declare const THEME_SCOPES_CSS_KEYS: {
-  readonly global: readonly [
-    "color",
-    "fontSize",
-    "fontFamily",
-    "fontWeight",
-    "gap"
-  ];
-  readonly input: readonly [
-    "color",
-    "fontSize",
-    "fontFamily",
-    "borderRadius",
-    "backgroundColor",
-    "borderColor",
-    "borderStyle",
-    "borderWidth",
-    "fontWeight",
-    "fontStyle",
-    "padding",
-    "boxShadow",
-    "outlineColor",
-    "outlineStyle",
-    "outlineWidth"
-  ];
-  readonly helperText: readonly [
-    "color",
-    "fontSize",
-    "fontFamily",
-    "fontWeight",
-    "margin"
-  ];
-  readonly tooltip: readonly [
-    "color",
-    "fontSize",
-    "fontFamily",
-    "fontWeight",
-    "borderRadius",
-    "backgroundColor",
-    "padding",
-    "boxShadow"
-  ];
-  readonly label: readonly [
-    "color",
-    "fontSize",
-    "fontFamily",
-    "fontWeight",
-    "margin"
-  ];
+	readonly global: readonly [
+		"color",
+		"fontSize",
+		"fontFamily",
+		"fontWeight",
+		"gap"
+	];
+	readonly input: readonly [
+		"color",
+		"fontSize",
+		"fontFamily",
+		"borderRadius",
+		"backgroundColor",
+		"borderColor",
+		"borderStyle",
+		"borderWidth",
+		"fontWeight",
+		"fontStyle",
+		"padding",
+		"boxShadow",
+		"outlineColor",
+		"outlineStyle",
+		"outlineWidth"
+	];
+	readonly helperText: readonly [
+		"color",
+		"fontSize",
+		"fontFamily",
+		"fontWeight",
+		"margin"
+	];
+	readonly tooltip: readonly [
+		"color",
+		"fontSize",
+		"fontFamily",
+		"fontWeight",
+		"borderRadius",
+		"backgroundColor",
+		"padding",
+		"boxShadow"
+	];
+	readonly label: readonly [
+		"color",
+		"fontSize",
+		"fontFamily",
+		"fontWeight",
+		"margin"
+	];
 };
 declare const THEME_SCOPES_VARIANTS: {
-  readonly global: readonly [
-    ":valid",
-    ":invalid"
-  ];
-  readonly input: readonly [
-    ":hover",
-    ":valid",
-    ":focus",
-    ":invalid",
-    "::placeholder",
-    "::placeholder:disabled",
-    ":-webkit-autofill"
-  ];
-  readonly helperText: readonly [
-    ":disabled",
-    ":valid",
-    ":invalid"
-  ];
-  readonly tooltip: readonly [
-    ":focus",
-    ":invalid"
-  ];
-  readonly label: readonly [
-    ":valid",
-    ":invalid"
-  ];
+	readonly global: readonly [
+		":valid",
+		":invalid"
+	];
+	readonly input: readonly [
+		":hover",
+		":valid",
+		":focus",
+		":invalid",
+		"::placeholder",
+		"::placeholder:disabled",
+		":-webkit-autofill"
+	];
+	readonly helperText: readonly [
+		":disabled",
+		":valid",
+		":invalid"
+	];
+	readonly tooltip: readonly [
+		":focus",
+		":invalid"
+	];
+	readonly label: readonly [
+		":valid",
+		":invalid"
+	];
 };
 export declare type ThemeScope<Scope extends ThemeScopeName> = {
-  [cssKey in ThemeScopeCSSKeys<Scope>]?: CSSStyleDeclaration[cssKey];
+	[cssKey in ThemeScopeCSSKeys<Scope>]?: CSSStyleDeclaration[cssKey];
 } & {
-  [variant in ThemeScopesVariants<Scope>]?: {
-    [cssKey in ThemeScopeCSSKeys<Scope>]?: CSSStyleDeclaration[cssKey];
-  };
+	[variant in ThemeScopesVariants<Scope>]?: {
+		[cssKey in ThemeScopeCSSKeys<Scope>]?: CSSStyleDeclaration[cssKey];
+	};
 };
 export declare type ThemeScopeCSSKeyMap = {
-  [K in ThemeScopeName]: (typeof THEME_SCOPES_CSS_KEYS)[K][number];
+	[K in ThemeScopeName]: (typeof THEME_SCOPES_CSS_KEYS)[K][number];
 };
 export declare type ThemeScopeCSSKeys<S extends ThemeScopeName> = ThemeScopeCSSKeyMap[S];
 export declare type ThemeScopeName = (typeof THEME_SCOPES)[number];
 export declare type ThemeScopesVariants<Scope extends ThemeScopeName> = ThemeScopesVariantsMap[Scope];
 export declare type ThemeScopesVariantsMap = {
-  [K in ThemeScopeName]: (typeof THEME_SCOPES_VARIANTS)[K][number];
+	[K in ThemeScopeName]: (typeof THEME_SCOPES_VARIANTS)[K][number];
 };
 export declare interface UnifiedEventPayload {
-  clientError: ErrorPayload | null;
-  clientNotFound: ErrorPayload | null;
-  died: ErrorPayload | null;
-  apiError: Pick<ApiError, "error" | "additionalPayload" | "path"> | null;
-  clientNotProperlyDestroyed: {
-    error: string;
-  };
-  disconnected: null;
-  environmentSet: Record<string, any> | null;
-  fulfilled: {
-    isFulfilled: boolean;
-  };
-  formDataChanged: {
-    values: HostedFieldsFormValues;
-    validationResult: Record<string, string>;
-  };
-  initFailed: ErrorPayload | null;
-  cantDownloadPluginSources: ErrorPayload | null;
-  loaded: Record<string, any> | null;
-  misconfigured: string | null;
-  modalIn: Record<string, any> | null;
-  modalOut: Record<string, any> | null;
-  optionsSet: Record<string, any> | null;
-  pluginClientDestroyed: Record<string, any> | null;
-  formStateChanged: Record<FrameName, string | null> & {
-    errors?: AnyObject;
-    active?: string;
-  };
-  pluginExtraSourcesLoaded: Record<string, any> | null;
-  pluginIsIncompatibleWithInterface: {
-    partner: Partner;
-    method: Method;
-    interface: string;
-    fallBackInterface: string;
-  };
-  pluginIsIncompatibleWithClient: {
-    partner: Partner;
-    method: Method;
-  };
-  pluginPostValidation: Record<string, any> | null;
-  pluginPreValidation: Record<string, any> | null;
-  pluginSessionSet: Record<string, any> | null;
-  pluginSourcesLoaded: Record<string, any> | null;
-  ready: Record<string, any> | null;
-  redirect: Record<string, any> | null;
-  requestValidate: {
-    skipOnBeforeValidate?: boolean;
-  } | null;
-  sourceListLoaded: {
-    errors: Partial<Source>[] | false;
-  } | null;
-  sourceLoaded: {
-    source: Partial<Source>;
-    error: boolean;
-  } | null;
-  other: Record<string, any> | null;
-  methodSelected: {
-    method: string;
-  };
-  methodUnselected: {
-    method: string;
-  };
-  partnerError: {
-    error: Omit<KRError_2, "metadata">;
-    method: string;
-  };
-  change: HostedFieldsEventPayload | null;
-  focus: HostedFieldsEventPayload | null;
-  blur: HostedFieldsEventPayload | null;
-  keyup: HostedFieldsEventPayload | null;
-  keydown: HostedFieldsEventPayload | null;
-  error: {
-    message: string;
-  } | null;
-  brandDetected: {
-    brands: string[];
-  } | null;
-  supportedBrandsChanged: string[];
-  selectedBrandChanged: string | null;
-  endOfSession: {
-    reason?: string;
-  } | null;
+	clientError: ErrorPayload | null;
+	clientNotFound: ErrorPayload | null;
+	died: ErrorPayload | null;
+	apiError: Pick<ApiError, "error" | "additionalPayload" | "path"> | null;
+	clientNotProperlyDestroyed: {
+		error: string;
+	};
+	disconnected: null;
+	environmentSet: Record<string, any> | null;
+	fulfilled: {
+		isFulfilled: boolean;
+	};
+	formDataChanged: {
+		values: HostedFieldsFormValues;
+		validationResult: Record<string, string>;
+	};
+	initFailed: ErrorPayload | null;
+	cantDownloadPluginSources: ErrorPayload | null;
+	loaded: Record<string, any> | null;
+	misconfigured: string | null;
+	apiCallStart: {
+		call: string;
+		path: string;
+	};
+	apiCallEnd: {
+		call: string;
+		path: string;
+		durationMs: number;
+		success: boolean;
+		responseHeaders?: Record<string, string | null>;
+	};
+	cancelled: null;
+	modalIn: Record<string, any> | null;
+	modalOut: Record<string, any> | null;
+	optionsSet: Record<string, any> | null;
+	pluginClientDestroyed: Record<string, any> | null;
+	formStateChanged: Record<FrameName, string | null> & {
+		errors?: AnyObject;
+		active?: string;
+	};
+	pluginExtraSourcesLoaded: Record<string, any> | null;
+	pluginIsIncompatibleWithInterface: {
+		partner: Partner;
+		method: Method;
+		interface: string;
+		fallBackInterface: string;
+	};
+	pluginIsIncompatibleWithClient: {
+		partner: Partner;
+		method: Method;
+	};
+	pluginPostValidation: Record<string, any> | null;
+	pluginPreValidation: Record<string, any> | null;
+	pluginSessionSet: Record<string, any> | null;
+	pluginSourcesLoaded: Record<string, any> | null;
+	ready: Record<string, any> | null;
+	redirect: Record<string, any> | null;
+	requestValidate: {
+		skipOnBeforeValidate?: boolean;
+	} | null;
+	sourceListLoaded: {
+		errors: Partial<Source>[] | false;
+	} | null;
+	sourceLoaded: {
+		source: Partial<Source>;
+		error: boolean;
+	} | null;
+	other: Record<string, any> | null;
+	methodSelected: {
+		method: string;
+	};
+	methodUnselected: {
+		method: string;
+	};
+	partnerError: {
+		error: Omit<KRError_2, "metadata">;
+		method: string;
+	};
+	change: HostedFieldsEventPayload | null;
+	focus: HostedFieldsEventPayload | null;
+	blur: HostedFieldsEventPayload | null;
+	keyup: HostedFieldsEventPayload | null;
+	keydown: HostedFieldsEventPayload | null;
+	error: {
+		message: string;
+	} | null;
+	brandDetected: {
+		brands: string[];
+	} | null;
+	supportedBrandsChanged: string[];
+	selectedBrandChanged: string | null;
+	endOfSession: {
+		reason?: string;
+	} | null;
 }
 /**
  * Apple, Google and PayPal buttons are treated differently and all the config is exposed through this object.
  */
 export declare interface XPayButtonUIOptions {
-  apple?: {
-    type?: "plain" | "buy" | "donate" | "check-out" | "book" | "subscribe" | "add-money" | "contribute" | "order" | "reload" | "rent" | "support" | "tip" | "top-up";
-    buttonstyle?: "black" | "white" | "white-outline";
-    width?: string;
-    height?: string;
-    borderRadius?: string;
-    padding?: string;
-    /**
-     * Locale code is a combination of ISO 639-1 language code and ISO 3166-1 country code . For example, fr_FR is a locale code for French language in France.
-     * @example 'fr-FR'
-     */
-    locale?: string;
-  };
-  google?: GooglePayButtonOptions & {
-    height?: number;
-  };
-  paypal?: {
-    layout?: "vertical" | "horizontal";
-    color?: "silver" | "white" | "black" | "gold" | "blue";
-    shape?: "rect" | "pill";
-    height?: number;
-    label?: "paypal" | "checkout" | "buynow" | "pay" | "installment";
-  };
+	apple?: {
+		type?: "plain" | "buy" | "donate" | "check-out" | "book" | "subscribe" | "add-money" | "contribute" | "order" | "reload" | "rent" | "support" | "tip" | "top-up";
+		buttonstyle?: "black" | "white" | "white-outline";
+		width?: string;
+		height?: string;
+		borderRadius?: string;
+		padding?: string;
+		/**
+		 * Locale code is a combination of ISO 639-1 language code and ISO 3166-1 country code . For example, fr_FR is a locale code for French language in France.
+		 * @example 'fr-FR'
+		 */
+		locale?: string;
+	};
+	google?: GooglePayButtonOptions & {
+		height?: number;
+	};
+	paypal?: {
+		layout?: "vertical" | "horizontal";
+		color?: "silver" | "white" | "black" | "gold" | "blue";
+		shape?: "rect" | "pill";
+		height?: number;
+		label?: "paypal" | "checkout" | "buynow" | "pay" | "installment";
+		/**
+		 * When true, removes the max-width constraint applied by PayPal on the button container.
+		 * See https://developer.paypal.com/sdk/js/reference/#width
+		 */
+		disableMaxWidth?: boolean;
+	};
 }
 declare class ApiLogger extends FetchMonitoringAPI<PurseHeadlessCheckoutEventBusEvent<any>> {
-  constructor(env: EnvironmentTarget, apiKey: string, apiRoot?: string);
+	constructor(env: EnvironmentTarget, apiKey: string, apiRoot?: string);
 }
 /**
  * Represents the disabled state of a payment method.
@@ -1536,132 +1572,133 @@ declare class ApiLogger extends FetchMonitoringAPI<PurseHeadlessCheckoutEventBus
  * @property message - A human-readable message providing more details about the disabled state.
  */
 export declare type DisabledState = {
-  [K in keyof DisabledStatePayload]: {
-  code: K;
-  message: string;
-  reason?: string;
-} & (DisabledStatePayload[K] extends never ? {
-  details?: never;
-} : {
-  details: DisabledStatePayload[K];
-});
+	[K in keyof DisabledStatePayload]: {
+		code: K;
+		message: string;
+		reason?: string;
+	} & (DisabledStatePayload[K] extends never ? {
+		details?: never;
+	} : {
+		details: DisabledStatePayload[K];
+	});
 }[keyof DisabledStatePayload];
 export declare type DisabledStatePayload = {
-  METHOD_UNSTABLE: never;
-  TOKEN_INIT_FAILED: never;
-  PAYMENT_ELEMENT_FATAL_ERROR: never;
-  SUBMITTING: never;
-  PAYMENT_ELEMENT_RENDER_FAILED: never;
-  PLUGIN_INCOMPATIBLE: never;
-  PARTNER_UI_FATAL_ERROR: never;
-  FATAL_ERROR_BEFORE_RENDER: never;
-  MIN_AMOUNT_NOT_MET: {
-    minAmount: number | null;
-    restToPay: number | null;
-  };
-  PAYMENT_FULFILLED: never;
-  AMOUNT_CONDITION_UNREACHABLE: {
-    minAmount: number | null | undefined;
-    maxAmount: number | null | undefined;
-    orderAmount: number | null | undefined;
-  };
-  DOES_NOT_BELONG_TO_CURRENT_SESSION: never;
-  MAX_AMOUNT_EXCEEDED: {
-    maxAmount: number | null;
-  };
+	METHOD_UNSTABLE: never;
+	TOKEN_INIT_FAILED: never;
+	PAYMENT_ELEMENT_FATAL_ERROR: never;
+	SUBMITTING: never;
+	PAYMENT_ELEMENT_RENDER_FAILED: never;
+	PLUGIN_INCOMPATIBLE: never;
+	PARTNER_UI_FATAL_ERROR: never;
+	FATAL_ERROR_BEFORE_RENDER: never;
+	MIN_AMOUNT_NOT_MET: {
+		minAmount: number | null;
+		restToPay: number | null;
+	};
+	PAYMENT_FULFILLED: never;
+	AMOUNT_CONDITION_UNREACHABLE: {
+		minAmount: number | null | undefined;
+		maxAmount: number | null | undefined;
+		orderAmount: number | null | undefined;
+	};
+	DOES_NOT_BELONG_TO_CURRENT_SESSION: never;
+	MAX_AMOUNT_EXCEEDED: {
+		maxAmount: number | null;
+	};
 };
 declare const EventScopes: {
-  headlessCheckout: string[];
+	headlessCheckout: string[];
 };
 /**
  * HostedFieldsOptions let you override theme configuration, render targets and placeholders for hosted fields.
  * @see {@link PurseHeadlessCheckoutUIOptions.locale} for locale configuration
  */
 export declare type HostedFieldsOptions = Pick<Options, "locale"> & HostedFieldsUIOptions & {
-  /**
-   * This section holds the theme configuration. Matters like, font, colors, spacing can be override using this config.
-   * {@link HostedFieldsTheme}
-   */
-  theme: HostedFieldsTheme;
+	/**
+	 * This section holds the theme configuration. Matters like, font, colors, spacing can be override using this config.
+	 * {@link HostedFieldsTheme}
+	 */
+	theme: HostedFieldsTheme;
 };
 declare type JsonSerializable$1 = string | number | boolean | null | {
-  [key: string]: JsonSerializable$1 | undefined;
+	[key: string]: JsonSerializable$1 | undefined;
 } | JsonSerializable$1[];
 declare type OnePayWalletSession$1 = {
-  expiration_date: string;
-  session_id: string;
-  owner_reference: string;
-  merchant: string;
+	expiration_date: string;
+	session_id: string;
+	owner_reference: string;
+	merchant: string;
 };
 export declare interface Payment {
-  api: PaymentAPI;
-  walletAPI: WalletAPI;
-  paymentSplitter: PaymentSplitter;
-  factoriesStaticData: {
-    manuallyTriggerHook: (hookName: keyof PurseHeadlessCheckoutHooks, context?: {
-      actualMethod?: Method;
-      sourceId?: string;
-    }) => Promise<void>;
-    submitPayment: (skipOnBeforeValidateHook?: boolean) => Promise<void>;
-    onSessionTerminated: () => void;
-  };
-  mops: Readable<PurseHeadlessCheckoutPaymentItem[]>;
-  methods: Readable<PurseHeadlessCheckoutPaymentMethod[]>;
-  tokens: Readable<PurseHeadlessCheckoutPaymentToken[]>;
-  walletTokens: Readable<WalletItem[]>;
-  session: PaymentSession;
-  walletSession: WalletSession | null;
-  setSession(session: OrchestrationPaymentSession | LegacyPaymentSession): Promise<void>;
-  onExpires(callback: () => void): () => void;
-  getMop(mop: Partial<PurseHeadlessCheckoutPaymentItemBase>): PurseHeadlessCheckoutPaymentItem | null;
-  deleteAllTokens(): Promise<void>;
-  deactivateMop(mop: PurseHeadlessCheckoutPaymentItemBase, reason: DisabledState): Promise<void>;
-  isSessionExpired(): boolean;
+	api: PaymentAPI;
+	walletAPI: WalletAPI;
+	paymentSplitter: PaymentSplitter;
+	factoriesStaticData: {
+		manuallyTriggerHook: (hookName: keyof PurseHeadlessCheckoutHooks, context?: {
+			actualMethod?: Method;
+			sourceId?: string;
+		}) => Promise<void>;
+		submitPayment: (skipOnBeforeValidateHook?: boolean) => Promise<void>;
+		onSessionTerminated: () => void;
+	};
+	mops: Readable<PurseHeadlessCheckoutPaymentItem[]>;
+	methods: Readable<PurseHeadlessCheckoutPaymentMethod[]>;
+	tokens: Readable<PurseHeadlessCheckoutPaymentToken[]>;
+	walletTokens: Readable<WalletItem[]>;
+	paymentSession: Readable<PaymentSession | null>;
+	session: PaymentSession;
+	walletSession: WalletSession | null;
+	setSession(session: OrchestrationPaymentSession | LegacyPaymentSession): Promise<void>;
+	onExpires(callback: () => void): () => void;
+	getMop(mop: Partial<PurseHeadlessCheckoutPaymentItemBase>): PurseHeadlessCheckoutPaymentItem | null;
+	deleteAllTokens(): Promise<void>;
+	deactivateMop(mop: PurseHeadlessCheckoutPaymentItemBase, reason: DisabledState): Promise<void>;
+	isSessionExpired(): boolean;
 }
 export declare type PaymentElementEventName = "fatalError" | "formValid" | "validationRequested" | "methodSelected" | "methodUnselected" | "change" | "focus" | "modalIn" | "modalOut" | "blur" | "ready" | "keyup" | "keydown" | "partnerError";
 export declare interface PaymentElementEventsCallback {
-  /** Handler for fatal error events */
-  fatalError: (payload: PaymentElementEventsPayload["fatalError"]) => void;
-  /** Handler for form validation success events */
-  formValid: (payload: PaymentElementEventsPayload["formValid"]) => void;
-  /** Handler for validation request events */
-  validationRequested: (payload: PaymentElementEventsPayload["validationRequested"]) => void;
-  /** Handler for method selected events */
-  methodSelected: (payload: PaymentElementEventsPayload["methodSelected"]) => void;
-  /** Handler for method unselected events */
-  methodUnselected: (payload: PaymentElementEventsPayload["methodUnselected"]) => void;
-  /** Handler for partner error events */
-  partnerError: (payload: PaymentElementEventsPayload["partnerError"]) => void;
-  change: (payload: PaymentElementEventsPayload["change"]) => void;
-  focus: (payload: PaymentElementEventsPayload["focus"]) => void;
-  blur: (payload: PaymentElementEventsPayload["blur"]) => void;
-  ready: (payload: PaymentElementEventsPayload["ready"]) => void;
-  keyup: (payload: PaymentElementEventsPayload["keyup"]) => void;
-  modalIn: (payload: PaymentElementEventsPayload["modalIn"]) => void;
-  modalOut: (payload: PaymentElementEventsPayload["modalOut"]) => void;
-  keydown: (payload: PaymentElementEventsPayload["keydown"]) => void;
+	/** Handler for fatal error events */
+	fatalError: (payload: PaymentElementEventsPayload["fatalError"]) => void;
+	/** Handler for form validation success events */
+	formValid: (payload: PaymentElementEventsPayload["formValid"]) => void;
+	/** Handler for validation request events */
+	validationRequested: (payload: PaymentElementEventsPayload["validationRequested"]) => void;
+	/** Handler for method selected events */
+	methodSelected: (payload: PaymentElementEventsPayload["methodSelected"]) => void;
+	/** Handler for method unselected events */
+	methodUnselected: (payload: PaymentElementEventsPayload["methodUnselected"]) => void;
+	/** Handler for partner error events */
+	partnerError: (payload: PaymentElementEventsPayload["partnerError"]) => void;
+	change: (payload: PaymentElementEventsPayload["change"]) => void;
+	focus: (payload: PaymentElementEventsPayload["focus"]) => void;
+	blur: (payload: PaymentElementEventsPayload["blur"]) => void;
+	ready: (payload: PaymentElementEventsPayload["ready"]) => void;
+	keyup: (payload: PaymentElementEventsPayload["keyup"]) => void;
+	modalIn: (payload: PaymentElementEventsPayload["modalIn"]) => void;
+	modalOut: (payload: PaymentElementEventsPayload["modalOut"]) => void;
+	keydown: (payload: PaymentElementEventsPayload["keydown"]) => void;
 }
 export declare interface PaymentElementEventsPayload {
-  fatalError: {
-    code: string;
-    reason: string;
-    internalEventCode: EventCode;
-  };
-  formValid: {
-    isValid: boolean;
-  };
-  validationRequested: UnifiedEventPayload["requestValidate"];
-  methodSelected: UnifiedEventPayload["methodSelected"];
-  methodUnselected: UnifiedEventPayload["methodUnselected"];
-  partnerError: UnifiedEventPayload["partnerError"];
-  change: UnifiedEventPayload["change"];
-  focus: UnifiedEventPayload["focus"];
-  blur: UnifiedEventPayload["blur"];
-  modalIn: UnifiedEventPayload["modalIn"];
-  modalOut: UnifiedEventPayload["modalOut"];
-  ready: UnifiedEventPayload["ready"];
-  keyup: UnifiedEventPayload["keyup"];
-  keydown: UnifiedEventPayload["keydown"];
+	fatalError: {
+		code: string;
+		reason: string;
+		internalEventCode: EventCode;
+	};
+	formValid: {
+		isValid: boolean;
+	};
+	validationRequested: UnifiedEventPayload["requestValidate"];
+	methodSelected: UnifiedEventPayload["methodSelected"];
+	methodUnselected: UnifiedEventPayload["methodUnselected"];
+	partnerError: UnifiedEventPayload["partnerError"];
+	change: UnifiedEventPayload["change"];
+	focus: UnifiedEventPayload["focus"];
+	blur: UnifiedEventPayload["blur"];
+	modalIn: UnifiedEventPayload["modalIn"];
+	modalOut: UnifiedEventPayload["modalOut"];
+	ready: UnifiedEventPayload["ready"];
+	keyup: UnifiedEventPayload["keyup"];
+	keydown: UnifiedEventPayload["keydown"];
 }
 /**
  * PaymentElementOptions let you override theme configuration and placeholders for hosted forms.
@@ -1669,859 +1706,861 @@ export declare interface PaymentElementEventsPayload {
  */
 export declare type PaymentElementOptions = Omit<Options, "hostedFields">;
 export declare interface PaymentSession {
-  id: string;
-  source: OrchestrationPaymentSession | LegacyPaymentSession;
-  amount: number;
-  amountCts: number;
-  isInformationRequest: boolean;
-  expirationDate: string;
-  currency: string;
-  vaultsConfiguration?: SessionVault["vendor_front_data"];
-  meansOfPayment: PurseHeadlessCheckoutPaymentItem[];
+	id: string;
+	source: OrchestrationPaymentSession | LegacyPaymentSession;
+	amount: number;
+	amountCts: number;
+	isInformationRequest: boolean;
+	expirationDate: string;
+	currency: string;
+	vaultsConfiguration?: SessionVault["vendor_front_data"];
+	meansOfPayment: PurseHeadlessCheckoutPaymentItem[];
 }
 /**
  * An amount can be covered by single or multiple payment split.
  */
 export declare interface PaymentSplit {
-  amount: number;
-  source: PurseHeadlessCheckoutPaymentItem;
+	amount: number;
+	source: PurseHeadlessCheckoutPaymentItem;
 }
 export declare interface PaymentSplitter {
-  /**
-   * Total amount to be paid in cents
-   */
-  amount: Readable<number>;
-  /**
-   * The amount that is not covered by the splits.
-   */
-  primaryReach: Readable<number>;
-  /**
-   * The list of splits.
-   * @see {PaymentSplit}
-   */
-  splits: Readable<PaymentSplit[]>;
-  /**
-   * This reactive value switches to true when the splits cover the total amount.
-   */
-  fulfilled: Readable<boolean>;
-  /**
-   * Given a mean of payment, returns the amount that it can cover as a reactive value.
-   * @param mop { MeanOfPayment}
-   */
-  getMeanOfPaymentReach(mop: PurseHeadlessCheckoutPaymentItemBase): Readable<number>;
-  /**
-   * Given a mean of payment, returns the amount already allocated
-   * to the same partner/method across other splits, excluding the provided MOP.
-   * @param mop { MeanOfPayment }
-   */
-  getMethodContribution(mop: PurseHeadlessCheckoutPaymentItemBase): number;
-  /**
-   * Set the primary split. If a splitting can use multiple secondary means of payment, it can only use one primary at a time.
-   * @param mop { MeanOfPayment}
-   */
-  setPrimary(mop: PurseHeadlessCheckoutPaymentItem | null): void;
-  /**
-   * Involves a secondary mean of payment in the split.
-   * Secondary methods can yield multiple means of payment that can be used with different amounts.
-   * @param amount in cents. Set to 0 to remove the split.
-   * @param mop { MeanOfPayment}
-   */
-  takeSplit(amount: number, mop: PurseHeadlessCheckoutPaymentItem): void;
-  /**
-   * Removes the split from MOP if it exists.
-   * @param mop { MeanOfPayment}
-   */
-  clearSplit(mop: PurseHeadlessCheckoutPaymentItem): void;
-  /**
-   * Resets splits and change amount
-   * @param amount in cts
-   */
-  reset(amount: number): void;
-  isMethodLimitReached(mop: PurseHeadlessCheckoutPaymentItem): boolean;
+	/**
+	 * Total amount to be paid in cents
+	 */
+	amount: Readable<number>;
+	/**
+	 * The amount that is not covered by the splits.
+	 */
+	primaryReach: Readable<number>;
+	/**
+	 * The list of splits.
+	 * @see {PaymentSplit}
+	 */
+	splits: Readable<PaymentSplit[]>;
+	/**
+	 * This reactive value switches to true when the splits cover the total amount.
+	 */
+	fulfilled: Readable<boolean>;
+	/**
+	 * Given a mean of payment, returns the amount that it can cover as a reactive value.
+	 * @param mop { MeanOfPayment}
+	 */
+	getMeanOfPaymentReach(mop: PurseHeadlessCheckoutPaymentItemBase): Readable<number>;
+	/**
+	 * Given a mean of payment, returns the amount already allocated
+	 * to the same partner/method across other splits, excluding the provided MOP.
+	 * @param mop { MeanOfPayment }
+	 */
+	getMethodContribution(mop: PurseHeadlessCheckoutPaymentItemBase): number;
+	/**
+	 * Set the primary split. If a splitting can use multiple secondary means of payment, it can only use one primary at a time.
+	 * @param mop { MeanOfPayment}
+	 */
+	setPrimary(mop: PurseHeadlessCheckoutPaymentItem | null): void;
+	/**
+	 * Involves a secondary mean of payment in the split.
+	 * Secondary methods can yield multiple means of payment that can be used with different amounts.
+	 * @param amount in cents. Set to 0 to remove the split.
+	 * @param mop { MeanOfPayment}
+	 */
+	takeSplit(amount: number, mop: PurseHeadlessCheckoutPaymentItem): void;
+	/**
+	 * Removes the split from MOP if it exists.
+	 * @param mop { MeanOfPayment}
+	 */
+	clearSplit(mop: PurseHeadlessCheckoutPaymentItem): void;
+	/**
+	 * Resets splits and change amount
+	 * @param amount in cts
+	 */
+	reset(amount: number): void;
+	isMethodLimitReached(mop: PurseHeadlessCheckoutPaymentItem): boolean;
 }
 declare class PurseHeadlessCheckout {
-  #private;
-  protected _env: APIEnv;
-  protected _payment: PursePayment;
-  protected _eventBus: PurseHeadlessCheckoutEventBus;
-  protected _apiLogger: ApiLogger;
-  private readonly _hooks?;
-  /**
-   * Current paymentSessionID readable value;
-   */
-  readonly currentSessionID: Readable<string | null>;
-  /**
-   * Indicates whether the current session is an information request (data collection) session.
-   * In such sessions there is no amount to pay — the purpose is gathering payment information
-   * (e.g. registering a card) for later use. Only protocols with `registration_mode: "OFF_SESSION"`
-   * are available in this mode.
-   * @example
-   * ```ts
-   * headlessCheckout.isInformationRequest.subscribe((isInformationRequest: boolean) => {
-   *    if (isInformationRequest) {
-   *      // Adapt the UI: no amount to display, submit stores the card for later use
-   *    }
-   * });
-   * ```
-   */
-  readonly isInformationRequest: Readable<boolean>;
-  /**
-   * List of available payment methods for the checkout.
-   * Each payment-element in the array represents a payment method with its associated properties.
-   * @type {Readable<Array<PurseHeadlessCheckoutPaymentMethod>>}
-   * @example
-   * ```ts
-   * headlessCheckout.paymentMethods.subscribe((methods: PurseCheckoutPaymentMethod[]) => {
-   *    console.log('The payment methods changed', methods);
-   *    // Perhaps update the UI with the new methods
-   * });
-   * ```
-   */
-  readonly paymentMethods: Readable<PurseHeadlessCheckoutPaymentMethod[]>;
-  /**
-   * List of available payment tokens for the checkout.
-   * Each payment-element in the array represents a payment token with its associated properties.
-   * @type {Readable<Array<PurseHeadlessCheckoutPaymentToken>>}
-   * @example
-   * ```ts
-   * headlessCheckout.paymentTokens.subscribe((tokens: PurseCheckoutPaymentToken[]) => {
-   *   console.log('The payment tokens changed', tokens);
-   *   // Perhaps update the UI with the new tokens
-   * });
-   * ```
-   */
-  readonly paymentTokens: Readable<PurseHeadlessCheckoutPaymentToken[]>;
-  /**
-   * This property indicates if the payment can be submitted.
-   * @example
-   * ```ts
-   * headlessCheckout.isPaymentFulfilled.subscribe((isFulfilled: boolean) => {
-   *    if(isFulfilled) {
-   *      enablePayButton();
-   *    }else{
-   *      disablePayButton();
-   *    }
-   * });
-   * ```
-   */
-  readonly isPaymentFulfilled: Readable<boolean>;
-  /**
-   * The remaining amount to pay represents the amount that is left to pay after the secondary payment method(s) has been used.
-   * @example
-   * ```ts
-   * headlessCheckout.remainingAmountToPay.subscribe((amount: number) => {
-   *    console.log('Perhaps update the text in your pay button', amount);
-   * });
-   * ```
-   * */
-  readonly remainingAmountToPay: Readable<number>;
-  /**
-   * Splits represent the repartition between the primary payment method and the secondary payment methods.
-   * @link PurseHeadlessCheckoutPaymentSplit
-   * @example
-   * ```ts
-   * headlessCheckout.amountSplit.subscribe((splits: PurseHeadlessCheckoutPaymentSplit[]) => {
-   *    console.log('The payment composition changed', splits);
-   * });
-   * ```
-   * */
-  readonly amountSplit: Readable<PaymentSplit[]>;
-  /**
-   * The current state of the checkout session.
-   * It can be one of the following values:
-   * - 'idle': The session is idle and not yet initialized.
-   * - 'ready': The session is initialized and ready for payment method selection.
-   * - 'submitting': The payment is being submitted.
-   * - 'submitted': The payment has been successfully submitted.
-   * - 'expired': The session has expired.
-   * - 'error': An error occurred with the session.
-   * @example
-   * ```ts
-   * headlessCheckout.sessionState.subscribe((state: PurseHeadlessCheckoutSessionState) => {
-   *    console.log('The session state changed', state);
-   *    if(state === 'expired') {
-   *      alertUserSessionExpired();
-   *    }
-   * });
-   * ```
-   */
-  readonly sessionState: Derived<PurseHeadlessCheckoutSessionState, [
-    Writable<PurseHeadlessCheckoutSessionState>
-  ]>;
-  /* Excluded from this release type: __internal__ */
-  private constructor();
-  /* Excluded from this release type: init */
-  /**
-   * Get the config from params
-   * @param {PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params} checkoutParams - The checkoutParams data for initializing the checkout.
-   * @param {APIPaths} apiPaths - dev purposes only to override the APi URL's
-   */
-  static getConfigFromParams(checkoutParams: PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params, apiPaths?: APIPaths): PurseHeadlessCheckoutV1Params & {
-    apiPaths: APIPaths | undefined;
-  };
-  /**
-   * Cleans up resources and removes event listeners.
-   * @example
-   * ```ts
-   * headlessCheckout.teardown();
-   * ```
-   */
-  teardown(): void;
-  /**
-   * Sets the wallet session. The wallet session is used to retrieve and manage the user's stored card tokens.
-   *
-   * @param {WalletSessionModel} walletSession
-   *
-   * @throws {@link PurseHeadlessCheckoutError} `SET_WALLET_SESSION_FAILED` \
-   * If setting the wallet session fails
-   *
-   * @example
-   * ```ts
-   * headlessCheckout.setWalletSession(walletSession);
-   * ```
-   */
-  setWalletSession(walletSession: OnePayWalletSession): Promise<void>;
-  /**
-   * Remove all tokens from the provided wallet session
-   *
-   * @throws
-   * - {@link PurseHeadlessCheckoutError} `MISSING_WALLET_SESSION` \
-   * If the wallet session is missing
-   * - {@link PurseHeadlessCheckoutError} `FAILED_TO_DELETE_ALL_TOKENS` \
-   * If deleting the tokens fails
-   *
-   * @example
-   * ```ts
-   * headlessCheckout.deleteAllTokens();
-   * ```
-   */
-  deleteAllTokens(): Promise<void>;
-  /**
-   * Clears the primary split from the amount share.
-   * Nothing happens if the primary split is already cleared.
-   * @example
-   * ```ts
-   * headlessCheckout.clearPrimarySplit();
-   * ```
-   */
-  clearPrimarySplit(): void;
-  protected _setSession(session: PurseHeadlessCheckoutV1Params["paymentSession"]): Promise<void>;
-  /* Excluded from this release type: manuallyTriggerHook */
-  /**
-   * Updates the session with the provided session data.
-   * @param {PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params['paymentSession']} widgetData - The session data. Can be either an encoded string (V2) or a payment session object (V1).
-   *
-   * @throws
-   * - {@link PurseHeadlessCheckoutError} `MISSING_SESSION` \
-   * If setting the session fails
-   * - {@link PurseHeadlessCheckoutError} `UNKNOWN_ERROR` \
-   * If an unknown error is caught during the session update
-   *
-   * @example
-   * ```ts
-   * headlessCheckout.setSession(paymentSession);
-   * ```
-   */
-  setSession(widgetData: PurseHeadlessCheckoutV2Params): Promise<void>;
-  setSession(widgetData: PurseHeadlessCheckoutV1Params["paymentSession"]): Promise<void>;
-  private _submitPayment;
-  /**
-   * Submits the current payment configuration for processing.
-   * This will validate and process all payment methods in the current split configuration.
-   *
-   * @throws
-   * - {@link PurseHeadlessCheckoutError} `MISSING_SESSION` \
-   * If the session is missing
-   * - {@link PurseHeadlessCheckoutError} `PAYMENT_NOT_FULFILLED_ON_SUBMIT` \
-   * If submitting a payment not available for submission
-   * - {@link PurseHeadlessCheckoutError} `POST_VALIDATE_FAILED` \
-   * If the post-validation step of the payment process fails
-   * - {@link PurseHeadlessCheckoutError} `UI_VALIDATION_FAILED_ERROR` \
-   * If the pre-validation step of the payment process fails
-   * - {@link PurseHeadlessCheckoutError} `VALIDATE_FAILED` \
-   * If the validate step of the payment process fails
-   *
-   * @example
-   * ```typescript
-   * try {
-   *   // Configure payment methods and amounts
-   *   await primaryMethod.setAsPrimarySource();
-   *   await secondaryToken.take(50.00);
-   *
-   *   // Submit the payment
-   *   await checkout.submitPayment();
-   *   console.log('Payment successful!');
-   * } catch (error) {
-   *   console.error('Payment failed:', error);
-   * }
-   * ```
-   */
-  submitPayment(skipOnBeforeValidateHook?: boolean): Promise<void>;
-  /**
-   * Shortcut to instantiate a payment element directly from the checkout, without
-   * iterating through `paymentMethods` to find a method first.
-   *
-   * Behaviour:
-   * - `hostedForm` and `hostedFields` are mutually exclusive — when both are set,
-   *   `hostedForm` wins and a warning is emitted.
-   * - `method` is required for `hostedForm`. For `hostedFields` it can be omitted,
-   *   in which case the first primary method on `partner` is used.
-   * - When the resolved method does not support hosted fields, a warning is logged
-   *   but the call still returns the hosted-fields instance.
-   *
-   * @param options - {@link PurseHeadlessCheckoutGetPaymentElementOptions}
-   *
-   * @throws
-   * - {@link PurseHeadlessCheckoutError} `PAYMENT_METHOD_NOT_FOUND` \
-   *   If no primary method matches `partner` (and `method`, when provided).
-   *
-   * @example
-   * ```ts
-   * const el = checkout.getPaymentElement({
-   *   partner: 'ingenico',
-   *   method: 'creditcard',
-   *   theme: {},
-   *   hostedForm: {},
-   * });
-   * el.appendTo('#container');
-   * ```
-   */
-  getPaymentElement(options: PurseHeadlessCheckoutGetPaymentElementOptions): PurseHeadlessCheckoutPaymentElement | PurseHeadlessCheckoutHostedFields;
+	#private;
+	protected _env: APIEnv;
+	protected _payment: PursePayment;
+	protected _eventBus: PurseHeadlessCheckoutEventBus;
+	protected _apiLogger: ApiLogger;
+	private readonly _hooks?;
+	/**
+	 * Current paymentSessionID readable value;
+	 */
+	readonly currentSessionID: Readable<string | null>;
+	/**
+	 * Indicates whether the current session is an information request (data collection) session.
+	 * In such sessions there is no amount to pay — the purpose is gathering payment information
+	 * (e.g. registering a card) for later use. Only protocols with `registration_mode: "OFF_SESSION"`
+	 * are available in this mode.
+	 * @example
+	 * ```ts
+	 * headlessCheckout.isInformationRequest.subscribe((isInformationRequest: boolean) => {
+	 *    if (isInformationRequest) {
+	 *      // Adapt the UI: no amount to display, submit stores the card for later use
+	 *    }
+	 * });
+	 * ```
+	 */
+	readonly isInformationRequest: Readable<boolean>;
+	/**
+	 * List of available payment methods for the checkout.
+	 * Each payment-element in the array represents a payment method with its associated properties.
+	 * @type {Readable<Array<PurseHeadlessCheckoutPaymentMethod>>}
+	 * @example
+	 * ```ts
+	 * headlessCheckout.paymentMethods.subscribe((methods: PurseCheckoutPaymentMethod[]) => {
+	 *    console.log('The payment methods changed', methods);
+	 *    // Perhaps update the UI with the new methods
+	 * });
+	 * ```
+	 */
+	readonly paymentMethods: Readable<PurseHeadlessCheckoutPaymentMethod[]>;
+	/**
+	 * List of available payment tokens for the checkout.
+	 * Each payment-element in the array represents a payment token with its associated properties.
+	 * @type {Readable<Array<PurseHeadlessCheckoutPaymentToken>>}
+	 * @example
+	 * ```ts
+	 * headlessCheckout.paymentTokens.subscribe((tokens: PurseCheckoutPaymentToken[]) => {
+	 *   console.log('The payment tokens changed', tokens);
+	 *   // Perhaps update the UI with the new tokens
+	 * });
+	 * ```
+	 */
+	readonly paymentTokens: Readable<PurseHeadlessCheckoutPaymentToken[]>;
+	/**
+	 * This property indicates if the payment can be submitted.
+	 * @example
+	 * ```ts
+	 * headlessCheckout.isPaymentFulfilled.subscribe((isFulfilled: boolean) => {
+	 *    if(isFulfilled) {
+	 *      enablePayButton();
+	 *    }else{
+	 *      disablePayButton();
+	 *    }
+	 * });
+	 * ```
+	 */
+	readonly isPaymentFulfilled: Readable<boolean>;
+	/**
+	 * The remaining amount to pay represents the amount that is left to pay after the secondary payment method(s) has been used.
+	 * @example
+	 * ```ts
+	 * headlessCheckout.remainingAmountToPay.subscribe((amount: number) => {
+	 *    console.log('Perhaps update the text in your pay button', amount);
+	 * });
+	 * ```
+	 * */
+	readonly remainingAmountToPay: Readable<number>;
+	/**
+	 * Splits represent the repartition between the primary payment method and the secondary payment methods.
+	 * @link PurseHeadlessCheckoutPaymentSplit
+	 * @example
+	 * ```ts
+	 * headlessCheckout.amountSplit.subscribe((splits: PurseHeadlessCheckoutPaymentSplit[]) => {
+	 *    console.log('The payment composition changed', splits);
+	 * });
+	 * ```
+	 * */
+	readonly amountSplit: Readable<PaymentSplit[]>;
+	readonly currency: Readable<string>;
+	/**
+	 * The current state of the checkout session.
+	 * It can be one of the following values:
+	 * - 'idle': The session is idle and not yet initialized.
+	 * - 'ready': The session is initialized and ready for payment method selection.
+	 * - 'submitting': The payment is being submitted.
+	 * - 'submitted': The payment has been successfully submitted.
+	 * - 'expired': The session has expired.
+	 * - 'error': An error occurred with the session.
+	 * @example
+	 * ```ts
+	 * headlessCheckout.sessionState.subscribe((state: PurseHeadlessCheckoutSessionState) => {
+	 *    console.log('The session state changed', state);
+	 *    if(state === 'expired') {
+	 *      alertUserSessionExpired();
+	 *    }
+	 * });
+	 * ```
+	 */
+	readonly sessionState: Derived<PurseHeadlessCheckoutSessionState, [
+		Writable<PurseHeadlessCheckoutSessionState>
+	]>;
+	/* Excluded from this release type: __internal__ */
+	private constructor();
+	/* Excluded from this release type: init */
+	/**
+	 * Get the config from params
+	 * @param {PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params} checkoutParams - The checkoutParams data for initializing the checkout.
+	 * @param {APIPaths} apiPaths - dev purposes only to override the APi URL's
+	 */
+	static getConfigFromParams(checkoutParams: PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params, apiPaths?: APIPaths): PurseHeadlessCheckoutV1Params & {
+		apiPaths: APIPaths | undefined;
+		walletSession?: OnePayWalletSession;
+	};
+	/**
+	 * Cleans up resources and removes event listeners.
+	 * @example
+	 * ```ts
+	 * headlessCheckout.teardown();
+	 * ```
+	 */
+	teardown(): void;
+	/**
+	 * Sets the wallet session. The wallet session is used to retrieve and manage the user's stored card tokens.
+	 *
+	 * @param {WalletSessionModel} walletSession
+	 *
+	 * @throws {@link PurseHeadlessCheckoutError} `SET_WALLET_SESSION_FAILED` \
+		 * If setting the wallet session fails
+		 *
+		 * @example
+		 * ```ts
+		 * headlessCheckout.setWalletSession(walletSession);
+		 * ```
+		 */
+	setWalletSession(walletSession: OnePayWalletSession): Promise<void>;
+	/**
+	 * Remove all tokens from the provided wallet session
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_WALLET_SESSION` \
+	 * If the wallet session is missing
+	 * - {@link PurseHeadlessCheckoutError} `FAILED_TO_DELETE_ALL_TOKENS` \
+	 * If deleting the tokens fails
+	 *
+	 * @example
+	 * ```ts
+	 * headlessCheckout.deleteAllTokens();
+	 * ```
+	 */
+	deleteAllTokens(): Promise<void>;
+	/**
+	 * Clears the primary split from the amount share.
+	 * Nothing happens if the primary split is already cleared.
+	 * @example
+	 * ```ts
+	 * headlessCheckout.clearPrimarySplit();
+	 * ```
+	 */
+	clearPrimarySplit(): void;
+	protected _setSession(session: PurseHeadlessCheckoutV1Params["paymentSession"]): Promise<void>;
+	/* Excluded from this release type: manuallyTriggerHook */
+	/**
+	 * Updates the session with the provided session data.
+	 * @param {PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params['paymentSession']} widgetData - The session data. Can be either an encoded string (V2) or a payment session object (V1).
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_SESSION` \
+	 * If setting the session fails
+	 * - {@link PurseHeadlessCheckoutError} `UNKNOWN_ERROR` \
+	 * If an unknown error is caught during the session update
+	 *
+	 * @example
+	 * ```ts
+	 * headlessCheckout.setSession(paymentSession);
+	 * ```
+	 */
+	setSession(widgetData: PurseHeadlessCheckoutV2Params): Promise<void>;
+	setSession(widgetData: PurseHeadlessCheckoutV1Params["paymentSession"]): Promise<void>;
+	private _submitPayment;
+	/**
+	 * Submits the current payment configuration for processing.
+	 * This will validate and process all payment methods in the current split configuration.
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_SESSION` \
+	 * If the session is missing
+	 * - {@link PurseHeadlessCheckoutError} `PAYMENT_NOT_FULFILLED_ON_SUBMIT` \
+	 * If submitting a payment not available for submission
+	 * - {@link PurseHeadlessCheckoutError} `POST_VALIDATE_FAILED` \
+	 * If the post-validation step of the payment process fails
+	 * - {@link PurseHeadlessCheckoutError} `UI_VALIDATION_FAILED_ERROR` \
+	 * If the pre-validation step of the payment process fails
+	 * - {@link PurseHeadlessCheckoutError} `VALIDATE_FAILED` \
+	 * If the validate step of the payment process fails
+	 *
+	 * @example
+	 * ```typescript
+	 * try {
+	 *   // Configure payment methods and amounts
+	 *   await primaryMethod.setAsPrimarySource();
+	 *   await secondaryToken.take(50.00);
+	 *
+	 *   // Submit the payment
+	 *   await checkout.submitPayment();
+	 *   console.log('Payment successful!');
+	 * } catch (error) {
+	 *   console.error('Payment failed:', error);
+	 * }
+	 * ```
+	 */
+	submitPayment(skipOnBeforeValidateHook?: boolean): Promise<void>;
+	/**
+	 * Shortcut to instantiate a payment element directly from the checkout, without
+	 * iterating through `paymentMethods` to find a method first.
+	 *
+	 * Behaviour:
+	 * - `hostedForm` and `hostedFields` are mutually exclusive — when both are set,
+	 *   `hostedForm` wins and a warning is emitted.
+	 * - `method` is required for `hostedForm`. For `hostedFields` it can be omitted,
+	 *   in which case the first primary method on `partner` is used.
+	 * - When the resolved method does not support hosted fields, a warning is logged
+	 *   but the call still returns the hosted-fields instance.
+	 *
+	 * @param options - {@link PurseHeadlessCheckoutGetPaymentElementOptions}
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `PAYMENT_METHOD_NOT_FOUND` \
+	 *   If no primary method matches `partner` (and `method`, when provided).
+	 *
+	 * @example
+	 * ```ts
+	 * const el = checkout.getPaymentElement({
+	 *   partner: 'ingenico',
+	 *   method: 'creditcard',
+	 *   theme: {},
+	 *   hostedForm: {},
+	 * });
+	 * el.appendTo('#container');
+	 * ```
+	 */
+	getPaymentElement(options: PurseHeadlessCheckoutGetPaymentElementOptions): PurseHeadlessCheckoutPaymentElement | PurseHeadlessCheckoutHostedFields;
 }
 export declare interface PurseHeadlessCheckoutEditable {
-  /**
-   * Delete the token from the user's wallet
-   *
-   * @throws
-   * - {@link PurseHeadlessCheckoutError} `METHOD_NOT_IMPLEMENTED` \
-   * If the token is of type {@link PurseHeadlessCheckoutTemporarySecondaryToken}
-   * - {@link PurseHeadlessCheckoutError} `MISSING_SESSION` \
-   * If the session is missing
-   * - {@link PurseHeadlessCheckoutError} `MISSING_TOKEN` \
-   * If the provided token cannot be found
-   * - {@link PurseHeadlessCheckoutError} `MISSING_WALLET_SESSION` \
-   * If the wallet session is missing
-   * - {@link PurseHeadlessCheckoutError} `UNKNOWN_ERROR` \
-   * If an unknown error is caught during the deletion
-   *
-   * @example
-   * ```typescript
-   * token.delete();
-   * ```
-   */
-  delete(): Promise<void>;
-  /**
-   * Edit the token's name
-   * @param payload
-   *
-   * @throws
-   * - {@link PurseHeadlessCheckoutError} `TOKEN_NOT_REGISTERABLE` \
-   * If the token is not registerable
-   * - {@link PurseHeadlessCheckoutError} `TOKEN_NOT_REGISTERED` \
-   * If the token is not registered (see {@link PurseHeadlessCheckoutRegisterable.register})
-   * - {@link PurseHeadlessCheckoutError} `TOKEN_NAME_EXISTS` \
-   * If the token name already exists
-   * - {@link PurseHeadlessCheckoutError} `MISSING_TOKEN` \
-   * If the provided token cannot be found
-   * - {@link PurseHeadlessCheckoutError} `INVALID_TOKEN_NAME` \
-   * If the provided token name is invalid
-   * - {@link PurseHeadlessCheckoutError} `MISSING_WALLET_SESSION` \
-   * If the wallet session is missing
-   *
-   * @example
-   * ```typescript
-   * token.edit({ name: 'New Name' });
-   * ```
-   */
-  edit(payload: {
-    name: string;
-  }): Promise<void>;
+	/**
+	 * Delete the token from the user's wallet
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `METHOD_NOT_IMPLEMENTED` \
+	 * If the token is of type {@link PurseHeadlessCheckoutTemporarySecondaryToken}
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_SESSION` \
+	 * If the session is missing
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_TOKEN` \
+	 * If the provided token cannot be found
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_WALLET_SESSION` \
+	 * If the wallet session is missing
+	 * - {@link PurseHeadlessCheckoutError} `UNKNOWN_ERROR` \
+	 * If an unknown error is caught during the deletion
+	 *
+	 * @example
+	 * ```typescript
+	 * token.delete();
+	 * ```
+	 */
+	delete(): Promise<void>;
+	/**
+	 * Edit the token's name
+	 * @param payload
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `TOKEN_NOT_REGISTERABLE` \
+	 * If the token is not registerable
+	 * - {@link PurseHeadlessCheckoutError} `TOKEN_NOT_REGISTERED` \
+	 * If the token is not registered (see {@link PurseHeadlessCheckoutRegisterable.register})
+	 * - {@link PurseHeadlessCheckoutError} `TOKEN_NAME_EXISTS` \
+	 * If the token name already exists
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_TOKEN` \
+	 * If the provided token cannot be found
+	 * - {@link PurseHeadlessCheckoutError} `INVALID_TOKEN_NAME` \
+	 * If the provided token name is invalid
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_WALLET_SESSION` \
+	 * If the wallet session is missing
+	 *
+	 * @example
+	 * ```typescript
+	 * token.edit({ name: 'New Name' });
+	 * ```
+	 */
+	edit(payload: {
+		name: string;
+	}): Promise<void>;
 }
 declare class PurseHeadlessCheckoutError extends Error {
-  readonly code: PurseHeadlessCheckoutErrorCodes;
-  readonly documentationLink: string;
-  readonly additionalPayload?: PurseHeadlessCheckoutErrorsPayload[PurseHeadlessCheckoutErrorCodes];
-  constructor(error: (typeof PurseHeadlessCheckoutErrors)[PurseHeadlessCheckoutErrorCodes], additionalPayload?: JsonSerializable$1 | Error);
+	readonly code: PurseHeadlessCheckoutErrorCodes;
+	readonly documentationLink: string;
+	readonly additionalPayload?: PurseHeadlessCheckoutErrorsPayload[PurseHeadlessCheckoutErrorCodes];
+	constructor(error: (typeof PurseHeadlessCheckoutErrors)[PurseHeadlessCheckoutErrorCodes], additionalPayload?: JsonSerializable$1 | Error);
 }
 export declare type PurseHeadlessCheckoutErrorCodes = keyof typeof PurseHeadlessCheckoutErrors;
 declare const PurseHeadlessCheckoutErrors: {
-  readonly ELEMENT_NOT_FULFILLED: {
-    readonly code: "ELEMENT_NOT_FULFILLED";
-    readonly message: "Payment element must be fulfilled for this action.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#element_not_fulfilled";
-  };
-  readonly ELEMENT_RENDER_FAILED: {
-    readonly code: "ELEMENT_RENDER_FAILED";
-    readonly message: "An error occurred while rendering the payment element";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#element_render_failed";
-  };
-  readonly INVALID_LOAN_SIMULATION: {
-    readonly code: "INVALID_LOAN_SIMULATION";
-    readonly message: "The Load Simulation API response does not contain valid simulation data.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#invalid_loan_simulation";
-  };
-  readonly UI_VALIDATION_FAILED_ERROR: {
-    readonly code: "UI_VALIDATION_FAILED_ERROR";
-    readonly message: "Partner's form is not complete, sometimes the form internal state cannot be accessed and fulfilled is sent right on creation. Visual queues are displayed for the user.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#ui_validation_failed_error";
-  };
-  readonly USAGE_LIMIT_ERROR: {
-    readonly code: "USAGE_LIMIT_ERROR";
-    readonly message: "Usage limit reached for partner and method.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#usage_limit_error";
-  };
-  readonly SECONDARY_METHOD_REQUIRED_CVV: {
-    readonly code: "SECONDARY_METHOD_REQUIRED_CVV";
-    readonly message: "This method and pan combination requires a CVV.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_required_cvv";
-  };
-  readonly SECONDARY_METHOD_WRONG_PAN_FORMAT: {
-    readonly code: "SECONDARY_METHOD_WRONG_PAN_FORMAT";
-    readonly message: "The provided pan does not respect the expected format.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_wrong_pan_format";
-  };
-  readonly SECONDARY_METHOD_WRONG_CVV_FORMAT: {
-    readonly code: "SECONDARY_METHOD_WRONG_CVV_FORMAT";
-    readonly message: "The provided cvv does not respect the expected format.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_wrong_cvv_format";
-  };
-  readonly SECONDARY_METHOD_TAKE_POLICY_VIOLATED: {
-    readonly code: "SECONDARY_METHOD_TAKE_POLICY_VIOLATED";
-    readonly message: "This method has a strict take policy and cannot be used with any amount.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_take_policy_violated";
-  };
-  readonly SECONDARY_METHOD_REQUEST_ABORTED: {
-    readonly code: "SECONDARY_METHOD_REQUEST_ABORTED";
-    readonly message: "The request to get a secondary token was aborted.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_request_aborted";
-  };
-  readonly METHOD_NOT_IMPLEMENTED: {
-    readonly code: "METHOD_NOT_IMPLEMENTED";
-    readonly message: "The invoked method is not implemented.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#method_not_implemented";
-  };
-  readonly INVALID_TAKE_AMOUNT: {
-    readonly code: "INVALID_TAKE_AMOUNT";
-    readonly message: "Cannot perform \"take\" with an invalid amount.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#invalid_take_amount";
-  };
-  readonly MAX_AMOUNT_REACHED: {
-    readonly code: "MAX_AMOUNT_REACHED";
-    readonly message: "Take amount is invalid. Maximum amount reached.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#max_amount_reached";
-  };
-  readonly PAYMENT_NOT_FULFILLED_ON_SUBMIT: {
-    readonly code: "PAYMENT_NOT_FULFILLED_ON_SUBMIT";
-    readonly message: "Payment not fulfilled while submitting payment.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#payment_not_fulfilled_on_submit";
-  };
-  readonly PAYMENT_METHOD_NOT_FOUND: {
-    readonly code: "PAYMENT_METHOD_NOT_FOUND";
-    readonly message: "Method not found.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#payment_method_not_found";
-  };
-  readonly UNKNOWN_ERROR: {
-    readonly code: "UNKNOWN_ERROR";
-    readonly message: "An error occurred.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#unknown_error";
-  };
-  readonly ON_BEFORE_VALIDATE_HOOK_FAILED: {
-    readonly code: "ON_BEFORE_VALIDATE_HOOK_FAILED";
-    readonly message: "The hook onBeforeValidate failed.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#on_before_validate_hook_failed";
-  };
-  readonly NOT_SUPPORTED_BRAND: {
-    readonly code: "NOT_SUPPORTED_BRAND";
-    readonly message: "The brand is not supported.";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#not_supported_brand";
-  };
-  readonly BRAND_NOT_BELONGS_TO_DETECTED: {
-    readonly code: "BRAND_NOT_BELONGS_TO_DETECTED";
-    readonly message: "The brand is not one of the detected ones";
-    readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#brand_not_belongs_to_detected";
-  };
-  readonly METHOD_NOT_REGISTERABLE: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly METHOD_DISABLED: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly METHOD_IS_NOT_SIMULABLE: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly VALIDATE_FAILED: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly POST_VALIDATE_FAILED: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly INVALID_INIT_PARAMS: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly FAILED_TO_INIT_SECONDARY_TOKEN: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly TOKEN_NOT_REGISTERABLE: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly TOKEN_NOT_REGISTERED: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly TOKEN_NAME_EXISTS: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly MISSING_TOKEN: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly INVALID_TOKEN_NAME: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly FAILED_TO_DELETE_ALL_TOKENS: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly FAILED_TO_ADD_TOKEN: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly TOKEN_ALREADY_EXISTS: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly USER_ACTION_REQUEST_HAS_EXPIRED: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly USER_ACTION_REQUEST_ABORTED_BY_CUSTOMER: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly OTHER_TRANSACTION_PENDING_FOR_ACCOUNT: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly PAYMENT_TOKEN_NOT_FOUND_IN_SESSION: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly SECONDARY_TOKEN_EMPTY_BALANCE: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly EXPIRED_SESSION: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly SESSION_ALREADY_SET: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly MISSING_SESSION: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly MISSING_WALLET_SESSION: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly SET_WALLET_SESSION_FAILED: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
-  readonly SESSION_MALFORMED: {
-    code: string;
-    message: string;
-    documentationLink: string;
-  };
+	readonly ELEMENT_NOT_FULFILLED: {
+		readonly code: "ELEMENT_NOT_FULFILLED";
+		readonly message: "Payment element must be fulfilled for this action.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#element_not_fulfilled";
+	};
+	readonly ELEMENT_RENDER_FAILED: {
+		readonly code: "ELEMENT_RENDER_FAILED";
+		readonly message: "An error occurred while rendering the payment element";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#element_render_failed";
+	};
+	readonly INVALID_LOAN_SIMULATION: {
+		readonly code: "INVALID_LOAN_SIMULATION";
+		readonly message: "The Load Simulation API response does not contain valid simulation data.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#invalid_loan_simulation";
+	};
+	readonly UI_VALIDATION_FAILED_ERROR: {
+		readonly code: "UI_VALIDATION_FAILED_ERROR";
+		readonly message: "Partner's form is not complete, sometimes the form internal state cannot be accessed and fulfilled is sent right on creation. Visual queues are displayed for the user.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#ui_validation_failed_error";
+	};
+	readonly USAGE_LIMIT_ERROR: {
+		readonly code: "USAGE_LIMIT_ERROR";
+		readonly message: "Usage limit reached for partner and method.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#usage_limit_error";
+	};
+	readonly SECONDARY_METHOD_REQUIRED_CVV: {
+		readonly code: "SECONDARY_METHOD_REQUIRED_CVV";
+		readonly message: "This method and pan combination requires a CVV.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_required_cvv";
+	};
+	readonly SECONDARY_METHOD_WRONG_PAN_FORMAT: {
+		readonly code: "SECONDARY_METHOD_WRONG_PAN_FORMAT";
+		readonly message: "The provided pan does not respect the expected format.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_wrong_pan_format";
+	};
+	readonly SECONDARY_METHOD_WRONG_CVV_FORMAT: {
+		readonly code: "SECONDARY_METHOD_WRONG_CVV_FORMAT";
+		readonly message: "The provided cvv does not respect the expected format.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_wrong_cvv_format";
+	};
+	readonly SECONDARY_METHOD_TAKE_POLICY_VIOLATED: {
+		readonly code: "SECONDARY_METHOD_TAKE_POLICY_VIOLATED";
+		readonly message: "This method has a strict take policy and cannot be used with any amount.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_take_policy_violated";
+	};
+	readonly SECONDARY_METHOD_REQUEST_ABORTED: {
+		readonly code: "SECONDARY_METHOD_REQUEST_ABORTED";
+		readonly message: "The request to get a secondary token was aborted.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#secondary_method_request_aborted";
+	};
+	readonly METHOD_NOT_IMPLEMENTED: {
+		readonly code: "METHOD_NOT_IMPLEMENTED";
+		readonly message: "The invoked method is not implemented.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#method_not_implemented";
+	};
+	readonly INVALID_TAKE_AMOUNT: {
+		readonly code: "INVALID_TAKE_AMOUNT";
+		readonly message: "Cannot perform \"take\" with an invalid amount.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#invalid_take_amount";
+	};
+	readonly MAX_AMOUNT_REACHED: {
+		readonly code: "MAX_AMOUNT_REACHED";
+		readonly message: "Take amount is invalid. Maximum amount reached.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#max_amount_reached";
+	};
+	readonly PAYMENT_NOT_FULFILLED_ON_SUBMIT: {
+		readonly code: "PAYMENT_NOT_FULFILLED_ON_SUBMIT";
+		readonly message: "Payment not fulfilled while submitting payment.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#payment_not_fulfilled_on_submit";
+	};
+	readonly PAYMENT_METHOD_NOT_FOUND: {
+		readonly code: "PAYMENT_METHOD_NOT_FOUND";
+		readonly message: "Method not found.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#payment_method_not_found";
+	};
+	readonly UNKNOWN_ERROR: {
+		readonly code: "UNKNOWN_ERROR";
+		readonly message: "An error occurred.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#unknown_error";
+	};
+	readonly ON_BEFORE_VALIDATE_HOOK_FAILED: {
+		readonly code: "ON_BEFORE_VALIDATE_HOOK_FAILED";
+		readonly message: "The hook onBeforeValidate failed.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#on_before_validate_hook_failed";
+	};
+	readonly NOT_SUPPORTED_BRAND: {
+		readonly code: "NOT_SUPPORTED_BRAND";
+		readonly message: "The brand is not supported.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#not_supported_brand";
+	};
+	readonly BRAND_NOT_BELONGS_TO_DETECTED: {
+		readonly code: "BRAND_NOT_BELONGS_TO_DETECTED";
+		readonly message: "The brand is not one of the detected ones";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#brand_not_belongs_to_detected";
+	};
+	readonly METHOD_NOT_REGISTERABLE: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly METHOD_DISABLED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly METHOD_IS_NOT_SIMULABLE: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly VALIDATE_FAILED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly POST_VALIDATE_FAILED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly INVALID_INIT_PARAMS: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly FAILED_TO_INIT_SECONDARY_TOKEN: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly TOKEN_NOT_REGISTERABLE: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly TOKEN_NOT_REGISTERED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly TOKEN_NAME_EXISTS: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly MISSING_TOKEN: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly INVALID_TOKEN_NAME: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly FAILED_TO_DELETE_ALL_TOKENS: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly FAILED_TO_ADD_TOKEN: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly TOKEN_ALREADY_EXISTS: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly USER_ACTION_REQUEST_HAS_EXPIRED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly USER_ACTION_REQUEST_ABORTED_BY_CUSTOMER: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly OTHER_TRANSACTION_PENDING_FOR_ACCOUNT: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly PAYMENT_TOKEN_NOT_FOUND_IN_SESSION: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SECONDARY_TOKEN_EMPTY_BALANCE: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly EXPIRED_SESSION: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SESSION_ALREADY_SET: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly MISSING_SESSION: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly MISSING_WALLET_SESSION: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SET_WALLET_SESSION_FAILED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SESSION_MALFORMED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
 };
 /**
  * Payload types for each specific error code.
  * This interface maps error codes to their expected additional payload structure.
  */
 export declare interface PurseHeadlessCheckoutErrorsPayload {
-  EXPIRED_SESSION?: never;
-  SESSION_ALREADY_SET?: never;
-  MISSING_SESSION?: string;
-  MISSING_WALLET_SESSION?: never;
-  SET_WALLET_SESSION_FAILED?: Error;
-  SESSION_MALFORMED?: {
-    message: string;
-  };
-  METHOD_NOT_REGISTERABLE?: never;
-  METHOD_DISABLED?: {
-    code: string;
-    message: string;
-  };
-  METHOD_IS_NOT_SIMULABLE?: never;
-  TOKEN_NOT_REGISTERABLE?: never;
-  TOKEN_NOT_REGISTERED?: never;
-  TOKEN_NAME_EXISTS?: never;
-  MISSING_TOKEN?: never;
-  INVALID_TOKEN_NAME?: never;
-  FAILED_TO_DELETE_ALL_TOKENS?: Error;
-  FAILED_TO_ADD_TOKEN?: never;
-  TOKEN_ALREADY_EXISTS?: never;
-  PAYMENT_TOKEN_NOT_FOUND_IN_SESSION?: {
-    partner: Partner;
-    method: Method;
-    uniqueness_token: string;
-  };
-  SECONDARY_TOKEN_EMPTY_BALANCE?: never;
-  USER_ACTION_REQUEST_HAS_EXPIRED: never;
-  USER_ACTION_REQUEST_ABORTED_BY_CUSTOMER: never;
-  OTHER_TRANSACTION_PENDING_FOR_ACCOUNT: never;
-  INVALID_INIT_PARAMS?: string;
-  FAILED_TO_INIT_SECONDARY_TOKEN?: never;
-  VALIDATE_FAILED?: {
-    message: string;
-  };
-  POST_VALIDATE_FAILED?: never;
-  ELEMENT_NOT_FULFILLED?: never;
-  ELEMENT_RENDER_FAILED?: Error;
-  INVALID_LOAN_SIMULATION?: never;
-  UI_VALIDATION_FAILED_ERROR?: never;
-  USAGE_LIMIT_ERROR?: {
-    partner: string;
-    method: string;
-  };
-  SECONDARY_METHOD_REQUIRED_CVV?: never;
-  SECONDARY_METHOD_WRONG_PAN_FORMAT?: never;
-  SECONDARY_METHOD_WRONG_CVV_FORMAT?: never;
-  SECONDARY_METHOD_TAKE_POLICY_VIOLATED?: never;
-  SECONDARY_METHOD_REQUEST_ABORTED?: never;
-  METHOD_NOT_IMPLEMENTED?: never;
-  INVALID_TAKE_AMOUNT?: {
-    message: string;
-    amount: number;
-    balance?: number;
-    sessionAmount?: number;
-  };
-  PAYMENT_NOT_FULFILLED_ON_SUBMIT?: never;
-  PAYMENT_METHOD_NOT_FOUND?: {
-    partner: Partner;
-    method: Method;
-    session: string;
-  };
-  UNKNOWN_ERROR?: {
-    message: string;
-    error: {
-      message: string;
-      stack?: string;
-    };
-  };
-  ON_BEFORE_VALIDATE_HOOK_FAILED?: Error;
-  NOT_SUPPORTED_BRAND?: {
-    brand: CardScheme;
-    detectedBrands?: CardScheme[] | null;
-    supportedBrands: CardScheme[];
-  };
-  BRAND_NOT_BELONGS_TO_DETECTED?: {
-    brand: CardScheme;
-    detectedBrands: CardScheme[];
-  };
-  MAX_AMOUNT_REACHED: {
-    partner: Partner;
-    method: Method;
-    amount: number;
-    amountLimit: number;
-  };
+	EXPIRED_SESSION?: never;
+	SESSION_ALREADY_SET?: never;
+	MISSING_SESSION?: string;
+	MISSING_WALLET_SESSION?: never;
+	SET_WALLET_SESSION_FAILED?: Error;
+	SESSION_MALFORMED?: {
+		message: string;
+	};
+	METHOD_NOT_REGISTERABLE?: never;
+	METHOD_DISABLED?: {
+		code: string;
+		message: string;
+	};
+	METHOD_IS_NOT_SIMULABLE?: never;
+	TOKEN_NOT_REGISTERABLE?: never;
+	TOKEN_NOT_REGISTERED?: never;
+	TOKEN_NAME_EXISTS?: never;
+	MISSING_TOKEN?: never;
+	INVALID_TOKEN_NAME?: never;
+	FAILED_TO_DELETE_ALL_TOKENS?: Error;
+	FAILED_TO_ADD_TOKEN?: never;
+	TOKEN_ALREADY_EXISTS?: never;
+	PAYMENT_TOKEN_NOT_FOUND_IN_SESSION?: {
+		partner: Partner;
+		method: Method;
+		uniqueness_token: string;
+	};
+	SECONDARY_TOKEN_EMPTY_BALANCE?: never;
+	USER_ACTION_REQUEST_HAS_EXPIRED: never;
+	USER_ACTION_REQUEST_ABORTED_BY_CUSTOMER: never;
+	OTHER_TRANSACTION_PENDING_FOR_ACCOUNT: never;
+	INVALID_INIT_PARAMS?: string;
+	FAILED_TO_INIT_SECONDARY_TOKEN?: never;
+	VALIDATE_FAILED?: {
+		message: string;
+	};
+	POST_VALIDATE_FAILED?: never;
+	ELEMENT_NOT_FULFILLED?: never;
+	ELEMENT_RENDER_FAILED?: Error;
+	INVALID_LOAN_SIMULATION?: never;
+	UI_VALIDATION_FAILED_ERROR?: never;
+	USAGE_LIMIT_ERROR?: {
+		partner: string;
+		method: string;
+	};
+	SECONDARY_METHOD_REQUIRED_CVV?: never;
+	SECONDARY_METHOD_WRONG_PAN_FORMAT?: never;
+	SECONDARY_METHOD_WRONG_CVV_FORMAT?: never;
+	SECONDARY_METHOD_TAKE_POLICY_VIOLATED?: never;
+	SECONDARY_METHOD_REQUEST_ABORTED?: never;
+	METHOD_NOT_IMPLEMENTED?: never;
+	INVALID_TAKE_AMOUNT?: {
+		message: string;
+		amount: number;
+		balance?: number;
+		sessionAmount?: number;
+	};
+	PAYMENT_NOT_FULFILLED_ON_SUBMIT?: never;
+	PAYMENT_METHOD_NOT_FOUND?: {
+		partner: Partner;
+		method: Method;
+		session: string;
+	};
+	UNKNOWN_ERROR?: {
+		message: string;
+		error: {
+			message: string;
+			stack?: string;
+		};
+	};
+	ON_BEFORE_VALIDATE_HOOK_FAILED?: Error;
+	NOT_SUPPORTED_BRAND?: {
+		brand: CardScheme;
+		detectedBrands?: CardScheme[] | null;
+		supportedBrands: CardScheme[];
+	};
+	BRAND_NOT_BELONGS_TO_DETECTED?: {
+		brand: CardScheme;
+		detectedBrands: CardScheme[];
+	};
+	MAX_AMOUNT_REACHED: {
+		partner: Partner;
+		method: Method;
+		amount: number;
+		amountLimit: number;
+	};
 }
 declare class PurseHeadlessCheckoutEventBus extends EventBus<PurseHeadlessCheckoutEventBusEvent> {
-  static readonly SCOPES: {
-    headlessCheckout: string[];
-  };
-  static _instance?: PurseHeadlessCheckoutEventBus;
-  private readonly _logQueue;
-  private readonly _windowErrorWatcher;
-  private constructor();
-  post<T extends PurseHeadlessCheckoutEventCode>(event: PurseHeadlessCheckoutEventBusEvent<T>): void;
-  unsubscribeAll(): void;
-  subscribe(listener: EventListener$1<PurseHeadlessCheckoutEventBusEvent>, scopes?: Array<keyof typeof EventScopes | "*">): EventListenerTerminator;
-  postFromCode<C extends PurseHeadlessCheckoutEventCode>(code: C, { type, payload, }?: {
-    type?: keyof typeof EventType;
-    payload?: PurseHeadlessCheckoutEventPayload[C];
-  }): void;
-  private beforeUnload;
-  static getInstance(processLog?: (e: PurseHeadlessCheckoutEventBusEvent[]) => void): PurseHeadlessCheckoutEventBus;
+	static readonly SCOPES: {
+		headlessCheckout: string[];
+	};
+	static _instance?: PurseHeadlessCheckoutEventBus;
+	private readonly _logQueue;
+	private readonly _windowErrorWatcher;
+	private constructor();
+	post<T extends PurseHeadlessCheckoutEventCode>(event: PurseHeadlessCheckoutEventBusEvent<T>): void;
+	unsubscribeAll(): void;
+	subscribe(listener: EventListener$1<PurseHeadlessCheckoutEventBusEvent>, scopes?: Array<keyof typeof EventScopes | "*">): EventListenerTerminator;
+	postFromCode<C extends PurseHeadlessCheckoutEventCode>(code: C, { type, payload, }?: {
+		type?: keyof typeof EventType;
+		payload?: PurseHeadlessCheckoutEventPayload[C];
+	}): void;
+	private beforeUnload;
+	static getInstance(processLog?: (e: PurseHeadlessCheckoutEventBusEvent[]) => void): PurseHeadlessCheckoutEventBus;
 }
 export declare interface PurseHeadlessCheckoutEventBusEvent<Code extends PurseHeadlessCheckoutEventCode = PurseHeadlessCheckoutEventCode> extends Event$1<PurseHeadlessCheckoutEventPayload[Code], Code> {
-  code: Code;
-  payload?: PurseHeadlessCheckoutEventPayload[Code];
+	code: Code;
+	payload?: PurseHeadlessCheckoutEventPayload[Code];
 }
 export declare type PurseHeadlessCheckoutEventCode = keyof PurseHeadlessCheckoutEventPayload;
 export declare interface PurseHeadlessCheckoutEventPayload {
-  HEADLESS_CHECKOUT_CLEAR_PRIMARY_SPLIT: {
-    partner: string;
-    method: string;
-  };
-  HEADLESS_CHECKOUT_CLIENT_HOOK_ERROR: Record<never, never>;
-  HEADLESS_CHECKOUT_CREATE: {
-    sessionType: "v1" | "v2";
-  };
-  HEADLESS_CHECKOUT_DELETE_ALL_TOKENS: Record<never, never>;
-  HEADLESS_CHECKOUT_EXPIRED_SESSION: {
-    paymentSessionId: string;
-  };
-  HEADLESS_CHECKOUT_METHOD_GET_PAYMENT_ELEMENT: {
-    partner: string;
-    method: string;
-    options?: string | Options;
-  };
-  HEADLESS_CHECKOUT_METHOD_GET_HOSTED_FIELDS: {
-    partner: string;
-    method: string;
-    options?: string | Options;
-  };
-  HEADLESS_CHECKOUT_METHOD_GET_SECONDARY_TOKEN: Record<never, never>;
-  HEADLESS_CHECKOUT_METHOD_LOAN_SIM: {
-    partner: string;
-    method: string;
-  };
-  HEADLESS_CHECKOUT_METHOD_REGISTER: {
-    partner: string;
-    method: string;
-    saveToken: boolean;
-  };
-  HEADLESS_CHECKOUT_METHOD_SET_PRIMARY: {
-    partner: string;
-    method: string;
-  };
-  HEADLESS_CHECKOUT_OTHER_ERROR: Record<never, never>;
-  HEADLESS_CHECKOUT_PAGE_UNLOAD: Record<never, never>;
-  HEADLESS_CHECKOUT_PARTNER_UI_EVENT: {
-    code: string;
-    partner: string;
-    method: string;
-    value?: unknown;
-  } & Record<string, string | number | undefined>;
-  HEADLESS_CHECKOUT_PAYMENT_ELEMENT_APPEND_TO: {
-    partner: string;
-    method: string;
-  };
-  HEADLESS_CHECKOUT_PAYMENT_ELEMENT_REMOVE: {
-    partner: string;
-    method: string;
-    id?: string;
-  };
-  HEADLESS_CHECKOUT_PAYMENT_ELEMENT_SET_OPTIONS: {
-    partner: string;
-    method: string;
-    options?: string | Options;
-  };
-  HEADLESS_CHECKOUT_PAYMENT_ELEMENT_VALIDATE_UI: {
-    partner: string;
-    method: string;
-  };
-  HEADLESS_CHECKOUT_PAYMENT_ELEMENT_LISTENER_ATTACHED: {
-    partner: string;
-    method: string;
-    eventName?: string;
-  };
-  HEADLESS_CHECKOUT_VALIDATION_STARTED: Record<never, never>;
-  HEADLESS_CHECKOUT_PRE_VALIDATION_FAILED: Record<never, never>;
-  HEADLESS_CHECKOUT_VALIDATION_ENDED: Record<never, never>;
-  HEADLESS_CHECKOUT_PAYMENT_ERROR: {
-    message?: string;
-    api_status?: string;
-    stack?: string;
-  };
-  HEADLESS_CHECKOUT_PAYMENT_FULFILLED: {
-    isFulfilled: boolean;
-  };
-  HEADLESS_CHECKOUT_PRIMARY_TOKEN_GET_PAYMENT_ELEMENT: {
-    partner: string;
-    method: string;
-    id?: string;
-  };
-  HEADLESS_CHECKOUT_PRIMARY_TOKEN_SET_AS_PRIMARY: {
-    partner: string;
-    method: string;
-  };
-  HEADLESS_CHECKOUT_REACTIVE_VALUE_SUBSCRIBE: {
-    variableName: string;
-  };
-  HEADLESS_CHECKOUT_READY: Record<never, never>;
-  HEADLESS_CHECKOUT_SECONDARY_TOKEN_REGISTER: Record<never, never>;
-  HEADLESS_CHECKOUT_SECONDARY_TOKEN_REMOVE_FROM_SPLIT: {
-    partner: string;
-    method: string;
-    id?: string;
-  };
-  HEADLESS_CHECKOUT_SECONDARY_TOKEN_TAKE: {
-    partner: string;
-    method: string;
-    amount?: number;
-  };
-  HEADLESS_CHECKOUT_SET_SESSION: {
-    paymentSessionId: string;
-    sessionType: "v1" | "v2" | "unknown";
-    message?: string;
-  };
-  HEADLESS_CHECKOUT_SET_WALLET_SESSION: {
-    walletSessionId: string;
-  };
-  HEADLESS_CHECKOUT_SET_WALLET_SESSION_FAILED: {
-    message?: string;
-    stack?: string;
-  };
-  HEADLESS_CHECKOUT_SUBMIT_PAYMENT: {
-    splits: PaymentSplit[];
-  };
-  HEADLESS_CHECKOUT_TOKEN_DELETE: {
-    partner: string;
-    method: string;
-    tokenId?: string;
-  };
-  HEADLESS_CHECKOUT_TOKEN_EDIT: {
-    partner: string;
-    method: string;
-    tokenId?: string;
-  };
-  HEADLESS_CHECKOUT_UNCAUGHT_ERROR: Record<never, never>;
-  HEADLESS_CHECKOUT_ON_BEFORE_VALIDATE_HOOK_FAILED: {
-    message: string;
-    error: {
-      message: string;
-      stack?: string;
-    };
-  };
+	HEADLESS_CHECKOUT_CLEAR_PRIMARY_SPLIT: {
+		partner: string;
+		method: string;
+	};
+	HEADLESS_CHECKOUT_CLIENT_HOOK_ERROR: Record<never, never>;
+	HEADLESS_CHECKOUT_CREATE: {
+		sessionType: "v1" | "v2";
+	};
+	HEADLESS_CHECKOUT_DELETE_ALL_TOKENS: Record<never, never>;
+	HEADLESS_CHECKOUT_EXPIRED_SESSION: {
+		paymentSessionId: string;
+	};
+	HEADLESS_CHECKOUT_METHOD_GET_PAYMENT_ELEMENT: {
+		partner: string;
+		method: string;
+		options?: string | Options;
+	};
+	HEADLESS_CHECKOUT_METHOD_GET_HOSTED_FIELDS: {
+		partner: string;
+		method: string;
+		options?: string | Options;
+	};
+	HEADLESS_CHECKOUT_METHOD_GET_SECONDARY_TOKEN: Record<never, never>;
+	HEADLESS_CHECKOUT_METHOD_LOAN_SIM: {
+		partner: string;
+		method: string;
+	};
+	HEADLESS_CHECKOUT_METHOD_REGISTER: {
+		partner: string;
+		method: string;
+		saveToken: boolean;
+	};
+	HEADLESS_CHECKOUT_METHOD_SET_PRIMARY: {
+		partner: string;
+		method: string;
+	};
+	HEADLESS_CHECKOUT_OTHER_ERROR: Record<never, never>;
+	HEADLESS_CHECKOUT_PAGE_UNLOAD: Record<never, never>;
+	HEADLESS_CHECKOUT_PARTNER_UI_EVENT: {
+		code: string;
+		partner: string;
+		method: string;
+		value?: unknown;
+	} & Record<string, string | number | undefined>;
+	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_APPEND_TO: {
+		partner: string;
+		method: string;
+	};
+	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_REMOVE: {
+		partner: string;
+		method: string;
+		id?: string;
+	};
+	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_SET_OPTIONS: {
+		partner: string;
+		method: string;
+		options?: string | Options;
+	};
+	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_VALIDATE_UI: {
+		partner: string;
+		method: string;
+	};
+	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_LISTENER_ATTACHED: {
+		partner: string;
+		method: string;
+		eventName?: string;
+	};
+	HEADLESS_CHECKOUT_VALIDATION_STARTED: Record<never, never>;
+	HEADLESS_CHECKOUT_PRE_VALIDATION_FAILED: Record<never, never>;
+	HEADLESS_CHECKOUT_VALIDATION_ENDED: Record<never, never>;
+	HEADLESS_CHECKOUT_PAYMENT_ERROR: {
+		message?: string;
+		api_status?: string;
+		stack?: string;
+	};
+	HEADLESS_CHECKOUT_PAYMENT_FULFILLED: {
+		isFulfilled: boolean;
+	};
+	HEADLESS_CHECKOUT_PRIMARY_TOKEN_GET_PAYMENT_ELEMENT: {
+		partner: string;
+		method: string;
+		id?: string;
+	};
+	HEADLESS_CHECKOUT_PRIMARY_TOKEN_SET_AS_PRIMARY: {
+		partner: string;
+		method: string;
+	};
+	HEADLESS_CHECKOUT_REACTIVE_VALUE_SUBSCRIBE: {
+		variableName: string;
+	};
+	HEADLESS_CHECKOUT_READY: Record<never, never>;
+	HEADLESS_CHECKOUT_SECONDARY_TOKEN_REGISTER: Record<never, never>;
+	HEADLESS_CHECKOUT_SECONDARY_TOKEN_REMOVE_FROM_SPLIT: {
+		partner: string;
+		method: string;
+		id?: string;
+	};
+	HEADLESS_CHECKOUT_SECONDARY_TOKEN_TAKE: {
+		partner: string;
+		method: string;
+		amount?: number;
+	};
+	HEADLESS_CHECKOUT_SET_SESSION: {
+		paymentSessionId: string;
+		sessionType: "v1" | "v2" | "unknown";
+		message?: string;
+	};
+	HEADLESS_CHECKOUT_SET_WALLET_SESSION: {
+		walletSessionId: string;
+	};
+	HEADLESS_CHECKOUT_SET_WALLET_SESSION_FAILED: {
+		message?: string;
+		stack?: string;
+	};
+	HEADLESS_CHECKOUT_SUBMIT_PAYMENT: {
+		splits: PaymentSplit[];
+	};
+	HEADLESS_CHECKOUT_TOKEN_DELETE: {
+		partner: string;
+		method: string;
+		tokenId?: string;
+	};
+	HEADLESS_CHECKOUT_TOKEN_EDIT: {
+		partner: string;
+		method: string;
+		tokenId?: string;
+	};
+	HEADLESS_CHECKOUT_UNCAUGHT_ERROR: Record<never, never>;
+	HEADLESS_CHECKOUT_ON_BEFORE_VALIDATE_HOOK_FAILED: {
+		message: string;
+		error: {
+			message: string;
+			stack?: string;
+		};
+	};
 }
 /**
  * Shortcut options accepted by {@link HeadlessCheckout.getPaymentElement}.
@@ -2538,83 +2577,83 @@ export declare interface PurseHeadlessCheckoutEventPayload {
  * - Throws `PAYMENT_METHOD_NOT_FOUND` if no matching method exists.
  */
 export declare interface PurseHeadlessCheckoutGetPaymentElementOptions {
-  /** Partner identifier (e.g. `'ingenico'`, `'hipay'`). */
-  partner: string;
-  /** Method identifier (e.g. `'creditcard'`). Optional only when using `hostedFields`. */
-  method?: string;
-  /** Theme overrides — passed through as-is to the underlying element. */
-  theme?: PartnerUIOptionsTheme | HostedFieldsTheme;
-  /** Locale code (e.g. `'fr-FR'`). */
-  locale?: string;
-  /** Hosted form configuration — see {@link HostedFormUIOptions}. */
-  hostedForm?: HostedFormUIOptions;
-  /** Hosted fields configuration — see {@link HostedFieldsUIOptions.fields}. */
-  hostedFields?: HostedFieldsUIOptions["fields"];
+	/** Partner identifier (e.g. `'ingenico'`, `'hipay'`). */
+	partner: string;
+	/** Method identifier (e.g. `'creditcard'`). Optional only when using `hostedFields`. */
+	method?: string;
+	/** Theme overrides — passed through as-is to the underlying element. */
+	theme?: PartnerUIOptionsTheme | HostedFieldsTheme;
+	/** Locale code (e.g. `'fr-FR'`). */
+	locale?: string;
+	/** Hosted form configuration — see {@link HostedFormUIOptions}. */
+	hostedForm?: HostedFormUIOptions;
+	/** Hosted fields configuration — see {@link HostedFieldsUIOptions.fields}. */
+	hostedFields?: HostedFieldsUIOptions["fields"];
 }
 export declare interface PurseHeadlessCheckoutHooks {
-  /**
-   * @param split - The current payment split. Each entry describes an amount and the payment
-   * source covering it.
-   */
-  onBeforeValidate?: (split: PaymentSplit[]) => Promise<void>;
-  /** Optional argument to pass a callback to invoke after submission */
-  onAfterValidate?: () => Promise<void>;
-  /** Optional argument to handle the redirection */
-  redirectionHandler?: (redirectionData: RedirectionHandlerParams) => Promise<void>;
+	/**
+	 * @param split - The current payment split. Each entry describes an amount and the payment
+	 * source covering it.
+	 */
+	onBeforeValidate?: (split: PaymentSplit[]) => Promise<void>;
+	/** Optional argument to pass a callback to invoke after submission */
+	onAfterValidate?: () => Promise<void>;
+	/** Optional argument to handle the redirection */
+	redirectionHandler?: (redirectionData: RedirectionHandlerParams) => Promise<void>;
 }
 export declare interface PurseHeadlessCheckoutHostedFields extends Omit<PurseHeadlessCheckoutPaymentElement, "appendTo"> {
-  supportedBrands: Readable<CardScheme[]>;
-  detectedBrands: Readable<CardScheme[]>;
-  selectedBrand: Readable<CardScheme | null>;
-  /**
-   * When the card is "co-branded" the user is allowed to set the selected brand.
-   * @param brand - The brand to set as selected
-   * @example
-   * ```typescript
-   * // Set the selected brand to "VISA"
-   * hostedFields.setSelectedBrand('VISA');
-   * ```
-   * @throws {@link PurseHeadlessCheckoutError} `NOT_SUPPORTED_BRAND` when the provided brand is not in the supported brands list.
-   * @throws {@link PurseHeadlessCheckoutError} `BRAND_NOT_BELONGS_TO_DETECTED` when brands are detected and the provided brand is not in the detected list.
-   */
-  setSelectedBrand(brand: CardScheme): void;
-  /**
-   * Renders the payment UI into the specified container element.
-   * The container can be either a CSS selector string or a direct reference to an HTML element.
-   *
-   * @example
-   * ```typescript
-   * // Using a CSS selector
-   * hostedFields.render();
-   * ```
-   */
-  render(): void;
+	supportedBrands: Readable<CardScheme[]>;
+	detectedBrands: Readable<CardScheme[]>;
+	selectedBrand: Readable<CardScheme | null>;
+	/**
+	 * When the card is "co-branded" the user is allowed to set the selected brand.
+	 * @param brand - The brand to set as selected
+	 * @example
+	 * ```typescript
+	 * // Set the selected brand to "VISA"
+	 * hostedFields.setSelectedBrand('VISA');
+	 * ```
+	 * @throws {@link PurseHeadlessCheckoutError} `NOT_SUPPORTED_BRAND` when the provided brand is not in the supported brands list.
+		 * @throws {@link PurseHeadlessCheckoutError} `BRAND_NOT_BELONGS_TO_DETECTED` when brands are detected and the provided brand is not in the detected list.
+			 */
+	setSelectedBrand(brand: CardScheme): void;
+	/**
+	 * Renders the payment UI into the specified container element.
+	 * The container can be either a CSS selector string or a direct reference to an HTML element.
+	 *
+	 * @example
+	 * ```typescript
+	 * // Using a CSS selector
+	 * hostedFields.render();
+	 * ```
+	 */
+	render(): void;
 }
 export declare interface PurseHeadlessCheckoutLoyaltyToken extends PurseHeadlessCheckoutTemporarySecondaryToken {
-  method: "loyaltycard";
-  /**
-   * The total amount on the loyalty account.
-   * This value will be at 0 until we've fetched its current value.
-   * The fetching is done in parallel during the checkout creation to speed up the process.
-   * The amount may differ from the balance. The balance represents the usable amount by the customer.
-   */
-  totalBalance: Readable<number>;
+	method: "loyaltycard";
+	/**
+	 * The total amount on the loyalty account.
+	 * This value will be at 0 until we've fetched its current value.
+	 * The fetching is done in parallel during the checkout creation to speed up the process.
+	 * The amount may differ from the balance. The balance represents the usable amount by the customer.
+	 */
+	totalBalance: Readable<number>;
 }
 /**
  * Represents an available payment method in the Purse checkout system.
  * Payment methods can be primary (e.g., credit cards, digital wallets) or secondary (e.g., gift cards).
  */
 export declare interface PurseHeadlessCheckoutMethod extends PurseHeadlessCheckoutPaymentItemBase {
-  type: "method";
-  /**
-   * Indicates if the payment method is disabled with an error code and message
-   * {@link DisabledState} error code and message
-   */
-  disabled: Readable<DisabledState | null>;
-  /** Position of the payment method in the list */
-  position: number;
-  /** Amount limit for the payment method (null if no limit) */
-  limit: number | null;
+	type: "method";
+	/**
+	 * Indicates if the payment method is disabled with an error code and message
+	 * {@link DisabledState} error code and message
+	 */
+	disabled: Readable<DisabledState | null>;
+	/** Position of the payment method in the list */
+	position: number;
+	/** Amount limit for the payment method (null if no limit) */
+	limit: number | null;
 }
 /**
  * Interface for managing and interacting with a payment partner's UI component.
@@ -2649,110 +2688,110 @@ export declare interface PurseHeadlessCheckoutMethod extends PurseHeadlessChecko
  * ```
  */
 export declare interface PurseHeadlessCheckoutPaymentElement {
-  /**
-   * Configures the appearance and behavior of the payment UI.
-   * Use this to customize the look and feel of the payment form to match your application's design.
-   *
-   * @param options - Configuration options for the payment UI
-   *                 See {@link PurseHeadlessCheckoutUIOptions} for available customization options
-   * @example
-   * ```typescript
-   * paymentElement.setOptions({
-   *   hostedForm: {
-   *     panPlaceholder: 'Enter your card number',
-   *     cvvPlaceholder: 'Enter your CVV'
-   *     // Add more options here
-   *   }
-   * });
-   * ```
-   */
-  setOptions(options?: Options): void;
-  /**
-   * Renders the payment UI into the specified container element.
-   * The container can be either a CSS selector string or a direct reference to an HTML element.
-   *
-   * @param container - CSS selector (e.g., '#payment-form') or HTML element to render the UI into
-   * @throws {Error} If the container element cannot be found or is invalid
-   * @example
-   * ```typescript
-   * // Using a CSS selector
-   * paymentElement.appendTo('#payment-form');
-   *
-   * // Using an HTML element
-   * const container = document.getElementById('payment-form');
-   * paymentElement.appendTo(container);
-   * ```
-   */
-  appendTo(container: string | Element): void;
-  /**
-   * Checks if the payment partner provides a visual UI component.
-   * Use this to determine if you need to allocate space in your layout for the payment UI.
-   * Some payment methods (like redirect-based flows) might not have a UI component.
-   *
-   * @returns true if the payment method has a UI component to display, false otherwise
-   * @example
-   * ```typescript
-   * if (paymentElement.hasUI()) {
-   *   // Add conditional styles or layout adjustments
-   *   // based on the presence of a payment UI
-   * }
-   * ```
-   */
-  hasUI(): boolean;
-  /**
-   * Force the payment UI to validate the form fields.
-   * For credit cards, this checks if all required fields are filled and valid.
-   * For other payment methods, this verifies if the UI is in a valid state for submission.
-   *
-   * @returns A promise that resolves to:
-   *          - boolean: true if validation passed, false if failed
-   *          - CreditCardValidateUiResult: detailed validation results for credit card forms
-   * @example
-   * ```typescript
-   * const isValid = await paymentElement.validateUi();
-   * if (isValid) {
-   *   // show success message
-   *   console.log('Payment form is valid');
-   * } else {
-   *  // show error message
-   *  console.error('Payment form is invalid');
-   * }
-   * ```
-   */
-  validateUi(): Promise<boolean | CreditCardValidateUiResult>;
-  /**
-   * Removes the payment UI from the DOM and cleans up any associated resources.
-   * Call this when the payment UI is no longer needed or when switching payment methods.
-   *
-   * @example
-   * ```typescript
-   * // Clean up the payment UI when switching methods
-   * paymentElement.remove();
-   * ```
-   */
-  remove(): void;
-  /**
-   * Returns whether the payment UI has ever emitted the `ready` event.
-   * Used to determine layout behaviour on session termination:
-   * - `true` → the element was visible; deactivate in place to preserve layout
-   * - `false` → the element never rendered; remove the slot entirely
-   */
-  wasEverReady(): boolean;
-  /**
-   * Registers an event listener for payment UI events.
-   * Listen for events like 'ready', 'change', 'blur', 'focus', etc.
-   *
-   * @param {PaymentElementEventName} eventName - Name of the event to listen for
-   * @param callback - Function to be called when the event occurs
-   * @example
-   * ```typescript
-   * // Listen for the UI ready event
-   * paymentElement.on('formValid', () => {
-   *   console.log('Payment UI form is valid');
-   * });
-   * ```
-   */
-  on<K extends PaymentElementEventName>(eventName: K, callback: PaymentElementEventsCallback[K]): void;
+	/**
+	 * Configures the appearance and behavior of the payment UI.
+	 * Use this to customize the look and feel of the payment form to match your application's design.
+	 *
+	 * @param options - Configuration options for the payment UI
+	 *                 See {@link PurseHeadlessCheckoutUIOptions} for available customization options
+	 * @example
+	 * ```typescript
+	 * paymentElement.setOptions({
+	 *   hostedForm: {
+	 *     panPlaceholder: 'Enter your card number',
+	 *     cvvPlaceholder: 'Enter your CVV'
+	 *     // Add more options here
+	 *   }
+	 * });
+	 * ```
+	 */
+	setOptions(options?: Options): void;
+	/**
+	 * Renders the payment UI into the specified container element.
+	 * The container can be either a CSS selector string or a direct reference to an HTML element.
+	 *
+	 * @param container - CSS selector (e.g., '#payment-form') or HTML element to render the UI into
+	 * @throws {Error} If the container element cannot be found or is invalid
+	 * @example
+	 * ```typescript
+	 * // Using a CSS selector
+	 * paymentElement.appendTo('#payment-form');
+	 *
+	 * // Using an HTML element
+	 * const container = document.getElementById('payment-form');
+	 * paymentElement.appendTo(container);
+	 * ```
+	 */
+	appendTo(container: string | Element): void;
+	/**
+	 * Checks if the payment partner provides a visual UI component.
+	 * Use this to determine if you need to allocate space in your layout for the payment UI.
+	 * Some payment methods (like redirect-based flows) might not have a UI component.
+	 *
+	 * @returns true if the payment method has a UI component to display, false otherwise
+	 * @example
+	 * ```typescript
+	 * if (paymentElement.hasUI()) {
+	 *   // Add conditional styles or layout adjustments
+	 *   // based on the presence of a payment UI
+	 * }
+	 * ```
+	 */
+	hasUI(): boolean;
+	/**
+	 * Force the payment UI to validate the form fields.
+	 * For credit cards, this checks if all required fields are filled and valid.
+	 * For other payment methods, this verifies if the UI is in a valid state for submission.
+	 *
+	 * @returns A promise that resolves to:
+	 *          - boolean: true if validation passed, false if failed
+	 *          - CreditCardValidateUiResult: detailed validation results for credit card forms
+	 * @example
+	 * ```typescript
+	 * const isValid = await paymentElement.validateUi();
+	 * if (isValid) {
+	 *   // show success message
+	 *   console.log('Payment form is valid');
+	 * } else {
+	 *  // show error message
+	 *  console.error('Payment form is invalid');
+	 * }
+	 * ```
+	 */
+	validateUi(): Promise<boolean | CreditCardValidateUiResult>;
+	/**
+	 * Removes the payment UI from the DOM and cleans up any associated resources.
+	 * Call this when the payment UI is no longer needed or when switching payment methods.
+	 *
+	 * @example
+	 * ```typescript
+	 * // Clean up the payment UI when switching methods
+	 * paymentElement.remove();
+	 * ```
+	 */
+	remove(): void;
+	/**
+	 * Returns whether the payment UI has ever emitted the `ready` event.
+	 * Used to determine layout behaviour on session termination:
+	 * - `true` → the element was visible; deactivate in place to preserve layout
+	 * - `false` → the element never rendered; remove the slot entirely
+	 */
+	wasEverReady(): boolean;
+	/**
+	 * Registers an event listener for payment UI events.
+	 * Listen for events like 'ready', 'change', 'blur', 'focus', etc.
+	 *
+	 * @param {PaymentElementEventName} eventName - Name of the event to listen for
+	 * @param callback - Function to be called when the event occurs
+	 * @example
+	 * ```typescript
+	 * // Listen for the UI ready event
+	 * paymentElement.on('formValid', () => {
+	 *   console.log('Payment UI form is valid');
+	 * });
+	 * ```
+	 */
+	on<K extends PaymentElementEventName>(eventName: K, callback: PaymentElementEventsCallback[K]): void;
 }
 export declare type PurseHeadlessCheckoutPaymentItem = PurseHeadlessCheckoutPaymentMethod | PurseHeadlessCheckoutPaymentToken;
 /**
@@ -2764,44 +2803,44 @@ export declare type PurseHeadlessCheckoutPaymentItem = PurseHeadlessCheckoutPaym
  * Instead, use {@link PurseHeadlessCheckoutMethod} or {@link PurseHeadlessCheckoutToken}.
  */
 export declare interface PurseHeadlessCheckoutPaymentItemBase {
-  /** Unique identifier of the payment method
-   * @example 'hipay-bancontact'
-   * @example 'illicado-giftcard'
-   * @example 'aci-creditcard'
-   *
-   */
-  id: string;
-  /** Partner associated with the payment method
-   * @example 'hipay'
-   * @example 'paypal'
-   */
-  partner: string;
-  /** Type of payment method, it can be a card, a wallet, a bank transfer, etc.
-   * @example 'applepay'
-   * @example 'googlepay'
-   * @example 'creditcard'
-   */
-  method: string;
-  type: "method" | "token" | "temporary_token" | undefined;
-  /** Indicates if the payment method is a secondary mean of payment */
-  isSecondary: boolean;
-  /** Minimum amount to use the payment method */
-  minAmount: number | null;
-  /** Maximum amount to use the payment method */
-  maxAmount: number | null;
-  /**
-   * Absolute URL of the payment method icon on the Purse CDN.
-   *
-   * The URL is stable and environment-aware (sandbox vs production).
-   * The icon is an SVG file that respects the brand guidelines of the
-   * payment partner. It can be used directly in an `<img>` tag or as
-   * a CSS background image without any further processing.
-   *
-   * @example
-   * // React
-   * <img src={method.iconUrl} alt={method.method} />
-   */
-  iconUrl: string;
+	/** Unique identifier of the payment method
+	 * @example 'hipay-bancontact'
+	 * @example 'illicado-giftcard'
+	 * @example 'aci-creditcard'
+	 *
+	 */
+	id: string;
+	/** Partner associated with the payment method
+	 * @example 'hipay'
+	 * @example 'paypal'
+	 */
+	partner: string;
+	/** Type of payment method, it can be a card, a wallet, a bank transfer, etc.
+	 * @example 'applepay'
+	 * @example 'googlepay'
+	 * @example 'creditcard'
+	 */
+	method: string;
+	type: "method" | "token" | "temporary_token" | undefined;
+	/** Indicates if the payment method is a secondary mean of payment */
+	isSecondary: boolean;
+	/** Minimum amount to use the payment method */
+	minAmount: number | null;
+	/** Maximum amount to use the payment method */
+	maxAmount: number | null;
+	/**
+	 * Absolute URL of the payment method icon on the Purse CDN.
+	 *
+	 * The URL is stable and environment-aware (sandbox vs production).
+	 * The icon is an SVG file that respects the brand guidelines of the
+	 * payment partner. It can be used directly in an `<img>` tag or as
+	 * a CSS background image without any further processing.
+	 *
+	 * @example
+	 * // React
+	 * <img src={method.iconUrl} alt={method.method} />
+	 */
+	iconUrl: string;
 }
 export declare type PurseHeadlessCheckoutPaymentMethod = PurseHeadlessCheckoutSecondaryMethod | PurseHeadlessCheckoutPrimaryMethod;
 export declare type PurseHeadlessCheckoutPaymentToken = PurseHeadlessCheckoutSecondaryToken | PurseHeadlessCheckoutPrimaryToken | PurseHeadlessCheckoutTemporarySecondaryToken | PurseHeadlessCheckoutLoyaltyToken;
@@ -2826,234 +2865,234 @@ export declare type PurseHeadlessCheckoutPaymentToken = PurseHeadlessCheckoutSec
  * ```
  */
 export declare interface PurseHeadlessCheckoutPrimaryMethod extends PurseHeadlessCheckoutMethod, PurseHeadlessCheckoutRegisterable {
-  isSecondary: false;
-  /** Whether the method can provide loan simulation or not*/
-  simulable: boolean;
-  /**
-   * Creates and returns a payment element UI instance for this payment method.
-   * The instance is created only on the first call and cached for subsequent calls.
-   *
-   * @param options - Optional UI customization settings for the payment element
-   * @returns A payment element instance for this payment method
-   * @example
-   * ```typescript
-   * const paymentElement = primaryMethod.getPaymentElement({
-   *   hostedForm: {
-   *     panPlaceholder: 'Enter your card number',
-   *     cvvPlaceholder: 'Enter your CVV'
-   *     // Add more options here
-   *   }
-   * })
-   * await paymentElement.appendTo('#payment-container');
-   * ```
-   */
-  getPaymentElement(options?: PaymentElementOptions): PurseHeadlessCheckoutPaymentElement;
-  /**
-   * Creates and returns a hosted fields UI instance for this payment method.
-   * @param options {@link HostedFieldsOptions}: settings for the hosted fields
-   * @return A hosted fields instance for this payment method
-   * @example
-   * ```typescript
-   *   const hostedFields = primaryMethod.getHostedFields({
-   *      fields: {
-   *        pan: {
-   *          target: '#card-number',
-   *          placeholder: 'Card number',
-   *        },
-   *        cvv: {
-   *          target: '#card-cvv',
-   *          placeholder: 'CVV',
-   *        },
-   *        expirationDate: {
-   *          target: '#card-expiration-date',
-   *          placeholder: 'MM / YY',
-   *        },
-   *      },
-   *      theme: {
-   *        global: {
-   *          fontSrc: 'https://fonts.googleapis.com/css?family=Roboto',
-   *        },
-   *        input: {
-   *          color: '#333',
-   *          fontSize: '16px',
-   *          fontFamily: 'Arial, sans-serif',
-   *          backgroundColor: '#fff',
-   *          fontWeight: '400',
-   *          ':valid': {
-   *            color: 'green',
-   *          },
-   *        }
-   *      }
-   *    });
-   *   await hostedFields.render();
-   * ```
-   */
-  getHostedFields(options?: HostedFieldsOptions): PurseHeadlessCheckoutHostedFields;
-  /**
-   * Changes the active primary payment source in the current payment split.
-   * Use this when you have multiple primary payment elements mounted (e.g., Wallet AND installments).
-   *
-   * @throws - {@link PurseHeadlessCheckoutError} `code: "ELEMENT_NOT_FULFILLED"` \
-   * If the method has empty or incomplete payment information
-   *
-   * @example
-   * ```typescript
-   * // Switch to this payment method as the primary source
-   * await method.setAsPrimarySource();
-   * ```
-   */
-  setAsPrimarySource(): void;
-  /**
-   * Some method are 'simulable' and can give a loan simulation if provided with a product description
-   *
-   * @throws
-   * - {@link PurseHeadlessCheckoutError} `INVALID_LOAN_SIMULATION` \
-   * If the method is not simulable or when an error happened during the simulation.
-   *
-   * @example
-   * ```typescript
-   * await method.simulateLoan({ amount: 200, shipments: [], currency_code: 'EUR',...  });
-   * ```
-   */
-  simulateLoan(product: LoanProduct): Promise<LoanSimulation>;
-  /**
-   * Some partners are available under several forms
-   * For instance paypal or klarna can exist as a redirection or as a popup
-   */
-  integrationType?: "redirection" | "popup";
+	isSecondary: false;
+	/** Whether the method can provide loan simulation or not*/
+	simulable: boolean;
+	/**
+	 * Creates and returns a payment element UI instance for this payment method.
+	 * The instance is created only on the first call and cached for subsequent calls.
+	 *
+	 * @param options - Optional UI customization settings for the payment element
+	 * @returns A payment element instance for this payment method
+	 * @example
+	 * ```typescript
+	 * const paymentElement = primaryMethod.getPaymentElement({
+	 *   hostedForm: {
+	 *     panPlaceholder: 'Enter your card number',
+	 *     cvvPlaceholder: 'Enter your CVV'
+	 *     // Add more options here
+	 *   }
+	 * })
+	 * await paymentElement.appendTo('#payment-container');
+	 * ```
+	 */
+	getPaymentElement(options?: PaymentElementOptions): PurseHeadlessCheckoutPaymentElement;
+	/**
+	 * Creates and returns a hosted fields UI instance for this payment method.
+	 * @param options {@link HostedFieldsOptions}: settings for the hosted fields
+	 * @return A hosted fields instance for this payment method
+	 * @example
+	 * ```typescript
+	 *   const hostedFields = primaryMethod.getHostedFields({
+	 *      fields: {
+	 *        pan: {
+	 *          target: '#card-number',
+	 *          placeholder: 'Card number',
+	 *        },
+	 *        cvv: {
+	 *          target: '#card-cvv',
+	 *          placeholder: 'CVV',
+	 *        },
+	 *        expirationDate: {
+	 *          target: '#card-expiration-date',
+	 *          placeholder: 'MM / YY',
+	 *        },
+	 *      },
+	 *      theme: {
+	 *        global: {
+	 *          fontSrc: 'https://fonts.googleapis.com/css?family=Roboto',
+	 *        },
+	 *        input: {
+	 *          color: '#333',
+	 *          fontSize: '16px',
+	 *          fontFamily: 'Arial, sans-serif',
+	 *          backgroundColor: '#fff',
+	 *          fontWeight: '400',
+	 *          ':valid': {
+	 *            color: 'green',
+	 *          },
+	 *        }
+	 *      }
+	 *    });
+	 *   await hostedFields.render();
+	 * ```
+	 */
+	getHostedFields(options?: HostedFieldsOptions): PurseHeadlessCheckoutHostedFields;
+	/**
+	 * Changes the active primary payment source in the current payment split.
+	 * Use this when you have multiple primary payment elements mounted (e.g., Wallet AND installments).
+	 *
+	 * @throws - {@link PurseHeadlessCheckoutError} `code: "ELEMENT_NOT_FULFILLED"` \
+	 * If the method has empty or incomplete payment information
+	 *
+	 * @example
+	 * ```typescript
+	 * // Switch to this payment method as the primary source
+	 * await method.setAsPrimarySource();
+	 * ```
+	 */
+	setAsPrimarySource(): void;
+	/**
+	 * Some method are 'simulable' and can give a loan simulation if provided with a product description
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `INVALID_LOAN_SIMULATION` \
+	 * If the method is not simulable or when an error happened during the simulation.
+	 *
+	 * @example
+	 * ```typescript
+	 * await method.simulateLoan({ amount: 200, shipments: [], currency_code: 'EUR',...  });
+	 * ```
+	 */
+	simulateLoan(product: LoanProduct): Promise<LoanSimulation>;
+	/**
+	 * Some partners are available under several forms
+	 * For instance paypal or klarna can exist as a redirection or as a popup
+	 */
+	integrationType?: "redirection" | "popup";
 }
 /**
  * Represents a primary token in the Purse checkout system.
  * Primary tokens are saved payment methods like stored credit cards or digital wallet accounts.
  */
 export declare interface PurseHeadlessCheckoutPrimaryToken extends PurseHeadlessCheckoutToken {
-  type: "token";
-  /** Indicates if the token is a secondary mean of payment */
-  isSecondary: false;
-  /**
-   * Description holds all display values to describe the token in a UI. This is useful since the rendering of a token
-   * is limited to the CVV.
-   */
-  description: {
-    /**
-     * Label is optional, the user have not necessarily given a label to the token when creating it.
-     */
-    label?: string;
-    /**
-     * Brand of the token
-     */
-    brand?: string;
-    /**
-     * Holder name of the token
-     */
-    holderName?: string;
-    /**
-     * Will contain displayable value of the PAN or the account email
-     */
-    masked_pan: string;
-    /**
-     * Date at which the token is excepted to expire
-     */
-    expiration_date: string;
-  };
-  /**
-   * Method to get the payment element. Creates the UI instance on first call.
-   * If you need to render a partner's UI, you will need a PaymentElement
-   * @param options {PurseHeadlessCheckoutUIOptions | undefined}
-   * @return {PurseHeadlessCheckoutPaymentElement}
-   * @example
-   * ```typescript
-   * const paymentElement = token.getPaymentElement();
-   * // Mount the payment element to your UI
-   * paymentElement.appendTo('#payment-container');
-   * ```
-   * */
-  getPaymentElement(options?: Options): PurseHeadlessCheckoutPaymentElement;
-  /**
-   * Creates and returns a hosted fields UI instance for this payment method.
-   * @param options {@link HostedFieldsOptions}: settings for the hosted fields
-   * @return A hosted fields instance for this payment method
-   * @example
-   * ```typescript
-   *   const hostedFields = primaryMethod.getHostedFields({
-   *      fields: {
-   *        cvv: {
-   *          target: '#card-cvv',
-   *          placeholder: 'CVV',
-   *        },
-   *      },
-   *      theme: {
-   *        global: {
-   *          fontSrc: 'https://fonts.googleapis.com/css?family=Roboto',
-   *        },
-   *        input: {
-   *          color: '#333',
-   *          fontSize: '16px',
-   *          fontFamily: 'Arial, sans-serif',
-   *          backgroundColor: '#fff',
-   *          fontWeight: '400',
-   *          ':valid': {
-   *            color: 'green',
-   *          },
-   *        }
-   *      }
-   *    });
-   *   await hostedFields.render();
-   * ```
-   */
-  getHostedFields(options?: HostedFieldsOptions): PurseHeadlessCheckoutHostedFields;
-  /** Use this method if you want to change which primary to use in the split.
-   * This can be useful if you have mounted multiple primary payment elements (ie. Wallet AND installments for
-   * instance).
-   *
-   * @throws - {@link PurseHeadlessCheckoutError} `ELEMENT_NOT_FULFILLED` \
-   * If the token has empty or incomplete payment information
-   *
-   * @example
-   * ```typescript
-   * token.setAsPrimarySource();
-   * ```
-   */
-  setAsPrimarySource(): void;
+	type: "token";
+	/** Indicates if the token is a secondary mean of payment */
+	isSecondary: false;
+	/**
+	 * Description holds all display values to describe the token in a UI. This is useful since the rendering of a token
+	 * is limited to the CVV.
+	 */
+	description: {
+		/**
+		 * Label is optional, the user have not necessarily given a label to the token when creating it.
+		 */
+		label?: string;
+		/**
+		 * Brand of the token
+		 */
+		brand?: string;
+		/**
+		 * Holder name of the token
+		 */
+		holderName?: string;
+		/**
+		 * Will contain displayable value of the PAN or the account email
+		 */
+		masked_pan: string;
+		/**
+		 * Date at which the token is excepted to expire
+		 */
+		expiration_date: string;
+	};
+	/**
+	 * Method to get the payment element. Creates the UI instance on first call.
+	 * If you need to render a partner's UI, you will need a PaymentElement
+	 * @param options {PurseHeadlessCheckoutUIOptions | undefined}
+	 * @return {PurseHeadlessCheckoutPaymentElement}
+	 * @example
+	 * ```typescript
+	 * const paymentElement = token.getPaymentElement();
+	 * // Mount the payment element to your UI
+	 * paymentElement.appendTo('#payment-container');
+	 * ```
+	 * */
+	getPaymentElement(options?: Options): PurseHeadlessCheckoutPaymentElement;
+	/**
+	 * Creates and returns a hosted fields UI instance for this payment method.
+	 * @param options {@link HostedFieldsOptions}: settings for the hosted fields
+	 * @return A hosted fields instance for this payment method
+	 * @example
+	 * ```typescript
+	 *   const hostedFields = primaryMethod.getHostedFields({
+	 *      fields: {
+	 *        cvv: {
+	 *          target: '#card-cvv',
+	 *          placeholder: 'CVV',
+	 *        },
+	 *      },
+	 *      theme: {
+	 *        global: {
+	 *          fontSrc: 'https://fonts.googleapis.com/css?family=Roboto',
+	 *        },
+	 *        input: {
+	 *          color: '#333',
+	 *          fontSize: '16px',
+	 *          fontFamily: 'Arial, sans-serif',
+	 *          backgroundColor: '#fff',
+	 *          fontWeight: '400',
+	 *          ':valid': {
+	 *            color: 'green',
+	 *          },
+	 *        }
+	 *      }
+	 *    });
+	 *   await hostedFields.render();
+	 * ```
+	 */
+	getHostedFields(options?: HostedFieldsOptions): PurseHeadlessCheckoutHostedFields;
+	/** Use this method if you want to change which primary to use in the split.
+	 * This can be useful if you have mounted multiple primary payment elements (ie. Wallet AND installments for
+	 * instance).
+	 *
+	 * @throws - {@link PurseHeadlessCheckoutError} `ELEMENT_NOT_FULFILLED` \
+	 * If the token has empty or incomplete payment information
+	 *
+	 * @example
+	 * ```typescript
+	 * token.setAsPrimarySource();
+	 * ```
+	 */
+	setAsPrimarySource(): void;
 }
 export declare interface PurseHeadlessCheckoutRegisterable {
-  /**
-   * Mark this mean of payment for registration upon validate.
-   * @param value {boolean} true to register, false to unregister
-   * @param params
-   * @example
-   * ```typescript
-   * item.register(true);
-   * ```
-   * @throws
-   * - {@link PurseHeadlessCheckoutError} `INVALID_TOKEN_NAME` \
-   * If the provided token name is invalid
-   * - {@link PurseHeadlessCheckoutError} `TOKEN_NOT_REGISTERABLE` \
-   * If the token is not registerable
-   */
-  register(value?: boolean, params?: {
-    name?: string;
-  }): Promise<void>;
-  /**
-   * This property exposes the saveToken configuration of the method.
-   * A mean of payment cannot be saved if the method is not registerable.
-   */
-  canBeRegistered: boolean;
-  /**
-   * This property exposes if the mean of payment is bound for registration upon validate.
-   */
-  registration: Readable<RegistrationState>;
+	/**
+	 * Mark this mean of payment for registration upon validate.
+	 * @param value {boolean} true to register, false to unregister
+	 * @param params
+	 * @example
+	 * ```typescript
+	 * item.register(true);
+	 * ```
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `INVALID_TOKEN_NAME` \
+	 * If the provided token name is invalid
+	 * - {@link PurseHeadlessCheckoutError} `TOKEN_NOT_REGISTERABLE` \
+	 * If the token is not registerable
+	 */
+	register(value?: boolean, params?: {
+		name?: string;
+	}): Promise<void>;
+	/**
+	 * This property exposes the saveToken configuration of the method.
+	 * A mean of payment cannot be saved if the method is not registerable.
+	 */
+	canBeRegistered: boolean;
+	/**
+	 * This property exposes if the mean of payment is bound for registration upon validate.
+	 */
+	registration: Readable<RegistrationState>;
 }
 /**
  * Represents a secondary payment method in the Purse checkout system.
  * Secondary methods are additional payment options like gift cards that can be combined with primary methods.
  */
 export declare type PurseHeadlessCheckoutSecondaryMethod = PurseHeadlessCheckoutMethod & PurseHeadlessCheckoutSecondaryTokenProvider & {
-  type: "method";
-  /** Maximum instances of this secondary method that can be used in the split */
-  limit?: number;
-  /** Always true for secondary payment methods */
-  isSecondary: true;
+	type: "method";
+	/** Maximum instances of this secondary method that can be used in the split */
+	limit?: number;
+	/** Always true for secondary payment methods */
+	isSecondary: true;
 } & SecondarySpecificConfig;
 /**
  * Represents a secondary token in the Purse checkout system.
@@ -3069,108 +3108,113 @@ export declare type PurseHeadlessCheckoutSecondaryMethod = PurseHeadlessCheckout
  * ```
  */
 export declare interface PurseHeadlessCheckoutSecondaryToken extends PurseHeadlessCheckoutToken {
-  type: "token" | "temporary_token";
-  isSecondary: true;
-  limit: number;
-  expiration_date: string | Date;
-  /**
-   * The amount available for use on the card.
-   * This value will be at 0 until we've fetched its current value.
-   * The fetching is done in parallel during the checkout creation to speed up the process.
-   */
-  balance: Readable<number>;
-  /**
-   * the card pan
-   */
-  pan: string;
-  /**
-   * the card cvv
-   */
-  cvv?: string;
-  /**
-   * Depending on the secondary method, the takable amount is constrained. Vouchers for instance can't be partially used.
-   * | method                | take policy |
-   * |-----------------------|-------------|
-   * | easy2play - voucher   | max         |
-   * | easy2play - giftcard  | none        |
-   * | illicado - giftcard   | none        |
-   * | ogloba - giftcard     | none        |
-   * | buybox - giftcard     | none        |
-   * | maxxing - loyaltycard | max         |
-   *
-   * Max: "All or nothing" the only takable amount is the full balance.
-   * None: The take amount is not constrained (should still be less than the token's available balance').
-   */
-  takePolicy: SecondaryTakePolicy;
-  /**
-   * Applies a specified amount from this secondary token to the current payment session.
-   * The amount will be deducted from the token's balance and added to the payment split.
-   *
-   * @param amount - Amount to use from this token's balance
-   *
-   * @throws
-   * - {@link PurseHeadlessCheckoutError} `INVALID_TAKE_AMOUNT` \
-   * If any of these conditions are not met:
-   *    - Amount must be greater than 0
-   *    - Amount must be less than the remaining session amount
-   *    - Amount must be less than the token's available balance
-   * - {@link PurseHeadlessCheckoutError} `METHOD_NOT_IMPLEMENTED` \
-   * If the real token could not be fetched and a placeholder object was returned instead
-   * - {@link PurseHeadlessCheckoutError} `USAGE_LIMIT_ERROR` \
-   * If the usage limit of the secondary method was reached
-   * - {@link PurseHeadlessCheckoutError} `SECONDARY_METHOD_TAKE_POLICY_VIOLATED` \
-   * If the take amount requested violates the policy of the secondary method.
-   *
-   * @example
-   * ```typescript
-   * // Use 50 from a gift card balance
-   * await token.take(50);
-   * ```
-   */
-  take(amount: number): Promise<void>;
-  /**
-   * Removes this token from the current payment split configuration.
-   * Any amount previously allocated from this token will be removed from the split.
-   *
-   * @throws
-   * - {@link PurseHeadlessCheckoutError} `METHOD_NOT_IMPLEMENTED` \
-   * If the real token could not be fetched and a placeholder object was returned instead
-   *
-   * @example
-   * ```typescript
-   * // Remove a gift card from the payment split
-   * await token.removeFromSplit();
-   * ```
-   */
-  removeFromSplit(): Promise<void>;
+	type: "token" | "temporary_token";
+	isSecondary: true;
+	limit: number;
+	expiration_date: string | Date;
+	/**
+	 * The amount available for use on the card.
+	 * This value will be at 0 until we've fetched its current value.
+	 * The fetching is done in parallel during the checkout creation to speed up the process.
+	 */
+	balance: Readable<number>;
+	/**
+	 * This value is populated for secondaries that can be partially consumed/eligible for a session
+	 * This is the case for loyalty accounts like maxxing for instance.
+	 */
+	totalBalance?: Readable<number>;
+	/**
+	 * the card pan
+	 */
+	pan: string;
+	/**
+	 * the card cvv
+	 */
+	cvv?: string;
+	/**
+	 * Depending on the secondary method, the takable amount is constrained. Vouchers for instance can't be partially used.
+	 * | method                | take policy |
+	 * |-----------------------|-------------|
+	 * | easy2play - voucher   | max         |
+	 * | easy2play - giftcard  | none        |
+	 * | illicado - giftcard   | none        |
+	 * | ogloba - giftcard     | none        |
+	 * | buybox - giftcard     | none        |
+	 * | maxxing - loyaltycard | max         |
+	 *
+	 * Max: "All or nothing" the only takable amount is the full balance.
+	 * None: The take amount is not constrained (should still be less than the token's available balance').
+	 */
+	takePolicy: SecondaryTakePolicy;
+	/**
+	 * Applies a specified amount from this secondary token to the current payment session.
+	 * The amount will be deducted from the token's balance and added to the payment split.
+	 *
+	 * @param amount - Amount to use from this token's balance
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `INVALID_TAKE_AMOUNT` \
+	 * If any of these conditions are not met:
+	 *    - Amount must be greater than 0
+	 *    - Amount must be less than the remaining session amount
+	 *    - Amount must be less than the token's available balance
+	 * - {@link PurseHeadlessCheckoutError} `METHOD_NOT_IMPLEMENTED` \
+	 * If the real token could not be fetched and a placeholder object was returned instead
+	 * - {@link PurseHeadlessCheckoutError} `USAGE_LIMIT_ERROR` \
+	 * If the usage limit of the secondary method was reached
+	 * - {@link PurseHeadlessCheckoutError} `SECONDARY_METHOD_TAKE_POLICY_VIOLATED` \
+	 * If the take amount requested violates the policy of the secondary method.
+	 *
+	 * @example
+	 * ```typescript
+	 * // Use 50 from a gift card balance
+	 * await token.take(50);
+	 * ```
+	 */
+	take(amount: number): Promise<void>;
+	/**
+	 * Removes this token from the current payment split configuration.
+	 * Any amount previously allocated from this token will be removed from the split.
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `METHOD_NOT_IMPLEMENTED` \
+	 * If the real token could not be fetched and a placeholder object was returned instead
+	 *
+	 * @example
+	 * ```typescript
+	 * // Remove a gift card from the payment split
+	 * await token.removeFromSplit();
+	 * ```
+	 */
+	removeFromSplit(): Promise<void>;
 }
 export declare interface PurseHeadlessCheckoutSecondaryTokenProvider {
-  /**
-   * @param pan
-   * @param cvv
-   * @param signal - An AbortSignal that can be used to cancel the request.
-   *
-   * @throws
-   * - {@link PurseHeadlessCheckoutError} `FAILED_TO_ADD_TOKEN` \
-   * If secondary token creation fails
-   * - {@link PurseHeadlessCheckoutError} `FAILED_TO_INIT_SECONDARY_TOKEN` \
-   * If secondary token initialization fails
-   * - {@link PurseHeadlessCheckoutError} `MISSING_SESSION` \
-   * If the session is missing
-   * - {@link PurseHeadlessCheckoutError} `PAYMENT_METHOD_NOT_FOUND` \
-   * If the partner and method associated to the token could not be found in the ones available in the session
-   * - {@link PurseHeadlessCheckoutError} `SECONDARY_METHOD_REQUIRED_CVV` \
-   * If the cvv is missing
-   * - {@link PurseHeadlessCheckoutError} `SECONDARY_METHOD_WRONG_PAN_FORMAT` \
-   * If the provided pan does not respect the expected format
-   * - {@link PurseHeadlessCheckoutError} `SECONDARY_METHOD_WRONG_CVV_FORMAT` \
-   * If the provided cvv does not respect the expected format
-   */
-  getSecondaryToken(pan: string, cvv?: string, signal?: AbortSignal): Promise<PurseHeadlessCheckoutTemporarySecondaryToken>;
+	/**
+	 * @param pan
+	 * @param cvv
+	 * @param signal - An AbortSignal that can be used to cancel the request.
+	 *
+	 * @throws
+	 * - {@link PurseHeadlessCheckoutError} `FAILED_TO_ADD_TOKEN` \
+	 * If secondary token creation fails
+	 * - {@link PurseHeadlessCheckoutError} `FAILED_TO_INIT_SECONDARY_TOKEN` \
+	 * If secondary token initialization fails
+	 * - {@link PurseHeadlessCheckoutError} `MISSING_SESSION` \
+	 * If the session is missing
+	 * - {@link PurseHeadlessCheckoutError} `PAYMENT_METHOD_NOT_FOUND` \
+	 * If the partner and method associated to the token could not be found in the ones available in the session
+	 * - {@link PurseHeadlessCheckoutError} `SECONDARY_METHOD_REQUIRED_CVV` \
+	 * If the cvv is missing
+	 * - {@link PurseHeadlessCheckoutError} `SECONDARY_METHOD_WRONG_PAN_FORMAT` \
+	 * If the provided pan does not respect the expected format
+	 * - {@link PurseHeadlessCheckoutError} `SECONDARY_METHOD_WRONG_CVV_FORMAT` \
+	 * If the provided cvv does not respect the expected format
+	 */
+	getSecondaryToken(pan: string, cvv?: string, signal?: AbortSignal): Promise<PurseHeadlessCheckoutTemporarySecondaryToken>;
 }
 export declare type PurseHeadlessCheckoutSessionState = "idle" | "ready" | "submitting" | "submitted" | "error" | "expired" | "terminated";
 export declare interface PurseHeadlessCheckoutTemporarySecondaryToken extends PurseHeadlessCheckoutSecondaryToken, PurseHeadlessCheckoutRegisterable {
-  type: "temporary_token";
+	type: "temporary_token";
 }
 /**
  * Represents a saved payment token in the Purse checkout system.
@@ -3186,25 +3230,25 @@ export declare interface PurseHeadlessCheckoutTemporarySecondaryToken extends Pu
  * ```
  */
 export declare interface PurseHeadlessCheckoutToken extends PurseHeadlessCheckoutPaymentItemBase, PurseHeadlessCheckoutEditable {
-  name: string;
-  type: "token" | "temporary_token";
-  /**
-   * Indicates if the payment token is disabled with an error code and message
-   */
-  disabled: Readable<DisabledState | null>;
+	name: string;
+	type: "token" | "temporary_token";
+	/**
+	 * Indicates if the payment token is disabled with an error code and message
+	 */
+	disabled: Readable<DisabledState | null>;
 }
 /**
  * Interface representing a V1 session for the Headless Checkout.
  */
 export declare interface PurseHeadlessCheckoutV1Params {
-  /** API key for authentication */
-  apiKey: string;
-  /** Unique identifier for the merchant entity */
-  entityId: string;
-  /** Target environment for the checkout (e.g., 'sandbox', 'production') */
-  environment: EnvironmentTarget;
-  /** Payment session data containing transaction details */
-  paymentSession: PurseHeadlessCheckoutV1SessionData;
+	/** API key for authentication */
+	apiKey: string;
+	/** Unique identifier for the merchant entity */
+	entityId: string;
+	/** Target environment for the checkout (e.g., 'sandbox', 'production') */
+	environment: EnvironmentTarget;
+	/** Payment session data containing transaction details */
+	paymentSession: PurseHeadlessCheckoutV1SessionData;
 }
 export declare type PurseHeadlessCheckoutV1SessionData = LegacyPaymentSession;
 /**
@@ -3218,3416 +3262,3417 @@ export declare type PurseHeadlessCheckoutV1SessionData = LegacyPaymentSession;
  */
 export declare type PurseHeadlessCheckoutV2Params = string;
 declare class PursePayment implements Payment {
-  readonly factoriesStaticData: {
-    manuallyTriggerHook: (hookName: keyof PurseHeadlessCheckoutHooks, context?: {
-      actualMethod?: Method;
-      sourceId?: string;
-    }) => Promise<void>;
-    submitPayment: (skipOnBeforeValidateHook?: boolean) => Promise<void>;
-    onSessionTerminated: () => void;
-  };
-  private _paymentSession;
-  private _walletSession;
-  private readonly _serverDateChecker;
-  api: PaymentAPI;
-  walletAPI: WalletAPI;
-  paymentSplitter: PaymentSplitter;
-  mops: Writable<PurseHeadlessCheckoutPaymentItem[]>;
-  methods: Readable<PurseHeadlessCheckoutPaymentMethod[]>;
-  tokens: Readable<PurseHeadlessCheckoutPaymentToken[]>;
-  walletTokens: Readable<WalletItem[]>;
-  constructor(env: APIEnv, factoriesStaticData: {
-    manuallyTriggerHook: (hookName: keyof PurseHeadlessCheckoutHooks, context?: {
-      actualMethod?: Method;
-      sourceId?: string;
-    }) => Promise<void>;
-    submitPayment: (skipOnBeforeValidateHook?: boolean) => Promise<void>;
-    onSessionTerminated: () => void;
-  });
-  get session(): PaymentSession;
-  get walletSession(): WalletSession | null;
-  setSession(session: OrchestrationPaymentSession | LegacyPaymentSession): Promise<void>;
-  setWalletSession(session: OnePayWalletSession): Promise<void>;
-  onExpires(callback: () => void): () => void;
-  getMop(mop: Partial<PurseHeadlessCheckoutPaymentItem>): PurseHeadlessCheckoutPaymentItem | null;
-  deleteAllTokens(): Promise<void>;
-  deactivateMop(mop: PurseHeadlessCheckoutPaymentItem, reason: DisabledState): Promise<void>;
-  isSessionExpired(): boolean;
-  private updateMopDisabledState;
+	readonly factoriesStaticData: {
+		manuallyTriggerHook: (hookName: keyof PurseHeadlessCheckoutHooks, context?: {
+			actualMethod?: Method;
+			sourceId?: string;
+		}) => Promise<void>;
+		submitPayment: (skipOnBeforeValidateHook?: boolean) => Promise<void>;
+		onSessionTerminated: () => void;
+	};
+	private _paymentSession;
+	private _walletSession;
+	private readonly _serverDateChecker;
+	api: PaymentAPI;
+	walletAPI: WalletAPI;
+	paymentSplitter: PaymentSplitter;
+	readonly paymentSession: Writable<PaymentSession | null>;
+	mops: Writable<PurseHeadlessCheckoutPaymentItem[]>;
+	methods: Readable<PurseHeadlessCheckoutPaymentMethod[]>;
+	tokens: Readable<PurseHeadlessCheckoutPaymentToken[]>;
+	walletTokens: Readable<WalletItem[]>;
+	constructor(env: APIEnv, factoriesStaticData: {
+		manuallyTriggerHook: (hookName: keyof PurseHeadlessCheckoutHooks, context?: {
+			actualMethod?: Method;
+			sourceId?: string;
+		}) => Promise<void>;
+		submitPayment: (skipOnBeforeValidateHook?: boolean) => Promise<void>;
+		onSessionTerminated: () => void;
+	});
+	get session(): PaymentSession;
+	get walletSession(): WalletSession | null;
+	setSession(session: OrchestrationPaymentSession | LegacyPaymentSession): Promise<void>;
+	setWalletSession(session: OnePayWalletSession): Promise<void>;
+	onExpires(callback: () => void): () => void;
+	getMop(mop: Partial<PurseHeadlessCheckoutPaymentItem>): PurseHeadlessCheckoutPaymentItem | null;
+	deleteAllTokens(): Promise<void>;
+	deactivateMop(mop: PurseHeadlessCheckoutPaymentItem, reason: DisabledState): Promise<void>;
+	isSessionExpired(): boolean;
+	private updateMopDisabledState;
 }
 export declare type RedirectionBasicParams = {
-  type: "redirection";
-  url: string;
+	type: "redirection";
+	url: string;
 };
 export declare type RedirectionHandlerParams = RedirectionBasicParams | RedirectionJSONParams | RedirectionHTMLParams;
 export declare type RedirectionHTMLParams = {
-  type: "htmlFormSubmit";
-  containerId: string;
-  responseForm: any;
+	type: "htmlFormSubmit";
+	containerId: string;
+	responseForm: any;
 };
 export declare type RedirectionJSONParams = {
-  type: "jsonFormSubmit";
-  url: string;
-  JSONPayload?: string;
-  method?: "GET" | "POST";
+	type: "jsonFormSubmit";
+	url: string;
+	JSONPayload?: string;
+	method?: "GET" | "POST";
 };
 export declare type RegistrationState = {
-  registered: boolean;
-  name: string | null;
+	registered: boolean;
+	name: string | null;
 };
 /**
  * Secondaries are true Headless payment methods and are handled directly by the SDK for now.
  * They are not handled by the partner UI.
  */
 export declare interface SecondarySpecificConfig {
-  /**
-   * Does this method require a CVV?
-   */
-  requiresCVV: (pan: string) => boolean;
-  /**
-   * Validates the pan of the card.
-   */
-  validatePan: (pan: string) => boolean;
-  /**
-   * Validates the CVV.
-   */
-  validateCVV?: (cvv: string) => boolean;
-  /**
-   * Take policy
-   */
-  takePolicy: SecondaryTakePolicy;
-  /**
-   * Map the payment_data for the first init call.
-   */
-  mapPaymentData?: (item: SecondaryPluginInitPayload, pan: string, cvv?: string) => SecondaryPluginInitPayload;
-  /**
-   * Map the payment_data for the validate call.
-   * This is called after the init/polling phase and has access to the token
-   * which may contain data obtained from the init response (e.g., partner_reference).
-   */
-  mapValidatePaymentData?: (item: SecondaryPluginInitPayload, token: Partial<PurseHeadlessCheckoutSecondaryToken>) => SecondaryPluginInitPayload;
-  /**
-   * Some partners require multiple init calls before a token can be built.
-   * When present, this function is called after the first init and is responsible
-   * for polling until the partner signals a final state (e.g. AUTHORIZED).
-   * The resolved InitData is then used as if it were the first-and-only init result.
-   * From the caller's perspective getSecondaryToken() is still a single promise — it just
-   * takes longer to resolve.
-   *
-   * @param api         The payment API instance to issue subsequent init calls.
-   * @param firstResult The InitData returned by the first init call.
-   * @param basePayload The original init payload (partner, method, amount, …) so the
-   *                    polling call can reuse it with a different payment_data.
-   * @param signal      Optional signal to abort the polling.
-   */
-  pollForToken?: (api: PaymentAPI, firstResult: InitData, basePayload: SecondaryPluginInitPayload, signal?: AbortSignal) => Promise<InitData>;
-  /**
-   * Inspect the first init result and return a specific error when the response
-   * carries a known terminal status that should surface a precise error code
-   * instead of the generic FAILED_TO_INIT_SECONDARY_TOKEN.
-   * Return undefined to fall through to the default error.
-   */
-  classifyInitError?: (initData: InitData) => PurseHeadlessCheckoutError | undefined;
+	/**
+	 * Does this method require a CVV?
+	 */
+	requiresCVV: (pan: string) => boolean;
+	/**
+	 * Validates the pan of the card.
+	 */
+	validatePan: (pan: string) => boolean;
+	/**
+	 * Validates the CVV.
+	 */
+	validateCVV?: (cvv: string) => boolean;
+	/**
+	 * Take policy
+	 */
+	takePolicy: SecondaryTakePolicy;
+	/**
+	 * Map the payment_data for the first init call.
+	 */
+	mapPaymentData?: (item: SecondaryPluginInitPayload, pan: string, cvv?: string) => SecondaryPluginInitPayload;
+	/**
+	 * Map the payment_data for the validate call.
+	 * This is called after the init/polling phase and has access to the token
+	 * which may contain data obtained from the init response (e.g., partner_reference).
+	 */
+	mapValidatePaymentData?: (item: SecondaryPluginInitPayload, token: Partial<PurseHeadlessCheckoutSecondaryToken>) => SecondaryPluginInitPayload;
+	/**
+	 * Some partners require multiple init calls before a token can be built.
+	 * When present, this function is called after the first init and is responsible
+	 * for polling until the partner signals a final state (e.g. AUTHORIZED).
+	 * The resolved InitData is then used as if it were the first-and-only init result.
+	 * From the caller's perspective getSecondaryToken() is still a single promise — it just
+	 * takes longer to resolve.
+	 *
+	 * @param api         The payment API instance to issue subsequent init calls.
+	 * @param firstResult The InitData returned by the first init call.
+	 * @param basePayload The original init payload (partner, method, amount, …) so the
+	 *                    polling call can reuse it with a different payment_data.
+	 * @param signal      Optional signal to abort the polling.
+	 */
+	pollForToken?: (api: PaymentAPI, firstResult: InitData, basePayload: SecondaryPluginInitPayload, signal?: AbortSignal) => Promise<InitData>;
+	/**
+	 * Inspect the first init result and return a specific error when the response
+	 * carries a known terminal status that should surface a precise error code
+	 * instead of the generic FAILED_TO_INIT_SECONDARY_TOKEN.
+	 * Return undefined to fall through to the default error.
+	 */
+	classifyInitError?: (initData: InitData) => PurseHeadlessCheckoutError | undefined;
 }
 export declare type SecondaryTakePolicy = "none" | "max";
 export declare interface WalletSession {
-  source: OnePayWalletSession$1;
-  id: string;
-  merchantID: string;
-  expirationDate: string;
-  ownerReference: string;
+	source: OnePayWalletSession$1;
+	id: string;
+	merchantID: string;
+	expirationDate: string;
+	ownerReference: string;
 }
 declare const DropinThemeSchema: z.ZodObject<{
-  fontFamily: z.ZodOptional<z.ZodEnum<[
-    "Roboto",
-    "Montserrat",
-    "Raleway",
-    "Inter",
-    "Noto Sans",
-    "Open Sans",
-    "Lato",
-    "Nunito",
-    "Work Sans"
-  ]>>;
-  borderRadius: z.ZodOptional<z.ZodString>;
-  accentColor: z.ZodOptional<z.ZodString>;
-  text: z.ZodOptional<z.ZodObject<{
-    primaryColor: z.ZodOptional<z.ZodString>;
-    secondaryColor: z.ZodOptional<z.ZodString>;
-    fontSize: z.ZodOptional<z.ZodString>;
-    fontWeight: z.ZodOptional<z.ZodEnum<[
-      "normal",
-      "bold",
-      "bolder",
-      "lighter",
-      "100",
-      "200",
-      "300",
-      "400",
-      "500",
-      "600",
-      "700",
-      "800",
-      "900"
-    ]>>;
-  }, "strict", z.ZodTypeAny, {
-    primaryColor?: string | undefined;
-    secondaryColor?: string | undefined;
-    fontSize?: string | undefined;
-    fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-  }, {
-    primaryColor?: string | undefined;
-    secondaryColor?: string | undefined;
-    fontSize?: string | undefined;
-    fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-  }>>;
-  title: z.ZodOptional<z.ZodObject<{
-    fontSize: z.ZodOptional<z.ZodString>;
-    fontWeight: z.ZodOptional<z.ZodEnum<[
-      "normal",
-      "bold",
-      "bolder",
-      "lighter",
-      "100",
-      "200",
-      "300",
-      "400",
-      "500",
-      "600",
-      "700",
-      "800",
-      "900"
-    ]>>;
-  }, "strict", z.ZodTypeAny, {
-    fontSize?: string | undefined;
-    fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-  }, {
-    fontSize?: string | undefined;
-    fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-  }>>;
+	fontFamily: z.ZodOptional<z.ZodEnum<[
+		"Roboto",
+		"Montserrat",
+		"Raleway",
+		"Inter",
+		"Noto Sans",
+		"Open Sans",
+		"Lato",
+		"Nunito",
+		"Work Sans"
+	]>>;
+	borderRadius: z.ZodOptional<z.ZodString>;
+	accentColor: z.ZodOptional<z.ZodString>;
+	text: z.ZodOptional<z.ZodObject<{
+		primaryColor: z.ZodOptional<z.ZodString>;
+		secondaryColor: z.ZodOptional<z.ZodString>;
+		fontSize: z.ZodOptional<z.ZodString>;
+		fontWeight: z.ZodOptional<z.ZodEnum<[
+			"normal",
+			"bold",
+			"bolder",
+			"lighter",
+			"100",
+			"200",
+			"300",
+			"400",
+			"500",
+			"600",
+			"700",
+			"800",
+			"900"
+		]>>;
+	}, "strict", z.ZodTypeAny, {
+		primaryColor?: string | undefined;
+		secondaryColor?: string | undefined;
+		fontSize?: string | undefined;
+		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
+	}, {
+		primaryColor?: string | undefined;
+		secondaryColor?: string | undefined;
+		fontSize?: string | undefined;
+		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
+	}>>;
+	title: z.ZodOptional<z.ZodObject<{
+		fontSize: z.ZodOptional<z.ZodString>;
+		fontWeight: z.ZodOptional<z.ZodEnum<[
+			"normal",
+			"bold",
+			"bolder",
+			"lighter",
+			"100",
+			"200",
+			"300",
+			"400",
+			"500",
+			"600",
+			"700",
+			"800",
+			"900"
+		]>>;
+	}, "strict", z.ZodTypeAny, {
+		fontSize?: string | undefined;
+		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
+	}, {
+		fontSize?: string | undefined;
+		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
+	}>>;
 }, "strict", z.ZodTypeAny, {
-  fontFamily?: "Roboto" | "Montserrat" | "Raleway" | "Inter" | "Noto Sans" | "Open Sans" | "Lato" | "Nunito" | "Work Sans" | undefined;
-  borderRadius?: string | undefined;
-  accentColor?: string | undefined;
-  text?: {
-    primaryColor?: string | undefined;
-    secondaryColor?: string | undefined;
-    fontSize?: string | undefined;
-    fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-  } | undefined;
-  title?: {
-    fontSize?: string | undefined;
-    fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-  } | undefined;
+	fontFamily?: "Roboto" | "Montserrat" | "Raleway" | "Inter" | "Noto Sans" | "Open Sans" | "Lato" | "Nunito" | "Work Sans" | undefined;
+	borderRadius?: string | undefined;
+	accentColor?: string | undefined;
+	text?: {
+		primaryColor?: string | undefined;
+		secondaryColor?: string | undefined;
+		fontSize?: string | undefined;
+		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
+	} | undefined;
+	title?: {
+		fontSize?: string | undefined;
+		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
+	} | undefined;
 }, {
-  fontFamily?: "Roboto" | "Montserrat" | "Raleway" | "Inter" | "Noto Sans" | "Open Sans" | "Lato" | "Nunito" | "Work Sans" | undefined;
-  borderRadius?: string | undefined;
-  accentColor?: string | undefined;
-  text?: {
-    primaryColor?: string | undefined;
-    secondaryColor?: string | undefined;
-    fontSize?: string | undefined;
-    fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-  } | undefined;
-  title?: {
-    fontSize?: string | undefined;
-    fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-  } | undefined;
+	fontFamily?: "Roboto" | "Montserrat" | "Raleway" | "Inter" | "Noto Sans" | "Open Sans" | "Lato" | "Nunito" | "Work Sans" | undefined;
+	borderRadius?: string | undefined;
+	accentColor?: string | undefined;
+	text?: {
+		primaryColor?: string | undefined;
+		secondaryColor?: string | undefined;
+		fontSize?: string | undefined;
+		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
+	} | undefined;
+	title?: {
+		fontSize?: string | undefined;
+		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
+	} | undefined;
 }>;
 export type DropinTheme = z.infer<typeof DropinThemeSchema>;
 export interface DropinPrivateEventPayload {
-  DROPIN_CHECKOUT_INIT_OPTIONS: {
-    hidePayButton: boolean;
-    hasEventListener: boolean;
-    hasTheme: boolean;
-    locale: string | undefined;
-  };
-  DROPIN_CHECKOUT_STORE_SUBSCRIBED: {
-    store: "isPaymentFulfilled" | "remainingAmountToPay" | "paymentSplit" | "sessionState";
-  };
-  DROPIN_CHECKOUT_METHODS_LIST_LOADED: {
-    methods: {
-      method_id: string;
-      type: PurseHeadlessCheckoutPaymentItem["type"];
-      enabled: boolean;
-    }[];
-  };
-  DROPIN_CHECKOUT_METHODS_SINGLE_MODE: {
-    method_id: string;
-  };
-  DROPIN_CHECKOUT_METHOD_DISABLED: {
-    method_id: string;
-    cause: string;
-  };
-  DROPIN_CHECKOUT_METHOD_DISPLAYED: {
-    method_id: string;
-    group: string;
-    position: number;
-    timeToInteractive: number;
-  };
-  DROPIN_CHECKOUT_METHOD_SELECTED: {
-    method_id: string;
-    group: string;
-    position: number;
-  };
-  DROPIN_CHECKOUT_METHOD_UNSELECTED: {
-    method_id: string;
-    group: string;
-    position: number;
-  };
-  DROPIN_CHECKOUT_METHOD_ERROR: {
-    method_id: string;
-    cause: string;
-    code: string;
-  };
-  DROPIN_CHECKOUT_MOUNT_CALLED: Record<never, never>;
-  DROPIN_CHECKOUT_MOUNT_FAILED: {
-    reason: string;
-    error_type: string;
-  };
-  DROPIN_CHECKOUT_UNMOUNT_CALLED: Record<never, never>;
-  DROPIN_CHECKOUT_PAGE_UNLOAD: undefined;
-  DROPIN_CHECKOUT_SESSION_EXPIRED: undefined;
-  DROPIN_CHECKOUT_SESSION_TERMINATED: undefined;
-  DROPIN_CHECKOUT_PUBLIC_EVENT_DISPATCHED: {
-    code: keyof DropinPublicEventPayload;
-    payload: DropinPublicEventPayload[keyof DropinPublicEventPayload];
-  };
-  DROPIN_CHECKOUT_REDIRECTION: {
-    redirect_type: string;
-  };
-  DROPIN_CHECKOUT_SAVE_TOKEN_ENABLED: {
-    partner: string;
-    method: string;
-  };
-  DROPIN_CHECKOUT_SAVE_TOKEN_OPT_IN: {
-    partner: string;
-    method: string;
-  };
-  DROPIN_CHECKOUT_SAVE_TOKEN_OPT_OUT: {
-    partner: string;
-    method: string;
-  };
-  DROPIN_CHECKOUT_SET_SESSION_CALLED: {
-    session_id: string;
-  };
-  DROPIN_CHECKOUT_SET_SESSION_FAILED: {
-    reason: string;
-    error_type: string;
-  };
-  DROPIN_CHECKOUT_SET_WALLET_SESSION_CALLED: {
-    wallet_session_id: string;
-  };
-  DROPIN_CHECKOUT_SET_WALLET_SESSION_FAILED: {
-    reason: string;
-    error_type: string;
-  };
-  DROPIN_CHECKOUT_SUBMIT_PAYMENT_CALLED: {
-    participants: string[];
-  };
-  DROPIN_CHECKOUT_SUBMIT_PAYMENT_FAILED: {
-    reason: string;
-    error_type: string;
-  };
-  DROPIN_CHECKOUT_SUBMIT_PAYMENT_REDIRECT_TRIGGERED: {
-    trigger: string;
-    redirect_type: string;
-  };
-  DROPIN_CHECKOUT_ADD_SECONDARY_STARTED: {
-    partner: string;
-    method: string;
-  };
-  DROPIN_CHECKOUT_ADD_SECONDARY_CANCELLED: {
-    partner: string;
-    method: string;
-  };
-  DROPIN_CHECKOUT_SECONDARY_ACCORDION_OPENED: {
-    type: "giftcard" | "voucher" | "ancv";
-  };
-  DROPIN_CHECKOUT_ADD_SECONDARY_SUCCESS: {
-    partner: string;
-    method: string;
-    balance: number;
-    amount: number;
-    amount_loss?: number;
-  };
-  DROPIN_CHECKOUT_ADD_SECONDARY_FAILED: {
-    partner: string;
-    method: string;
-    reason?: string;
-    message?: string;
-  };
-  DROPIN_CHECKOUT_SECONDARY_REMOVED: {
-    partner: string;
-    method: string;
-  };
-  DROPIN_CHECKOUT_SECONDARY_INSUFFICIENT_BALANCE: {
-    partner: string;
-    method: string;
-    balance: number;
-    amount: number;
-  };
-  DROPIN_CHECKOUT_SECONDARY_USAGE_LIMIT_REACHED: {
-    partner: string;
-    method: string;
-    limit: number;
-  };
-  DROPIN_CHECKOUT_SECONDARY_MAX_AMOUNT_REACHED: {
-    partner: string;
-    method: string;
-    max_amount: number | null;
-    amount: number;
-  };
-  DROPIN_CHECKOUT_SECONDARY_TECHNICAL_ERROR: {
-    partner: string;
-    method: string;
-    code: string;
-    reason: string;
-  };
-  DROPIN_CHECKOUT_UNCAUGHT_ERROR: {
-    stack: string;
-    message?: string;
-  };
-  DROPIN_CHECKOUT_XPAY_DISABLED: {
-    method_id: string;
-    cause: string;
-  };
-  DROPIN_CHECKOUT_XPAY_DISPLAYED: {
-    method_id: string;
-    group: string;
-    position: number;
-    timeToInteractive: number;
-  };
-  DROPIN_CHECKOUT_XPAY_ERROR: {
-    method_id: string;
-    code: string;
-    cause: string;
-  };
-  DROPIN_CHECKOUT_XPAY_LIST_LOADED: {
-    methods: {
-      method_id: string;
-      type: PurseHeadlessCheckoutPaymentItem["type"];
-      enabled: boolean;
-    }[];
-  };
-  DROPIN_CHECKOUT_XPAY_MODAL_IN: {
-    method_id: string;
-  };
-  DROPIN_CHECKOUT_XPAY_MODAL_OUT: {
-    method_id: string;
-  };
-  DROPIN_CHECKOUT_TOKEN_DISPLAYED: {
-    method: string;
-    partner: string;
-    token: string;
-    timeToInteractive: number;
-  };
-  DROPIN_CHECKOUT_TOKEN_SELECTED: {
-    method: string;
-    partner: string;
-    token: string;
-  };
-  DROPIN_CHECKOUT_TOKEN_UNSELECTED: {
-    method: string;
-    partner: string;
-    token: string;
-  };
-  DROPIN_CHECKOUT_TOKEN_USE_ANOTHER_CARD: {
-    method: string;
-    partner: string;
-  };
-  DROPIN_CHECKOUT_TOKEN_DISABLED: {
-    method: string;
-    partner: string;
-    token: string;
-    cause: string;
-  };
-  DROPIN_CHECKOUT_TOKEN_ERROR: {
-    method: string;
-    partner: string;
-    token: string;
-    cause: string;
-    code: string;
-  };
-  DROPIN_CHECKOUT_THEME_CONFIG_LOADED: {
-    sessionId: string;
-    config: DropinTheme;
-  };
-  DROPIN_CHECKOUT_THEME_INVALID_CONFIG: {
-    sessionId: string;
-    errors: ZodIssue[];
-  };
-  DROPIN_CHECKOUT_LOYALTY_DISPLAYED: {
-    totalEuros: number;
-    eligibleEuros: number;
-  };
-  DROPIN_CHECKOUT_LOYALTY_ENABLED: {
-    eurosUsed: number;
-    remainingEuros: number;
-  };
-  DROPIN_CHECKOUT_LOYALTY_DISABLED: {
-    wasActiveDurationSeconds: number;
-  };
-  DROPIN_CHECKOUT_LOYALTY_ERROR: {
-    code: string;
-    message: string;
-  };
+	DROPIN_CHECKOUT_INIT_OPTIONS: {
+		hidePayButton: boolean;
+		hasEventListener: boolean;
+		hasTheme: boolean;
+		locale: string | undefined;
+	};
+	DROPIN_CHECKOUT_STORE_SUBSCRIBED: {
+		store: "isPaymentFulfilled" | "remainingAmountToPay" | "paymentSplit" | "sessionState";
+	};
+	DROPIN_CHECKOUT_METHODS_LIST_LOADED: {
+		methods: {
+			method_id: string;
+			type: PurseHeadlessCheckoutPaymentItem["type"];
+			enabled: boolean;
+		}[];
+	};
+	DROPIN_CHECKOUT_METHODS_SINGLE_MODE: {
+		method_id: string;
+	};
+	DROPIN_CHECKOUT_METHOD_DISABLED: {
+		method_id: string;
+		cause: string;
+	};
+	DROPIN_CHECKOUT_METHOD_DISPLAYED: {
+		method_id: string;
+		group: string;
+		position: number;
+		timeToInteractive: number;
+	};
+	DROPIN_CHECKOUT_METHOD_SELECTED: {
+		method_id: string;
+		group: string;
+		position: number;
+	};
+	DROPIN_CHECKOUT_METHOD_UNSELECTED: {
+		method_id: string;
+		group: string;
+		position: number;
+	};
+	DROPIN_CHECKOUT_METHOD_ERROR: {
+		method_id: string;
+		cause: string;
+		code: string;
+	};
+	DROPIN_CHECKOUT_MOUNT_CALLED: Record<never, never>;
+	DROPIN_CHECKOUT_MOUNT_FAILED: {
+		reason: string;
+		error_type: string;
+	};
+	DROPIN_CHECKOUT_UNMOUNT_CALLED: Record<never, never>;
+	DROPIN_CHECKOUT_PAGE_UNLOAD: undefined;
+	DROPIN_CHECKOUT_SESSION_EXPIRED: undefined;
+	DROPIN_CHECKOUT_SESSION_TERMINATED: undefined;
+	DROPIN_CHECKOUT_PUBLIC_EVENT_DISPATCHED: {
+		code: keyof DropinPublicEventPayload;
+		payload: DropinPublicEventPayload[keyof DropinPublicEventPayload];
+	};
+	DROPIN_CHECKOUT_REDIRECTION: {
+		redirect_type: string;
+	};
+	DROPIN_CHECKOUT_SAVE_TOKEN_ENABLED: {
+		partner: string;
+		method: string;
+	};
+	DROPIN_CHECKOUT_SAVE_TOKEN_OPT_IN: {
+		partner: string;
+		method: string;
+	};
+	DROPIN_CHECKOUT_SAVE_TOKEN_OPT_OUT: {
+		partner: string;
+		method: string;
+	};
+	DROPIN_CHECKOUT_SET_SESSION_CALLED: {
+		session_id: string;
+	};
+	DROPIN_CHECKOUT_SET_SESSION_FAILED: {
+		reason: string;
+		error_type: string;
+	};
+	DROPIN_CHECKOUT_SET_WALLET_SESSION_CALLED: {
+		wallet_session_id: string;
+	};
+	DROPIN_CHECKOUT_SET_WALLET_SESSION_FAILED: {
+		reason: string;
+		error_type: string;
+	};
+	DROPIN_CHECKOUT_SUBMIT_PAYMENT_CALLED: {
+		participants: string[];
+	};
+	DROPIN_CHECKOUT_SUBMIT_PAYMENT_FAILED: {
+		reason: string;
+		error_type: string;
+	};
+	DROPIN_CHECKOUT_SUBMIT_PAYMENT_REDIRECT_TRIGGERED: {
+		trigger: string;
+		redirect_type: string;
+	};
+	DROPIN_CHECKOUT_ADD_SECONDARY_STARTED: {
+		partner: string;
+		method: string;
+	};
+	DROPIN_CHECKOUT_ADD_SECONDARY_CANCELLED: {
+		partner: string;
+		method: string;
+	};
+	DROPIN_CHECKOUT_SECONDARY_ACCORDION_OPENED: {
+		type: "giftcard" | "voucher" | "ancv";
+	};
+	DROPIN_CHECKOUT_ADD_SECONDARY_SUCCESS: {
+		partner: string;
+		method: string;
+		balance: number;
+		amount: number;
+		amount_loss?: number;
+	};
+	DROPIN_CHECKOUT_ADD_SECONDARY_FAILED: {
+		partner: string;
+		method: string;
+		reason?: string;
+		message?: string;
+	};
+	DROPIN_CHECKOUT_SECONDARY_REMOVED: {
+		partner: string;
+		method: string;
+	};
+	DROPIN_CHECKOUT_SECONDARY_INSUFFICIENT_BALANCE: {
+		partner: string;
+		method: string;
+		balance: number;
+		amount: number;
+	};
+	DROPIN_CHECKOUT_SECONDARY_USAGE_LIMIT_REACHED: {
+		partner: string;
+		method: string;
+		limit: number;
+	};
+	DROPIN_CHECKOUT_SECONDARY_MAX_AMOUNT_REACHED: {
+		partner: string;
+		method: string;
+		max_amount: number | null;
+		amount: number;
+	};
+	DROPIN_CHECKOUT_SECONDARY_TECHNICAL_ERROR: {
+		partner: string;
+		method: string;
+		code: string;
+		reason: string;
+	};
+	DROPIN_CHECKOUT_UNCAUGHT_ERROR: {
+		stack: string;
+		message?: string;
+	};
+	DROPIN_CHECKOUT_XPAY_DISABLED: {
+		method_id: string;
+		cause: string;
+	};
+	DROPIN_CHECKOUT_XPAY_DISPLAYED: {
+		method_id: string;
+		group: string;
+		position: number;
+		timeToInteractive: number;
+	};
+	DROPIN_CHECKOUT_XPAY_ERROR: {
+		method_id: string;
+		code: string;
+		cause: string;
+	};
+	DROPIN_CHECKOUT_XPAY_LIST_LOADED: {
+		methods: {
+			method_id: string;
+			type: PurseHeadlessCheckoutPaymentItem["type"];
+			enabled: boolean;
+		}[];
+	};
+	DROPIN_CHECKOUT_XPAY_MODAL_IN: {
+		method_id: string;
+	};
+	DROPIN_CHECKOUT_XPAY_MODAL_OUT: {
+		method_id: string;
+	};
+	DROPIN_CHECKOUT_TOKEN_DISPLAYED: {
+		method: string;
+		partner: string;
+		token: string;
+		timeToInteractive: number;
+	};
+	DROPIN_CHECKOUT_TOKEN_SELECTED: {
+		method: string;
+		partner: string;
+		token: string;
+	};
+	DROPIN_CHECKOUT_TOKEN_UNSELECTED: {
+		method: string;
+		partner: string;
+		token: string;
+	};
+	DROPIN_CHECKOUT_TOKEN_USE_ANOTHER_CARD: {
+		method: string;
+		partner: string;
+	};
+	DROPIN_CHECKOUT_TOKEN_DISABLED: {
+		method: string;
+		partner: string;
+		token: string;
+		cause: string;
+	};
+	DROPIN_CHECKOUT_TOKEN_ERROR: {
+		method: string;
+		partner: string;
+		token: string;
+		cause: string;
+		code: string;
+	};
+	DROPIN_CHECKOUT_THEME_CONFIG_LOADED: {
+		sessionId: string;
+		config: DropinTheme;
+	};
+	DROPIN_CHECKOUT_THEME_INVALID_CONFIG: {
+		sessionId: string;
+		errors: ZodIssue[];
+	};
+	DROPIN_CHECKOUT_LOYALTY_DISPLAYED: {
+		totalEuros: number;
+		eligibleEuros: number;
+	};
+	DROPIN_CHECKOUT_LOYALTY_ENABLED: {
+		eurosUsed: number;
+		remainingEuros: number;
+	};
+	DROPIN_CHECKOUT_LOYALTY_DISABLED: {
+		wasActiveDurationSeconds: number;
+	};
+	DROPIN_CHECKOUT_LOYALTY_ERROR: {
+		code: string;
+		message: string;
+	};
 }
 export interface DropinPublicEventPayload {
-  ready: undefined;
-  error: {
-    message: string;
-    code?: string;
-  };
+	ready: undefined;
+	error: {
+		message: string;
+		code?: string;
+	};
 }
 export type DropinEventPayload = DropinPrivateEventPayload & DropinPublicEventPayload;
 export type DropinEventCode = keyof DropinEventPayload;
 export interface DropinEventBusEvent<Code extends DropinEventCode = DropinEventCode> extends Event$1<DropinEventPayload[Code], Code> {
-  code: Code;
-  payload?: DropinEventPayload[Code];
+	code: Code;
+	payload?: DropinEventPayload[Code];
 }
 type OnePayWalletSession$2 = Parameters<PurseHeadlessCheckout["setWalletSession"]>[0];
 declare const translationFiles: {
-  readonly "de-AT": {
-    translation: {
-      ILLICADO_GIFTCARD: string;
-      method: {
-        "100EURO": string;
-        "10X": string;
-        "10XIBAN": string;
-        "10XSANSFRAIS": string;
-        "10XSANSFRAISIBAN": string;
-        "12X": string;
-        "15X": string;
-        "18X": string;
-        "20X": string;
-        "20XIBAN": string;
-        "20XSANSFRAISIBAN": string;
-        "24X": string;
-        "30EURO": string;
-        "30X": string;
-        "3X": string;
-        "4X": string;
-        "4XSANSFRAIS": string;
-        "5-12X": string;
-        "50EURO": string;
-        "5X": string;
-        "6X": string;
-        "70EURO": string;
-        "9X": string;
-        APPLEPAY: string;
-        BANCONTACT: string;
-        BIZUM: string;
-        BNPL: string;
-        CB10X: string;
-        CB10XSANSFRAIS: string;
-        CB12X: string;
-        CB12XSANSFRAIS: string;
-        CB2X: string;
-        CB3X: string;
-        "CB3X-PAYBYLINK": string;
-        CB3XSANSFRAIS: string;
-        CB4X: string;
-        "CB4X-PAYBYLINK": string;
-        CB4XSANSFRAIS: string;
-        COMPTANT: string;
-        CREDITCARD: string;
-        GOOGLEPAY: string;
-        IDEAL: string;
-        INSTALLMENT: string;
-        INSTALLMENTS: string;
-        INSTANTPAYMENT: string;
-        INVOICE: string;
-        LOAN: string;
-        MBWAY: string;
-        MULTIBANCO: string;
-        PAYLATER: string;
-        PAYPAL: string;
-        REVOLVING: string;
-        SEPA: string;
-        SEPAINSTANT: string;
-        SEPARECURRENT: string;
-        SEPASINGLE: string;
-        TWINT: string;
-        WALLET: string;
-        XPAY: string;
-        GIFTCARD: string;
-        VOUCHER: string;
-      };
-      dividerText: string;
-      hostedForm: {
-        panPlaceholder: string;
-        panInputLabel: string;
-        panRequiredError: string;
-        panFormatError: string;
-        panCannotBeEmptyError: string;
-        panTooltipText: string;
-        cvvPlaceholder: string;
-        cvv4Placeholder: string;
-        cvvInputLabel: string;
-        cvv4InputLabel: string;
-        cvvRequiredError: string;
-        cvvFormatError: string;
-        cvvCannotBeEmptyError: string;
-        cvvTooltipText: string;
-        expirationPlaceholder: string;
-        expirationInputLabel: string;
-        expirationRequiredError: string;
-        expirationFormatError: string;
-        expirationCannotBeEmptyError: string;
-        expirationOutOfRangeError: string;
-        expirationTooltipText: string;
-        holderPlaceholder: string;
-        holderInputLabel: string;
-        holderRequiredError: string;
-        holderFormatError: string;
-        holderCannotBeEmptyError: string;
-        birthdateInputLabel: string;
-        birthdateRequiredError: string;
-        birthdateFormatError: string;
-        birthdateCannotBeEmptyError: string;
-        saveTokenLabel: string;
-        saveAccountLabel: string;
-      };
-      secondaries: {
-        title: string;
-      };
-      primaries: {
-        paymentMethod: string;
-        useAnotherCard: string;
-        useAnotherAccount: string;
-        redirectionText: string;
-        CVV: string;
-        savedAccounts_one: string;
-        savedAccounts_other: string;
-        savedCards_one: string;
-        savedCards_other: string;
-      };
-      installments: {
-        financingCostWithAprc: string;
-        financingCost: string;
-        total: string;
-        yourPaymentSchedule: string;
-        installment_ordinal_one: string;
-        installment_ordinal_other: string;
-        computeInstallments: string;
-        computeInstallmentsError: string;
-      };
-      common: {
-        submittingPayment: string;
-        sessionExpired: string;
-        sessionTerminated: string;
-        today: string;
-      };
-      giftCards: {
-        cardsAndPartner_one: string;
-        cardsAndPartner_other: string;
-        gifts_one: string;
-        gifts_other: string;
-        giftCards_one: string;
-        giftCards_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        invalidCard: string;
-        availableAmount: string;
-        expiryDate: string;
-        apply: string;
-        applied_one: string;
-        applied_other: string;
-        cancel: string;
-        remove: string;
-        amountToUse: string;
-        insufficientBalance: string;
-        invalidAmount: string;
-        alreadyApplied: string;
-        failedToUseCard: string;
-        emptyCardBalance: string;
-        youCanAddUpTo: string;
-        currentStatus: string;
-        amountMax: string;
-        limitReachedForPartner: string;
-        limitReachedForPartnerAmount: string;
-      };
-      loyalty: {
-        insufficientBalance: string;
-        noAmountLeftToPay: string;
-        failedToLoadAccount: string;
-        minAmountNotMet: string;
-        loyaltyAccount: string;
-        balanceDetail: string;
-        amountUsed: string;
-      };
-      payButton: {
-        pay: string;
-      };
-      vouchers: {
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        vouchers_one: string;
-        vouchers_other: string;
-        voucherLoss: string;
-        voucherLossExplain: string;
-        voucherNoticeTitle: string;
-        voucherNotice: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-      };
-      suspensions: {
-        minAmountNotMet: string;
-        maxAmountExceeded: string;
-        technical: string;
-        fulfilled: string;
-        mainAlert: {
-          title: string;
-          text: string;
-        };
-      };
-    };
-  };
-  readonly "de-CH": {
-    translation: {
-      ILLICADO_GIFTCARD: string;
-      method: {
-        "100EURO": string;
-        "10X": string;
-        "10XIBAN": string;
-        "10XSANSFRAIS": string;
-        "10XSANSFRAISIBAN": string;
-        "12X": string;
-        "15X": string;
-        "18X": string;
-        "20X": string;
-        "20XIBAN": string;
-        "20XSANSFRAISIBAN": string;
-        "24X": string;
-        "30EURO": string;
-        "30X": string;
-        "3X": string;
-        "4X": string;
-        "4XSANSFRAIS": string;
-        "5-12X": string;
-        "50EURO": string;
-        "5X": string;
-        "6X": string;
-        "70EURO": string;
-        "9X": string;
-        APPLEPAY: string;
-        BANCONTACT: string;
-        BIZUM: string;
-        BNPL: string;
-        CB10X: string;
-        CB10XSANSFRAIS: string;
-        CB12X: string;
-        CB12XSANSFRAIS: string;
-        CB2X: string;
-        CB3X: string;
-        "CB3X-PAYBYLINK": string;
-        CB3XSANSFRAIS: string;
-        CB4X: string;
-        "CB4X-PAYBYLINK": string;
-        CB4XSANSFRAIS: string;
-        COMPTANT: string;
-        CREDITCARD: string;
-        GOOGLEPAY: string;
-        IDEAL: string;
-        INSTALLMENT: string;
-        INSTALLMENTS: string;
-        INSTANTPAYMENT: string;
-        INVOICE: string;
-        LOAN: string;
-        MBWAY: string;
-        MULTIBANCO: string;
-        PAYLATER: string;
-        PAYPAL: string;
-        REVOLVING: string;
-        SEPA: string;
-        SEPAINSTANT: string;
-        SEPARECURRENT: string;
-        SEPASINGLE: string;
-        TWINT: string;
-        WALLET: string;
-        XPAY: string;
-        GIFTCARD: string;
-        VOUCHER: string;
-      };
-      dividerText: string;
-      hostedForm: {
-        panPlaceholder: string;
-        panInputLabel: string;
-        panRequiredError: string;
-        panFormatError: string;
-        panCannotBeEmptyError: string;
-        panTooltipText: string;
-        cvvPlaceholder: string;
-        cvv4Placeholder: string;
-        cvvInputLabel: string;
-        cvv4InputLabel: string;
-        cvvRequiredError: string;
-        cvvFormatError: string;
-        cvvCannotBeEmptyError: string;
-        cvvTooltipText: string;
-        expirationPlaceholder: string;
-        expirationInputLabel: string;
-        expirationRequiredError: string;
-        expirationFormatError: string;
-        expirationCannotBeEmptyError: string;
-        expirationOutOfRangeError: string;
-        expirationTooltipText: string;
-        holderPlaceholder: string;
-        holderInputLabel: string;
-        holderRequiredError: string;
-        holderFormatError: string;
-        holderCannotBeEmptyError: string;
-        birthdateInputLabel: string;
-        birthdateRequiredError: string;
-        birthdateFormatError: string;
-        birthdateCannotBeEmptyError: string;
-        saveTokenLabel: string;
-        saveAccountLabel: string;
-      };
-      secondaries: {
-        title: string;
-      };
-      primaries: {
-        paymentMethod: string;
-        useAnotherCard: string;
-        useAnotherAccount: string;
-        redirectionText: string;
-        CVV: string;
-        savedAccounts_one: string;
-        savedAccounts_other: string;
-        savedCards_one: string;
-        savedCards_other: string;
-      };
-      installments: {
-        financingCostWithAprc: string;
-        financingCost: string;
-        total: string;
-        yourPaymentSchedule: string;
-        installment_ordinal_one: string;
-        installment_ordinal_other: string;
-        computeInstallments: string;
-        computeInstallmentsError: string;
-      };
-      common: {
-        submittingPayment: string;
-        sessionExpired: string;
-        sessionTerminated: string;
-        today: string;
-      };
-      giftCards: {
-        cardsAndPartner_one: string;
-        cardsAndPartner_other: string;
-        gifts_one: string;
-        gifts_other: string;
-        giftCards_one: string;
-        giftCards_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        invalidCard: string;
-        availableAmount: string;
-        expiryDate: string;
-        apply: string;
-        applied_one: string;
-        applied_other: string;
-        cancel: string;
-        remove: string;
-        amountToUse: string;
-        insufficientBalance: string;
-        invalidAmount: string;
-        alreadyApplied: string;
-        failedToUseCard: string;
-        emptyCardBalance: string;
-        youCanAddUpTo: string;
-        currentStatus: string;
-        amountMax: string;
-        limitReachedForPartner: string;
-        limitReachedForPartnerAmount: string;
-      };
-      loyalty: {
-        insufficientBalance: string;
-        noAmountLeftToPay: string;
-        failedToLoadAccount: string;
-        minAmountNotMet: string;
-        loyaltyAccount: string;
-        balanceDetail: string;
-        amountUsed: string;
-      };
-      payButton: {
-        pay: string;
-      };
-      vouchers: {
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        vouchers_one: string;
-        vouchers_other: string;
-        voucherLoss: string;
-        voucherLossExplain: string;
-        voucherNoticeTitle: string;
-        voucherNotice: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-      };
-      suspensions: {
-        minAmountNotMet: string;
-        maxAmountExceeded: string;
-        technical: string;
-        fulfilled: string;
-        mainAlert: {
-          title: string;
-          text: string;
-        };
-      };
-    };
-  };
-  readonly "de-DE": {
-    translation: {
-      ILLICADO_GIFTCARD: string;
-      method: {
-        "100EURO": string;
-        "10X": string;
-        "10XIBAN": string;
-        "10XSANSFRAIS": string;
-        "10XSANSFRAISIBAN": string;
-        "12X": string;
-        "15X": string;
-        "18X": string;
-        "20X": string;
-        "20XIBAN": string;
-        "20XSANSFRAISIBAN": string;
-        "24X": string;
-        "30EURO": string;
-        "30X": string;
-        "3X": string;
-        "4X": string;
-        "4XSANSFRAIS": string;
-        "5-12X": string;
-        "50EURO": string;
-        "5X": string;
-        "6X": string;
-        "70EURO": string;
-        "9X": string;
-        APPLEPAY: string;
-        BANCONTACT: string;
-        BIZUM: string;
-        BNPL: string;
-        CB10X: string;
-        CB10XSANSFRAIS: string;
-        CB12X: string;
-        CB12XSANSFRAIS: string;
-        CB2X: string;
-        CB3X: string;
-        "CB3X-PAYBYLINK": string;
-        CB3XSANSFRAIS: string;
-        CB4X: string;
-        "CB4X-PAYBYLINK": string;
-        CB4XSANSFRAIS: string;
-        COMPTANT: string;
-        CREDITCARD: string;
-        GOOGLEPAY: string;
-        IDEAL: string;
-        INSTALLMENT: string;
-        INSTALLMENTS: string;
-        INSTANTPAYMENT: string;
-        INVOICE: string;
-        LOAN: string;
-        MBWAY: string;
-        MULTIBANCO: string;
-        PAYLATER: string;
-        PAYPAL: string;
-        REVOLVING: string;
-        SEPA: string;
-        SEPAINSTANT: string;
-        SEPARECURRENT: string;
-        SEPASINGLE: string;
-        TWINT: string;
-        WALLET: string;
-        XPAY: string;
-        GIFTCARD: string;
-        VOUCHER: string;
-      };
-      dividerText: string;
-      hostedForm: {
-        panPlaceholder: string;
-        panInputLabel: string;
-        panRequiredError: string;
-        panFormatError: string;
-        panCannotBeEmptyError: string;
-        panTooltipText: string;
-        cvvPlaceholder: string;
-        cvv4Placeholder: string;
-        cvvInputLabel: string;
-        cvv4InputLabel: string;
-        cvvRequiredError: string;
-        cvvFormatError: string;
-        cvvCannotBeEmptyError: string;
-        cvvTooltipText: string;
-        expirationPlaceholder: string;
-        expirationInputLabel: string;
-        expirationRequiredError: string;
-        expirationFormatError: string;
-        expirationCannotBeEmptyError: string;
-        expirationOutOfRangeError: string;
-        expirationTooltipText: string;
-        holderPlaceholder: string;
-        holderInputLabel: string;
-        holderRequiredError: string;
-        holderFormatError: string;
-        holderCannotBeEmptyError: string;
-        birthdateInputLabel: string;
-        birthdateRequiredError: string;
-        birthdateFormatError: string;
-        birthdateCannotBeEmptyError: string;
-        saveTokenLabel: string;
-        saveAccountLabel: string;
-      };
-      secondaries: {
-        title: string;
-      };
-      primaries: {
-        paymentMethod: string;
-        useAnotherCard: string;
-        useAnotherAccount: string;
-        redirectionText: string;
-        CVV: string;
-        savedAccounts_one: string;
-        savedAccounts_other: string;
-        savedCards_one: string;
-        savedCards_other: string;
-      };
-      installments: {
-        financingCostWithAprc: string;
-        financingCost: string;
-        total: string;
-        yourPaymentSchedule: string;
-        installment_ordinal_one: string;
-        installment_ordinal_other: string;
-        computeInstallments: string;
-        computeInstallmentsError: string;
-      };
-      common: {
-        submittingPayment: string;
-        sessionExpired: string;
-        sessionTerminated: string;
-        today: string;
-      };
-      giftCards: {
-        cardsAndPartner_one: string;
-        cardsAndPartner_other: string;
-        gifts_one: string;
-        gifts_other: string;
-        giftCards_one: string;
-        giftCards_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        invalidCard: string;
-        availableAmount: string;
-        expiryDate: string;
-        apply: string;
-        applied_one: string;
-        applied_other: string;
-        cancel: string;
-        remove: string;
-        amountToUse: string;
-        insufficientBalance: string;
-        invalidAmount: string;
-        alreadyApplied: string;
-        failedToUseCard: string;
-        emptyCardBalance: string;
-        youCanAddUpTo: string;
-        currentStatus: string;
-        amountMax: string;
-        limitReachedForPartner: string;
-        limitReachedForPartnerAmount: string;
-      };
-      loyalty: {
-        insufficientBalance: string;
-        noAmountLeftToPay: string;
-        failedToLoadAccount: string;
-        minAmountNotMet: string;
-        loyaltyAccount: string;
-        balanceDetail: string;
-        amountUsed: string;
-      };
-      payButton: {
-        pay: string;
-      };
-      ancv: {
-        actionRequired: string;
-        ancvNotice: string;
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        ancv_one: string;
-        ancv_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        cancel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-        userActionTimeout: string;
-        userActionAborted: string;
-        userOtherTransactionPending: string;
-      };
-      vouchers: {
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        vouchers_one: string;
-        vouchers_other: string;
-        voucherLoss: string;
-        voucherLossExplain: string;
-        voucherNoticeTitle: string;
-        voucherNotice: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-      };
-      suspensions: {
-        minAmountNotMet: string;
-        maxAmountExceeded: string;
-        technical: string;
-        fulfilled: string;
-        mainAlert: {
-          title: string;
-          text: string;
-        };
-      };
-    };
-  };
-  readonly "en-GB": {
-    translation: {
-      ILLICADO_GIFTCARD: string;
-      method: {
-        "100EURO": string;
-        "10X": string;
-        "10XIBAN": string;
-        "10XSANSFRAIS": string;
-        "10XSANSFRAISIBAN": string;
-        "12X": string;
-        "15X": string;
-        "18X": string;
-        "20X": string;
-        "20XIBAN": string;
-        "20XSANSFRAISIBAN": string;
-        "24X": string;
-        "30EURO": string;
-        "30X": string;
-        "3X": string;
-        "4X": string;
-        "4XSANSFRAIS": string;
-        "5-12X": string;
-        "50EURO": string;
-        "5X": string;
-        "6X": string;
-        "70EURO": string;
-        "9X": string;
-        APPLEPAY: string;
-        BANCONTACT: string;
-        BIZUM: string;
-        BNPL: string;
-        CB10X: string;
-        CB10XSANSFRAIS: string;
-        CB12X: string;
-        CB12XSANSFRAIS: string;
-        CB2X: string;
-        CB3X: string;
-        "CB3X-PAYBYLINK": string;
-        CB3XSANSFRAIS: string;
-        CB4X: string;
-        "CB4X-PAYBYLINK": string;
-        CB4XSANSFRAIS: string;
-        COMPTANT: string;
-        CREDITCARD: string;
-        GOOGLEPAY: string;
-        IDEAL: string;
-        INSTALLMENT: string;
-        INSTALLMENTS: string;
-        INSTANTPAYMENT: string;
-        INVOICE: string;
-        LOAN: string;
-        MBWAY: string;
-        MULTIBANCO: string;
-        PAYLATER: string;
-        PAYPAL: string;
-        REVOLVING: string;
-        SEPA: string;
-        SEPAINSTANT: string;
-        SEPARECURRENT: string;
-        SEPASINGLE: string;
-        TWINT: string;
-        WALLET: string;
-        XPAY: string;
-        GIFTCARD: string;
-        VOUCHER: string;
-      };
-      dividerText: string;
-      hostedForm: {
-        panPlaceholder: string;
-        panInputLabel: string;
-        panRequiredError: string;
-        panFormatError: string;
-        panCannotBeEmptyError: string;
-        panTooltipText: string;
-        cvvPlaceholder: string;
-        cvv4Placeholder: string;
-        cvvInputLabel: string;
-        cvv4InputLabel: string;
-        cvvRequiredError: string;
-        cvvFormatError: string;
-        cvvCannotBeEmptyError: string;
-        cvvTooltipText: string;
-        expirationPlaceholder: string;
-        expirationInputLabel: string;
-        expirationRequiredError: string;
-        expirationFormatError: string;
-        expirationCannotBeEmptyError: string;
-        expirationOutOfRangeError: string;
-        expirationTooltipText: string;
-        holderPlaceholder: string;
-        holderInputLabel: string;
-        holderRequiredError: string;
-        holderFormatError: string;
-        holderCannotBeEmptyError: string;
-        birthdateInputLabel: string;
-        birthdateRequiredError: string;
-        birthdateFormatError: string;
-        birthdateCannotBeEmptyError: string;
-        saveTokenLabel: string;
-        saveAccountLabel: string;
-      };
-      secondaries: {
-        title: string;
-      };
-      primaries: {
-        paymentMethod: string;
-        useAnotherCard: string;
-        useAnotherAccount: string;
-        redirectionText: string;
-        CVV: string;
-        savedAccounts_one: string;
-        savedAccounts_other: string;
-        savedCards_one: string;
-        savedCards_other: string;
-      };
-      installments: {
-        financingCostWithAprc: string;
-        financingCost: string;
-        total: string;
-        yourPaymentSchedule: string;
-        installment_ordinal_one: string;
-        installment_ordinal_other: string;
-        computeInstallments: string;
-        computeInstallmentsError: string;
-      };
-      common: {
-        submittingPayment: string;
-        sessionExpired: string;
-        sessionTerminated: string;
-        today: string;
-      };
-      giftCards: {
-        cardsAndPartner_one: string;
-        cardsAndPartner_other: string;
-        gifts_one: string;
-        gifts_other: string;
-        giftCards_one: string;
-        giftCards_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        invalidCard: string;
-        availableAmount: string;
-        expiryDate: string;
-        apply: string;
-        applied_one: string;
-        applied_other: string;
-        cancel: string;
-        remove: string;
-        amountToUse: string;
-        insufficientBalance: string;
-        invalidAmount: string;
-        alreadyApplied: string;
-        failedToUseCard: string;
-        emptyCardBalance: string;
-        youCanAddUpTo: string;
-        currentStatus: string;
-        amountMax: string;
-        limitReachedForPartner: string;
-        limitReachedForPartnerAmount: string;
-      };
-      loyalty: {
-        insufficientBalance: string;
-        noAmountLeftToPay: string;
-        failedToLoadAccount: string;
-        minAmountNotMet: string;
-        loyaltyAccount: string;
-        balanceDetail: string;
-        amountUsed: string;
-      };
-      payButton: {
-        pay: string;
-      };
-      ancv: {
-        actionRequired: string;
-        ancvNotice: string;
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        ancv_one: string;
-        ancv_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        cancel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-        userActionTimeout: string;
-        userActionAborted: string;
-        userOtherTransactionPending: string;
-      };
-      vouchers: {
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        vouchers_one: string;
-        vouchers_other: string;
-        voucherLoss: string;
-        voucherLossExplain: string;
-        voucherNoticeTitle: string;
-        voucherNotice: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-      };
-      suspensions: {
-        minAmountNotMet: string;
-        maxAmountExceeded: string;
-        technical: string;
-        fulfilled: string;
-        mainAlert: {
-          title: string;
-          text: string;
-        };
-      };
-    };
-  };
-  readonly "en-US": {
-    translation: {
-      ILLICADO_GIFTCARD: string;
-      method: {
-        "100EURO": string;
-        "10X": string;
-        "10XIBAN": string;
-        "10XSANSFRAIS": string;
-        "10XSANSFRAISIBAN": string;
-        "12X": string;
-        "15X": string;
-        "18X": string;
-        "20X": string;
-        "20XIBAN": string;
-        "20XSANSFRAISIBAN": string;
-        "24X": string;
-        "30EURO": string;
-        "30X": string;
-        "3X": string;
-        "4X": string;
-        "4XSANSFRAIS": string;
-        "5-12X": string;
-        "50EURO": string;
-        "5X": string;
-        "6X": string;
-        "70EURO": string;
-        "9X": string;
-        APPLEPAY: string;
-        BANCONTACT: string;
-        BIZUM: string;
-        BNPL: string;
-        CB10X: string;
-        CB10XSANSFRAIS: string;
-        CB12X: string;
-        CB12XSANSFRAIS: string;
-        CB2X: string;
-        CB3X: string;
-        "CB3X-PAYBYLINK": string;
-        CB3XSANSFRAIS: string;
-        CB4X: string;
-        "CB4X-PAYBYLINK": string;
-        CB4XSANSFRAIS: string;
-        COMPTANT: string;
-        CREDITCARD: string;
-        GOOGLEPAY: string;
-        IDEAL: string;
-        INSTALLMENT: string;
-        INSTALLMENTS: string;
-        INSTANTPAYMENT: string;
-        INVOICE: string;
-        LOAN: string;
-        MBWAY: string;
-        MULTIBANCO: string;
-        PAYLATER: string;
-        PAYPAL: string;
-        REVOLVING: string;
-        SEPA: string;
-        SEPAINSTANT: string;
-        SEPARECURRENT: string;
-        SEPASINGLE: string;
-        TWINT: string;
-        WALLET: string;
-        XPAY: string;
-        GIFTCARD: string;
-        VOUCHER: string;
-      };
-      dividerText: string;
-      hostedForm: {
-        panPlaceholder: string;
-        panInputLabel: string;
-        panRequiredError: string;
-        panFormatError: string;
-        panCannotBeEmptyError: string;
-        panTooltipText: string;
-        cvvPlaceholder: string;
-        cvv4Placeholder: string;
-        cvvInputLabel: string;
-        cvv4InputLabel: string;
-        cvvRequiredError: string;
-        cvvFormatError: string;
-        cvvCannotBeEmptyError: string;
-        cvvTooltipText: string;
-        expirationPlaceholder: string;
-        expirationInputLabel: string;
-        expirationRequiredError: string;
-        expirationFormatError: string;
-        expirationCannotBeEmptyError: string;
-        expirationOutOfRangeError: string;
-        expirationTooltipText: string;
-        holderPlaceholder: string;
-        holderInputLabel: string;
-        holderRequiredError: string;
-        holderFormatError: string;
-        holderCannotBeEmptyError: string;
-        birthdateInputLabel: string;
-        birthdateRequiredError: string;
-        birthdateFormatError: string;
-        birthdateCannotBeEmptyError: string;
-        saveTokenLabel: string;
-        saveAccountLabel: string;
-      };
-      secondaries: {
-        title: string;
-      };
-      primaries: {
-        paymentMethod: string;
-        useAnotherCard: string;
-        useAnotherAccount: string;
-        redirectionText: string;
-        CVV: string;
-        savedAccounts_one: string;
-        savedAccounts_other: string;
-        savedCards_one: string;
-        savedCards_other: string;
-      };
-      installments: {
-        financingCostWithAprc: string;
-        financingCost: string;
-        total: string;
-        yourPaymentSchedule: string;
-        installment_ordinal_one: string;
-        installment_ordinal_other: string;
-        computeInstallments: string;
-        computeInstallmentsError: string;
-      };
-      common: {
-        submittingPayment: string;
-        sessionExpired: string;
-        sessionTerminated: string;
-        today: string;
-      };
-      giftCards: {
-        cardsAndPartner_one: string;
-        cardsAndPartner_other: string;
-        gifts_one: string;
-        gifts_other: string;
-        giftCards_one: string;
-        giftCards_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        invalidCard: string;
-        availableAmount: string;
-        expiryDate: string;
-        apply: string;
-        applied_one: string;
-        applied_other: string;
-        cancel: string;
-        remove: string;
-        amountToUse: string;
-        insufficientBalance: string;
-        invalidAmount: string;
-        alreadyApplied: string;
-        failedToUseCard: string;
-        emptyCardBalance: string;
-        youCanAddUpTo: string;
-        currentStatus: string;
-        amountMax: string;
-        limitReachedForPartner: string;
-        limitReachedForPartnerAmount: string;
-      };
-      loyalty: {
-        insufficientBalance: string;
-        noAmountLeftToPay: string;
-        failedToLoadAccount: string;
-        minAmountNotMet: string;
-        loyaltyAccount: string;
-        balanceDetail: string;
-        amountUsed: string;
-      };
-      payButton: {
-        pay: string;
-      };
-      ancv: {
-        actionRequired: string;
-        ancvNotice: string;
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        ancv_one: string;
-        ancv_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        cancel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-        userActionTimeout: string;
-        userActionAborted: string;
-        userOtherTransactionPending: string;
-      };
-      vouchers: {
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        vouchers_one: string;
-        vouchers_other: string;
-        voucherLoss: string;
-        voucherLossExplain: string;
-        voucherNoticeTitle: string;
-        voucherNotice: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-      };
-      suspensions: {
-        minAmountNotMet: string;
-        maxAmountExceeded: string;
-        technical: string;
-        fulfilled: string;
-        mainAlert: {
-          title: string;
-          text: string;
-        };
-      };
-    };
-  };
-  readonly "es-ES": {
-    translation: {
-      ILLICADO_GIFTCARD: string;
-      method: {
-        "100EURO": string;
-        "10X": string;
-        "10XIBAN": string;
-        "10XSANSFRAIS": string;
-        "10XSANSFRAISIBAN": string;
-        "12X": string;
-        "15X": string;
-        "18X": string;
-        "20X": string;
-        "20XIBAN": string;
-        "20XSANSFRAISIBAN": string;
-        "24X": string;
-        "30EURO": string;
-        "30X": string;
-        "3X": string;
-        "4X": string;
-        "4XSANSFRAIS": string;
-        "5-12X": string;
-        "50EURO": string;
-        "5X": string;
-        "6X": string;
-        "70EURO": string;
-        "9X": string;
-        APPLEPAY: string;
-        BANCONTACT: string;
-        BIZUM: string;
-        BNPL: string;
-        CB10X: string;
-        CB10XSANSFRAIS: string;
-        CB12X: string;
-        CB12XSANSFRAIS: string;
-        CB2X: string;
-        CB3X: string;
-        "CB3X-PAYBYLINK": string;
-        CB3XSANSFRAIS: string;
-        CB4X: string;
-        "CB4X-PAYBYLINK": string;
-        CB4XSANSFRAIS: string;
-        COMPTANT: string;
-        CREDITCARD: string;
-        GOOGLEPAY: string;
-        IDEAL: string;
-        INSTALLMENT: string;
-        INSTALLMENTS: string;
-        INSTANTPAYMENT: string;
-        INVOICE: string;
-        LOAN: string;
-        MBWAY: string;
-        MULTIBANCO: string;
-        PAYLATER: string;
-        PAYPAL: string;
-        REVOLVING: string;
-        SEPA: string;
-        SEPAINSTANT: string;
-        SEPARECURRENT: string;
-        SEPASINGLE: string;
-        TWINT: string;
-        WALLET: string;
-        XPAY: string;
-        GIFTCARD: string;
-        VOUCHER: string;
-      };
-      dividerText: string;
-      hostedForm: {
-        panPlaceholder: string;
-        panInputLabel: string;
-        panRequiredError: string;
-        panFormatError: string;
-        panCannotBeEmptyError: string;
-        panTooltipText: string;
-        cvvPlaceholder: string;
-        cvv4Placeholder: string;
-        cvvInputLabel: string;
-        cvv4InputLabel: string;
-        cvvRequiredError: string;
-        cvvFormatError: string;
-        cvvCannotBeEmptyError: string;
-        cvvTooltipText: string;
-        expirationPlaceholder: string;
-        expirationInputLabel: string;
-        expirationRequiredError: string;
-        expirationFormatError: string;
-        expirationCannotBeEmptyError: string;
-        expirationOutOfRangeError: string;
-        expirationTooltipText: string;
-        holderPlaceholder: string;
-        holderInputLabel: string;
-        holderRequiredError: string;
-        holderFormatError: string;
-        holderCannotBeEmptyError: string;
-        birthdateInputLabel: string;
-        birthdateRequiredError: string;
-        birthdateFormatError: string;
-        birthdateCannotBeEmptyError: string;
-        saveTokenLabel: string;
-        saveAccountLabel: string;
-      };
-      secondaries: {
-        title: string;
-      };
-      primaries: {
-        paymentMethod: string;
-        useAnotherCard: string;
-        useAnotherAccount: string;
-        redirectionText: string;
-        CVV: string;
-        savedAccounts_one: string;
-        savedAccounts_other: string;
-        savedCards_one: string;
-        savedCards_other: string;
-      };
-      installments: {
-        financingCostWithAprc: string;
-        financingCost: string;
-        total: string;
-        yourPaymentSchedule: string;
-        installment_ordinal_one: string;
-        installment_ordinal_other: string;
-        computeInstallments: string;
-        computeInstallmentsError: string;
-      };
-      common: {
-        submittingPayment: string;
-        sessionExpired: string;
-        sessionTerminated: string;
-        today: string;
-      };
-      giftCards: {
-        cardsAndPartner_one: string;
-        cardsAndPartner_other: string;
-        gifts_one: string;
-        gifts_other: string;
-        giftCards_one: string;
-        giftCards_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        invalidCard: string;
-        availableAmount: string;
-        expiryDate: string;
-        apply: string;
-        applied_one: string;
-        applied_other: string;
-        cancel: string;
-        remove: string;
-        amountToUse: string;
-        insufficientBalance: string;
-        invalidAmount: string;
-        alreadyApplied: string;
-        failedToUseCard: string;
-        emptyCardBalance: string;
-        youCanAddUpTo: string;
-        currentStatus: string;
-        amountMax: string;
-        limitReachedForPartner: string;
-        limitReachedForPartnerAmount: string;
-      };
-      loyalty: {
-        insufficientBalance: string;
-        noAmountLeftToPay: string;
-        failedToLoadAccount: string;
-        minAmountNotMet: string;
-        loyaltyAccount: string;
-        balanceDetail: string;
-        amountUsed: string;
-      };
-      payButton: {
-        pay: string;
-      };
-      ancv: {
-        actionRequired: string;
-        ancvNotice: string;
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        ancv_one: string;
-        ancv_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        cancel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-        userActionTimeout: string;
-        userActionAborted: string;
-        userOtherTransactionPending: string;
-      };
-      vouchers: {
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        vouchers_one: string;
-        vouchers_other: string;
-        voucherLoss: string;
-        voucherLossExplain: string;
-        voucherNoticeTitle: string;
-        voucherNotice: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-      };
-      suspensions: {
-        minAmountNotMet: string;
-        maxAmountExceeded: string;
-        technical: string;
-        fulfilled: string;
-        mainAlert: {
-          title: string;
-          text: string;
-        };
-      };
-    };
-  };
-  readonly "fr-FR": {
-    translation: {
-      ILLICADO_GIFTCARD: string;
-      method: {
-        "100EURO": string;
-        "10X": string;
-        "10XIBAN": string;
-        "10XSANSFRAIS": string;
-        "10XSANSFRAISIBAN": string;
-        "12X": string;
-        "15X": string;
-        "18X": string;
-        "20X": string;
-        "20XIBAN": string;
-        "20XSANSFRAISIBAN": string;
-        "24X": string;
-        "30EURO": string;
-        "30X": string;
-        "3X": string;
-        "4X": string;
-        "4XSANSFRAIS": string;
-        "5-12X": string;
-        "50EURO": string;
-        "5X": string;
-        "6X": string;
-        "70EURO": string;
-        "9X": string;
-        APPLEPAY: string;
-        BANCONTACT: string;
-        BIZUM: string;
-        BNPL: string;
-        CB10X: string;
-        CB10XSANSFRAIS: string;
-        CB12X: string;
-        CB12XSANSFRAIS: string;
-        CB2X: string;
-        CB3X: string;
-        "CB3X-PAYBYLINK": string;
-        CB3XSANSFRAIS: string;
-        CB4X: string;
-        "CB4X-PAYBYLINK": string;
-        CB4XSANSFRAIS: string;
-        COMPTANT: string;
-        CREDITCARD: string;
-        GOOGLEPAY: string;
-        IDEAL: string;
-        INSTALLMENT: string;
-        INSTALLMENTS: string;
-        INSTANTPAYMENT: string;
-        INVOICE: string;
-        LOAN: string;
-        MBWAY: string;
-        MULTIBANCO: string;
-        PAYLATER: string;
-        PAYPAL: string;
-        REVOLVING: string;
-        SEPA: string;
-        SEPAINSTANT: string;
-        SEPARECURRENT: string;
-        SEPASINGLE: string;
-        TWINT: string;
-        WALLET: string;
-        XPAY: string;
-        GIFTCARD: string;
-        VOUCHER: string;
-      };
-      dividerText: string;
-      hostedForm: {
-        panPlaceholder: string;
-        panInputLabel: string;
-        panRequiredError: string;
-        panFormatError: string;
-        panCannotBeEmptyError: string;
-        panTooltipText: string;
-        cvvPlaceholder: string;
-        cvv4Placeholder: string;
-        cvvInputLabel: string;
-        cvv4InputLabel: string;
-        cvvRequiredError: string;
-        cvvFormatError: string;
-        cvvCannotBeEmptyError: string;
-        cvvTooltipText: string;
-        expirationPlaceholder: string;
-        expirationInputLabel: string;
-        expirationRequiredError: string;
-        expirationFormatError: string;
-        expirationCannotBeEmptyError: string;
-        expirationOutOfRangeError: string;
-        expirationTooltipText: string;
-        holderPlaceholder: string;
-        holderInputLabel: string;
-        holderRequiredError: string;
-        holderFormatError: string;
-        holderCannotBeEmptyError: string;
-        birthdateInputLabel: string;
-        birthdateRequiredError: string;
-        birthdateFormatError: string;
-        birthdateCannotBeEmptyError: string;
-        saveTokenLabel: string;
-        saveAccountLabel: string;
-      };
-      secondaries: {
-        title: string;
-      };
-      primaries: {
-        paymentMethod: string;
-        useAnotherCard: string;
-        useAnotherAccount: string;
-        redirectionText: string;
-        CVV: string;
-        savedAccounts_one: string;
-        savedAccounts_other: string;
-        savedCards_one: string;
-        savedCards_other: string;
-      };
-      installments: {
-        financingCostWithAprc: string;
-        financingCost: string;
-        total: string;
-        yourPaymentSchedule: string;
-        installment_ordinal_one: string;
-        installment_ordinal_other: string;
-        computeInstallments: string;
-        computeInstallmentsError: string;
-      };
-      common: {
-        submittingPayment: string;
-        sessionExpired: string;
-        sessionTerminated: string;
-        today: string;
-      };
-      giftCards: {
-        cardsAndPartner_one: string;
-        cardsAndPartner_other: string;
-        gifts_one: string;
-        gifts_other: string;
-        giftCards_one: string;
-        giftCards_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        invalidCard: string;
-        availableAmount: string;
-        expiryDate: string;
-        apply: string;
-        applied_one: string;
-        applied_other: string;
-        cancel: string;
-        remove: string;
-        amountToUse: string;
-        insufficientBalance: string;
-        invalidAmount: string;
-        alreadyApplied: string;
-        failedToUseCard: string;
-        emptyCardBalance: string;
-        youCanAddUpTo: string;
-        currentStatus: string;
-        amountMax: string;
-        limitReachedForPartner: string;
-        limitReachedForPartnerAmount: string;
-      };
-      loyalty: {
-        insufficientBalance: string;
-        noAmountLeftToPay: string;
-        failedToLoadAccount: string;
-        minAmountNotMet: string;
-        loyaltyAccount: string;
-        balanceDetail: string;
-        amountUsed: string;
-      };
-      payButton: {
-        pay: string;
-      };
-      ancv: {
-        actionRequired: string;
-        ancvNotice: string;
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        ancv_one: string;
-        ancv_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        cancel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-        userActionTimeout: string;
-        userActionAborted: string;
-        userOtherTransactionPending: string;
-      };
-      vouchers: {
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        vouchers_one: string;
-        vouchers_other: string;
-        voucherLoss: string;
-        voucherLossExplain: string;
-        voucherNoticeTitle: string;
-        voucherNotice: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-      };
-      suspensions: {
-        minAmountNotMet: string;
-        maxAmountExceeded: string;
-        technical: string;
-        fulfilled: string;
-        mainAlert: {
-          title: string;
-          text: string;
-        };
-      };
-    };
-  };
-  readonly "it-CH": {
-    translation: {
-      ILLICADO_GIFTCARD: string;
-      method: {
-        "100EURO": string;
-        "10X": string;
-        "10XIBAN": string;
-        "10XSANSFRAIS": string;
-        "10XSANSFRAISIBAN": string;
-        "12X": string;
-        "15X": string;
-        "18X": string;
-        "20X": string;
-        "20XIBAN": string;
-        "20XSANSFRAISIBAN": string;
-        "24X": string;
-        "30EURO": string;
-        "30X": string;
-        "3X": string;
-        "4X": string;
-        "4XSANSFRAIS": string;
-        "5-12X": string;
-        "50EURO": string;
-        "5X": string;
-        "6X": string;
-        "70EURO": string;
-        "9X": string;
-        APPLEPAY: string;
-        BANCONTACT: string;
-        BIZUM: string;
-        BNPL: string;
-        CB10X: string;
-        CB10XSANSFRAIS: string;
-        CB12X: string;
-        CB12XSANSFRAIS: string;
-        CB2X: string;
-        CB3X: string;
-        "CB3X-PAYBYLINK": string;
-        CB3XSANSFRAIS: string;
-        CB4X: string;
-        "CB4X-PAYBYLINK": string;
-        CB4XSANSFRAIS: string;
-        COMPTANT: string;
-        CREDITCARD: string;
-        GOOGLEPAY: string;
-        IDEAL: string;
-        INSTALLMENT: string;
-        INSTALLMENTS: string;
-        INSTANTPAYMENT: string;
-        INVOICE: string;
-        LOAN: string;
-        MBWAY: string;
-        MULTIBANCO: string;
-        PAYLATER: string;
-        PAYPAL: string;
-        REVOLVING: string;
-        SEPA: string;
-        SEPAINSTANT: string;
-        SEPARECURRENT: string;
-        SEPASINGLE: string;
-        TWINT: string;
-        WALLET: string;
-        XPAY: string;
-        GIFTCARD: string;
-        VOUCHER: string;
-      };
-      dividerText: string;
-      hostedForm: {
-        panPlaceholder: string;
-        panInputLabel: string;
-        panRequiredError: string;
-        panFormatError: string;
-        panCannotBeEmptyError: string;
-        panTooltipText: string;
-        cvvPlaceholder: string;
-        cvv4Placeholder: string;
-        cvvInputLabel: string;
-        cvv4InputLabel: string;
-        cvvRequiredError: string;
-        cvvFormatError: string;
-        cvvCannotBeEmptyError: string;
-        cvvTooltipText: string;
-        expirationPlaceholder: string;
-        expirationInputLabel: string;
-        expirationRequiredError: string;
-        expirationFormatError: string;
-        expirationCannotBeEmptyError: string;
-        expirationOutOfRangeError: string;
-        expirationTooltipText: string;
-        holderPlaceholder: string;
-        holderInputLabel: string;
-        holderRequiredError: string;
-        holderFormatError: string;
-        holderCannotBeEmptyError: string;
-        birthdateInputLabel: string;
-        birthdateRequiredError: string;
-        birthdateFormatError: string;
-        birthdateCannotBeEmptyError: string;
-        saveTokenLabel: string;
-        saveAccountLabel: string;
-      };
-      secondaries: {
-        title: string;
-      };
-      primaries: {
-        paymentMethod: string;
-        useAnotherCard: string;
-        useAnotherAccount: string;
-        redirectionText: string;
-        CVV: string;
-        savedAccounts_one: string;
-        savedAccounts_other: string;
-        savedCards_one: string;
-        savedCards_other: string;
-      };
-      installments: {
-        financingCostWithAprc: string;
-        financingCost: string;
-        total: string;
-        yourPaymentSchedule: string;
-        installment_ordinal_one: string;
-        installment_ordinal_other: string;
-        computeInstallments: string;
-        computeInstallmentsError: string;
-      };
-      common: {
-        submittingPayment: string;
-        sessionExpired: string;
-        sessionTerminated: string;
-        today: string;
-      };
-      giftCards: {
-        cardsAndPartner_one: string;
-        cardsAndPartner_other: string;
-        gifts_one: string;
-        gifts_other: string;
-        giftCards_one: string;
-        giftCards_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        invalidCard: string;
-        availableAmount: string;
-        expiryDate: string;
-        apply: string;
-        applied_one: string;
-        applied_other: string;
-        cancel: string;
-        remove: string;
-        amountToUse: string;
-        insufficientBalance: string;
-        invalidAmount: string;
-        alreadyApplied: string;
-        failedToUseCard: string;
-        emptyCardBalance: string;
-        youCanAddUpTo: string;
-        currentStatus: string;
-        amountMax: string;
-        limitReachedForPartner: string;
-        limitReachedForPartnerAmount: string;
-      };
-      loyalty: {
-        insufficientBalance: string;
-        noAmountLeftToPay: string;
-        failedToLoadAccount: string;
-        minAmountNotMet: string;
-        loyaltyAccount: string;
-        balanceDetail: string;
-        amountUsed: string;
-      };
-      payButton: {
-        pay: string;
-      };
-      ancv: {
-        actionRequired: string;
-        ancvNotice: string;
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        ancv_one: string;
-        ancv_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        cancel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-        userActionTimeout: string;
-        userActionAborted: string;
-        userOtherTransactionPending: string;
-      };
-      vouchers: {
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        vouchers_one: string;
-        vouchers_other: string;
-        voucherLoss: string;
-        voucherLossExplain: string;
-        voucherNoticeTitle: string;
-        voucherNotice: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-      };
-      suspensions: {
-        minAmountNotMet: string;
-        maxAmountExceeded: string;
-        technical: string;
-        fulfilled: string;
-        mainAlert: {
-          title: string;
-          text: string;
-        };
-      };
-    };
-  };
-  readonly "it-IT": {
-    translation: {
-      ILLICADO_GIFTCARD: string;
-      method: {
-        "100EURO": string;
-        "10X": string;
-        "10XIBAN": string;
-        "10XSANSFRAIS": string;
-        "10XSANSFRAISIBAN": string;
-        "12X": string;
-        "15X": string;
-        "18X": string;
-        "20X": string;
-        "20XIBAN": string;
-        "20XSANSFRAISIBAN": string;
-        "24X": string;
-        "30EURO": string;
-        "30X": string;
-        "3X": string;
-        "4X": string;
-        "4XSANSFRAIS": string;
-        "5-12X": string;
-        "50EURO": string;
-        "5X": string;
-        "6X": string;
-        "70EURO": string;
-        "9X": string;
-        APPLEPAY: string;
-        BANCONTACT: string;
-        BIZUM: string;
-        BNPL: string;
-        CB10X: string;
-        CB10XSANSFRAIS: string;
-        CB12X: string;
-        CB12XSANSFRAIS: string;
-        CB2X: string;
-        CB3X: string;
-        "CB3X-PAYBYLINK": string;
-        CB3XSANSFRAIS: string;
-        CB4X: string;
-        "CB4X-PAYBYLINK": string;
-        CB4XSANSFRAIS: string;
-        COMPTANT: string;
-        CREDITCARD: string;
-        GOOGLEPAY: string;
-        IDEAL: string;
-        INSTALLMENT: string;
-        INSTALLMENTS: string;
-        INSTANTPAYMENT: string;
-        INVOICE: string;
-        LOAN: string;
-        MBWAY: string;
-        MULTIBANCO: string;
-        PAYLATER: string;
-        PAYPAL: string;
-        REVOLVING: string;
-        SEPA: string;
-        SEPAINSTANT: string;
-        SEPARECURRENT: string;
-        SEPASINGLE: string;
-        TWINT: string;
-        WALLET: string;
-        XPAY: string;
-        GIFTCARD: string;
-        VOUCHER: string;
-      };
-      dividerText: string;
-      hostedForm: {
-        panPlaceholder: string;
-        panInputLabel: string;
-        panRequiredError: string;
-        panFormatError: string;
-        panCannotBeEmptyError: string;
-        panTooltipText: string;
-        cvvPlaceholder: string;
-        cvv4Placeholder: string;
-        cvvInputLabel: string;
-        cvv4InputLabel: string;
-        cvvRequiredError: string;
-        cvvFormatError: string;
-        cvvCannotBeEmptyError: string;
-        cvvTooltipText: string;
-        expirationPlaceholder: string;
-        expirationInputLabel: string;
-        expirationRequiredError: string;
-        expirationFormatError: string;
-        expirationCannotBeEmptyError: string;
-        expirationOutOfRangeError: string;
-        expirationTooltipText: string;
-        holderPlaceholder: string;
-        holderInputLabel: string;
-        holderRequiredError: string;
-        holderFormatError: string;
-        holderCannotBeEmptyError: string;
-        birthdateInputLabel: string;
-        birthdateRequiredError: string;
-        birthdateFormatError: string;
-        birthdateCannotBeEmptyError: string;
-        saveTokenLabel: string;
-        saveAccountLabel: string;
-      };
-      secondaries: {
-        title: string;
-      };
-      primaries: {
-        paymentMethod: string;
-        useAnotherCard: string;
-        useAnotherAccount: string;
-        redirectionText: string;
-        CVV: string;
-        savedAccounts_one: string;
-        savedAccounts_other: string;
-        savedCards_one: string;
-        savedCards_other: string;
-      };
-      installments: {
-        financingCostWithAprc: string;
-        financingCost: string;
-        total: string;
-        yourPaymentSchedule: string;
-        installment_ordinal_one: string;
-        installment_ordinal_other: string;
-        computeInstallments: string;
-        computeInstallmentsError: string;
-      };
-      common: {
-        submittingPayment: string;
-        sessionExpired: string;
-        sessionTerminated: string;
-        today: string;
-      };
-      giftCards: {
-        cardsAndPartner_one: string;
-        cardsAndPartner_other: string;
-        gifts_one: string;
-        gifts_other: string;
-        giftCards_one: string;
-        giftCards_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        invalidCard: string;
-        availableAmount: string;
-        expiryDate: string;
-        apply: string;
-        applied_one: string;
-        applied_other: string;
-        cancel: string;
-        remove: string;
-        amountToUse: string;
-        insufficientBalance: string;
-        invalidAmount: string;
-        alreadyApplied: string;
-        failedToUseCard: string;
-        emptyCardBalance: string;
-        youCanAddUpTo: string;
-        currentStatus: string;
-        amountMax: string;
-        limitReachedForPartner: string;
-        limitReachedForPartnerAmount: string;
-      };
-      loyalty: {
-        insufficientBalance: string;
-        noAmountLeftToPay: string;
-        failedToLoadAccount: string;
-        minAmountNotMet: string;
-        loyaltyAccount: string;
-        balanceDetail: string;
-        amountUsed: string;
-      };
-      payButton: {
-        pay: string;
-      };
-      ancv: {
-        actionRequired: string;
-        ancvNotice: string;
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        ancv_one: string;
-        ancv_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        cancel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-        userActionTimeout: string;
-        userActionAborted: string;
-        userOtherTransactionPending: string;
-      };
-      vouchers: {
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        vouchers_one: string;
-        vouchers_other: string;
-        voucherLoss: string;
-        voucherLossExplain: string;
-        voucherNoticeTitle: string;
-        voucherNotice: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-      };
-      suspensions: {
-        minAmountNotMet: string;
-        maxAmountExceeded: string;
-        technical: string;
-        fulfilled: string;
-        mainAlert: {
-          title: string;
-          text: string;
-        };
-      };
-    };
-  };
-  readonly "nl-BE": {
-    translation: {
-      ILLICADO_GIFTCARD: string;
-      method: {
-        "100EURO": string;
-        "10X": string;
-        "10XIBAN": string;
-        "10XSANSFRAIS": string;
-        "10XSANSFRAISIBAN": string;
-        "12X": string;
-        "15X": string;
-        "18X": string;
-        "20X": string;
-        "20XIBAN": string;
-        "20XSANSFRAISIBAN": string;
-        "24X": string;
-        "30EURO": string;
-        "30X": string;
-        "3X": string;
-        "4X": string;
-        "4XSANSFRAIS": string;
-        "5-12X": string;
-        "50EURO": string;
-        "5X": string;
-        "6X": string;
-        "70EURO": string;
-        "9X": string;
-        APPLEPAY: string;
-        BANCONTACT: string;
-        BIZUM: string;
-        BNPL: string;
-        CB10X: string;
-        CB10XSANSFRAIS: string;
-        CB12X: string;
-        CB12XSANSFRAIS: string;
-        CB2X: string;
-        CB3X: string;
-        "CB3X-PAYBYLINK": string;
-        CB3XSANSFRAIS: string;
-        CB4X: string;
-        "CB4X-PAYBYLINK": string;
-        CB4XSANSFRAIS: string;
-        COMPTANT: string;
-        CREDITCARD: string;
-        GOOGLEPAY: string;
-        IDEAL: string;
-        INSTALLMENT: string;
-        INSTALLMENTS: string;
-        INSTANTPAYMENT: string;
-        INVOICE: string;
-        LOAN: string;
-        MBWAY: string;
-        MULTIBANCO: string;
-        PAYLATER: string;
-        PAYPAL: string;
-        REVOLVING: string;
-        SEPA: string;
-        SEPAINSTANT: string;
-        SEPARECURRENT: string;
-        SEPASINGLE: string;
-        TWINT: string;
-        WALLET: string;
-        XPAY: string;
-        GIFTCARD: string;
-        VOUCHER: string;
-      };
-      dividerText: string;
-      hostedForm: {
-        panPlaceholder: string;
-        panInputLabel: string;
-        panRequiredError: string;
-        panFormatError: string;
-        panCannotBeEmptyError: string;
-        panTooltipText: string;
-        cvvPlaceholder: string;
-        cvv4Placeholder: string;
-        cvvInputLabel: string;
-        cvv4InputLabel: string;
-        cvvRequiredError: string;
-        cvvFormatError: string;
-        cvvCannotBeEmptyError: string;
-        cvvTooltipText: string;
-        expirationPlaceholder: string;
-        expirationInputLabel: string;
-        expirationRequiredError: string;
-        expirationFormatError: string;
-        expirationCannotBeEmptyError: string;
-        expirationOutOfRangeError: string;
-        expirationTooltipText: string;
-        holderPlaceholder: string;
-        holderInputLabel: string;
-        holderRequiredError: string;
-        holderFormatError: string;
-        holderCannotBeEmptyError: string;
-        birthdateInputLabel: string;
-        birthdateRequiredError: string;
-        birthdateFormatError: string;
-        birthdateCannotBeEmptyError: string;
-        saveTokenLabel: string;
-        saveAccountLabel: string;
-      };
-      secondaries: {
-        title: string;
-      };
-      primaries: {
-        paymentMethod: string;
-        useAnotherCard: string;
-        useAnotherAccount: string;
-        redirectionText: string;
-        CVV: string;
-        savedAccounts_one: string;
-        savedAccounts_other: string;
-        savedCards_one: string;
-        savedCards_other: string;
-      };
-      installments: {
-        financingCostWithAprc: string;
-        financingCost: string;
-        total: string;
-        yourPaymentSchedule: string;
-        installment_ordinal_one: string;
-        installment_ordinal_other: string;
-        computeInstallments: string;
-        computeInstallmentsError: string;
-      };
-      common: {
-        submittingPayment: string;
-        sessionExpired: string;
-        sessionTerminated: string;
-        today: string;
-      };
-      giftCards: {
-        cardsAndPartner_one: string;
-        cardsAndPartner_other: string;
-        gifts_one: string;
-        gifts_other: string;
-        giftCards_one: string;
-        giftCards_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        invalidCard: string;
-        availableAmount: string;
-        expiryDate: string;
-        apply: string;
-        applied_one: string;
-        applied_other: string;
-        cancel: string;
-        remove: string;
-        amountToUse: string;
-        insufficientBalance: string;
-        invalidAmount: string;
-        alreadyApplied: string;
-        failedToUseCard: string;
-        emptyCardBalance: string;
-        youCanAddUpTo: string;
-        currentStatus: string;
-        amountMax: string;
-        limitReachedForPartner: string;
-        limitReachedForPartnerAmount: string;
-      };
-      loyalty: {
-        insufficientBalance: string;
-        noAmountLeftToPay: string;
-        failedToLoadAccount: string;
-        minAmountNotMet: string;
-        loyaltyAccount: string;
-        balanceDetail: string;
-        amountUsed: string;
-      };
-      payButton: {
-        pay: string;
-      };
-      ancv: {
-        actionRequired: string;
-        ancvNotice: string;
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        ancv_one: string;
-        ancv_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        cancel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-        userActionTimeout: string;
-        userActionAborted: string;
-        userOtherTransactionPending: string;
-      };
-      vouchers: {
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        vouchers_one: string;
-        vouchers_other: string;
-        voucherLoss: string;
-        voucherLossExplain: string;
-        voucherNoticeTitle: string;
-        voucherNotice: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-      };
-      suspensions: {
-        minAmountNotMet: string;
-        maxAmountExceeded: string;
-        technical: string;
-        fulfilled: string;
-        mainAlert: {
-          title: string;
-          text: string;
-        };
-      };
-    };
-  };
-  readonly "nl-NL": {
-    translation: {
-      ILLICADO_GIFTCARD: string;
-      method: {
-        "100EURO": string;
-        "10X": string;
-        "10XIBAN": string;
-        "10XSANSFRAIS": string;
-        "10XSANSFRAISIBAN": string;
-        "12X": string;
-        "15X": string;
-        "18X": string;
-        "20X": string;
-        "20XIBAN": string;
-        "20XSANSFRAISIBAN": string;
-        "24X": string;
-        "30EURO": string;
-        "30X": string;
-        "3X": string;
-        "4X": string;
-        "4XSANSFRAIS": string;
-        "5-12X": string;
-        "50EURO": string;
-        "5X": string;
-        "6X": string;
-        "70EURO": string;
-        "9X": string;
-        APPLEPAY: string;
-        BANCONTACT: string;
-        BIZUM: string;
-        BNPL: string;
-        CB10X: string;
-        CB10XSANSFRAIS: string;
-        CB12X: string;
-        CB12XSANSFRAIS: string;
-        CB2X: string;
-        CB3X: string;
-        "CB3X-PAYBYLINK": string;
-        CB3XSANSFRAIS: string;
-        CB4X: string;
-        "CB4X-PAYBYLINK": string;
-        CB4XSANSFRAIS: string;
-        COMPTANT: string;
-        CREDITCARD: string;
-        GOOGLEPAY: string;
-        IDEAL: string;
-        INSTALLMENT: string;
-        INSTALLMENTS: string;
-        INSTANTPAYMENT: string;
-        INVOICE: string;
-        LOAN: string;
-        MBWAY: string;
-        MULTIBANCO: string;
-        PAYLATER: string;
-        PAYPAL: string;
-        REVOLVING: string;
-        SEPA: string;
-        SEPAINSTANT: string;
-        SEPARECURRENT: string;
-        SEPASINGLE: string;
-        TWINT: string;
-        WALLET: string;
-        XPAY: string;
-        GIFTCARD: string;
-        VOUCHER: string;
-      };
-      dividerText: string;
-      hostedForm: {
-        panPlaceholder: string;
-        panInputLabel: string;
-        panRequiredError: string;
-        panFormatError: string;
-        panCannotBeEmptyError: string;
-        panTooltipText: string;
-        cvvPlaceholder: string;
-        cvv4Placeholder: string;
-        cvvInputLabel: string;
-        cvv4InputLabel: string;
-        cvvRequiredError: string;
-        cvvFormatError: string;
-        cvvCannotBeEmptyError: string;
-        cvvTooltipText: string;
-        expirationPlaceholder: string;
-        expirationInputLabel: string;
-        expirationRequiredError: string;
-        expirationFormatError: string;
-        expirationCannotBeEmptyError: string;
-        expirationOutOfRangeError: string;
-        expirationTooltipText: string;
-        holderPlaceholder: string;
-        holderInputLabel: string;
-        holderRequiredError: string;
-        holderFormatError: string;
-        holderCannotBeEmptyError: string;
-        birthdateInputLabel: string;
-        birthdateRequiredError: string;
-        birthdateFormatError: string;
-        birthdateCannotBeEmptyError: string;
-        saveTokenLabel: string;
-        saveAccountLabel: string;
-      };
-      secondaries: {
-        title: string;
-      };
-      primaries: {
-        paymentMethod: string;
-        useAnotherCard: string;
-        useAnotherAccount: string;
-        redirectionText: string;
-        CVV: string;
-        savedAccounts_one: string;
-        savedAccounts_other: string;
-        savedCards_one: string;
-        savedCards_other: string;
-      };
-      installments: {
-        financingCostWithAprc: string;
-        financingCost: string;
-        total: string;
-        yourPaymentSchedule: string;
-        installment_ordinal_one: string;
-        installment_ordinal_other: string;
-        computeInstallments: string;
-        computeInstallmentsError: string;
-      };
-      common: {
-        submittingPayment: string;
-        sessionExpired: string;
-        sessionTerminated: string;
-        today: string;
-      };
-      giftCards: {
-        cardsAndPartner_one: string;
-        cardsAndPartner_other: string;
-        gifts_one: string;
-        gifts_other: string;
-        giftCards_one: string;
-        giftCards_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        invalidCard: string;
-        availableAmount: string;
-        expiryDate: string;
-        apply: string;
-        applied_one: string;
-        applied_other: string;
-        cancel: string;
-        remove: string;
-        amountToUse: string;
-        insufficientBalance: string;
-        invalidAmount: string;
-        alreadyApplied: string;
-        failedToUseCard: string;
-        emptyCardBalance: string;
-        youCanAddUpTo: string;
-        currentStatus: string;
-        amountMax: string;
-        limitReachedForPartner: string;
-        limitReachedForPartnerAmount: string;
-      };
-      loyalty: {
-        insufficientBalance: string;
-        noAmountLeftToPay: string;
-        failedToLoadAccount: string;
-        minAmountNotMet: string;
-        loyaltyAccount: string;
-        balanceDetail: string;
-        amountUsed: string;
-      };
-      payButton: {
-        pay: string;
-      };
-      ancv: {
-        actionRequired: string;
-        ancvNotice: string;
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        ancv_one: string;
-        ancv_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        cancel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-        userActionTimeout: string;
-        userActionAborted: string;
-        userOtherTransactionPending: string;
-      };
-      vouchers: {
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        vouchers_one: string;
-        vouchers_other: string;
-        voucherLoss: string;
-        voucherLossExplain: string;
-        voucherNoticeTitle: string;
-        voucherNotice: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-      };
-      suspensions: {
-        minAmountNotMet: string;
-        maxAmountExceeded: string;
-        technical: string;
-        fulfilled: string;
-        mainAlert: {
-          title: string;
-          text: string;
-        };
-      };
-    };
-  };
-  readonly "pt-BR": {
-    translation: {
-      ILLICADO_GIFTCARD: string;
-      method: {
-        "100EURO": string;
-        "10X": string;
-        "10XIBAN": string;
-        "10XSANSFRAIS": string;
-        "10XSANSFRAISIBAN": string;
-        "12X": string;
-        "15X": string;
-        "18X": string;
-        "20X": string;
-        "20XIBAN": string;
-        "20XSANSFRAISIBAN": string;
-        "24X": string;
-        "30EURO": string;
-        "30X": string;
-        "3X": string;
-        "4X": string;
-        "4XSANSFRAIS": string;
-        "5-12X": string;
-        "50EURO": string;
-        "5X": string;
-        "6X": string;
-        "70EURO": string;
-        "9X": string;
-        APPLEPAY: string;
-        BANCONTACT: string;
-        BIZUM: string;
-        BNPL: string;
-        CB10X: string;
-        CB10XSANSFRAIS: string;
-        CB12X: string;
-        CB12XSANSFRAIS: string;
-        CB2X: string;
-        CB3X: string;
-        "CB3X-PAYBYLINK": string;
-        CB3XSANSFRAIS: string;
-        CB4X: string;
-        "CB4X-PAYBYLINK": string;
-        CB4XSANSFRAIS: string;
-        COMPTANT: string;
-        CREDITCARD: string;
-        GOOGLEPAY: string;
-        IDEAL: string;
-        INSTALLMENT: string;
-        INSTALLMENTS: string;
-        INSTANTPAYMENT: string;
-        INVOICE: string;
-        LOAN: string;
-        MBWAY: string;
-        MULTIBANCO: string;
-        PAYLATER: string;
-        PAYPAL: string;
-        REVOLVING: string;
-        SEPA: string;
-        SEPAINSTANT: string;
-        SEPARECURRENT: string;
-        SEPASINGLE: string;
-        TWINT: string;
-        WALLET: string;
-        XPAY: string;
-        GIFTCARD: string;
-        VOUCHER: string;
-      };
-      dividerText: string;
-      hostedForm: {
-        panPlaceholder: string;
-        panInputLabel: string;
-        panRequiredError: string;
-        panFormatError: string;
-        panCannotBeEmptyError: string;
-        panTooltipText: string;
-        cvvPlaceholder: string;
-        cvv4Placeholder: string;
-        cvvInputLabel: string;
-        cvv4InputLabel: string;
-        cvvRequiredError: string;
-        cvvFormatError: string;
-        cvvCannotBeEmptyError: string;
-        cvvTooltipText: string;
-        expirationPlaceholder: string;
-        expirationInputLabel: string;
-        expirationRequiredError: string;
-        expirationFormatError: string;
-        expirationCannotBeEmptyError: string;
-        expirationOutOfRangeError: string;
-        expirationTooltipText: string;
-        holderPlaceholder: string;
-        holderInputLabel: string;
-        holderRequiredError: string;
-        holderFormatError: string;
-        holderCannotBeEmptyError: string;
-        birthdateInputLabel: string;
-        birthdateRequiredError: string;
-        birthdateFormatError: string;
-        birthdateCannotBeEmptyError: string;
-        saveTokenLabel: string;
-        saveAccountLabel: string;
-      };
-      secondaries: {
-        title: string;
-      };
-      primaries: {
-        paymentMethod: string;
-        useAnotherCard: string;
-        useAnotherAccount: string;
-        redirectionText: string;
-        CVV: string;
-        savedAccounts_one: string;
-        savedAccounts_other: string;
-        savedCards_one: string;
-        savedCards_other: string;
-      };
-      installments: {
-        financingCostWithAprc: string;
-        financingCost: string;
-        total: string;
-        yourPaymentSchedule: string;
-        installment_ordinal_one: string;
-        installment_ordinal_other: string;
-        computeInstallments: string;
-        computeInstallmentsError: string;
-      };
-      common: {
-        submittingPayment: string;
-        sessionExpired: string;
-        sessionTerminated: string;
-        today: string;
-      };
-      giftCards: {
-        cardsAndPartner_one: string;
-        cardsAndPartner_other: string;
-        gifts_one: string;
-        gifts_other: string;
-        giftCards_one: string;
-        giftCards_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        invalidCard: string;
-        availableAmount: string;
-        expiryDate: string;
-        apply: string;
-        applied_one: string;
-        applied_other: string;
-        cancel: string;
-        remove: string;
-        amountToUse: string;
-        insufficientBalance: string;
-        invalidAmount: string;
-        alreadyApplied: string;
-        failedToUseCard: string;
-        emptyCardBalance: string;
-        youCanAddUpTo: string;
-        currentStatus: string;
-        amountMax: string;
-        limitReachedForPartner: string;
-        limitReachedForPartnerAmount: string;
-      };
-      loyalty: {
-        insufficientBalance: string;
-        noAmountLeftToPay: string;
-        failedToLoadAccount: string;
-        minAmountNotMet: string;
-        loyaltyAccount: string;
-        balanceDetail: string;
-        amountUsed: string;
-      };
-      payButton: {
-        pay: string;
-      };
-      ancv: {
-        actionRequired: string;
-        ancvNotice: string;
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        ancv_one: string;
-        ancv_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        cancel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-        userActionTimeout: string;
-        userActionAborted: string;
-        userOtherTransactionPending: string;
-      };
-      vouchers: {
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        vouchers_one: string;
-        vouchers_other: string;
-        voucherLoss: string;
-        voucherLossExplain: string;
-        voucherNoticeTitle: string;
-        voucherNotice: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-      };
-      suspensions: {
-        minAmountNotMet: string;
-        maxAmountExceeded: string;
-        technical: string;
-        fulfilled: string;
-        mainAlert: {
-          title: string;
-          text: string;
-        };
-      };
-    };
-  };
-  readonly "pt-PT": {
-    translation: {
-      ILLICADO_GIFTCARD: string;
-      method: {
-        "100EURO": string;
-        "10X": string;
-        "10XIBAN": string;
-        "10XSANSFRAIS": string;
-        "10XSANSFRAISIBAN": string;
-        "12X": string;
-        "15X": string;
-        "18X": string;
-        "20X": string;
-        "20XIBAN": string;
-        "20XSANSFRAISIBAN": string;
-        "24X": string;
-        "30EURO": string;
-        "30X": string;
-        "3X": string;
-        "4X": string;
-        "4XSANSFRAIS": string;
-        "5-12X": string;
-        "50EURO": string;
-        "5X": string;
-        "6X": string;
-        "70EURO": string;
-        "9X": string;
-        APPLEPAY: string;
-        BANCONTACT: string;
-        BIZUM: string;
-        BNPL: string;
-        CB10X: string;
-        CB10XSANSFRAIS: string;
-        CB12X: string;
-        CB12XSANSFRAIS: string;
-        CB2X: string;
-        CB3X: string;
-        "CB3X-PAYBYLINK": string;
-        CB3XSANSFRAIS: string;
-        CB4X: string;
-        "CB4X-PAYBYLINK": string;
-        CB4XSANSFRAIS: string;
-        COMPTANT: string;
-        CREDITCARD: string;
-        GOOGLEPAY: string;
-        IDEAL: string;
-        INSTALLMENT: string;
-        INSTALLMENTS: string;
-        INSTANTPAYMENT: string;
-        INVOICE: string;
-        LOAN: string;
-        MBWAY: string;
-        MULTIBANCO: string;
-        PAYLATER: string;
-        PAYPAL: string;
-        REVOLVING: string;
-        SEPA: string;
-        SEPAINSTANT: string;
-        SEPARECURRENT: string;
-        SEPASINGLE: string;
-        TWINT: string;
-        WALLET: string;
-        XPAY: string;
-        GIFTCARD: string;
-        VOUCHER: string;
-      };
-      dividerText: string;
-      hostedForm: {
-        panPlaceholder: string;
-        panInputLabel: string;
-        panRequiredError: string;
-        panFormatError: string;
-        panCannotBeEmptyError: string;
-        panTooltipText: string;
-        cvvPlaceholder: string;
-        cvv4Placeholder: string;
-        cvvInputLabel: string;
-        cvv4InputLabel: string;
-        cvvRequiredError: string;
-        cvvFormatError: string;
-        cvvCannotBeEmptyError: string;
-        cvvTooltipText: string;
-        expirationPlaceholder: string;
-        expirationInputLabel: string;
-        expirationRequiredError: string;
-        expirationFormatError: string;
-        expirationCannotBeEmptyError: string;
-        expirationOutOfRangeError: string;
-        expirationTooltipText: string;
-        holderPlaceholder: string;
-        holderInputLabel: string;
-        holderRequiredError: string;
-        holderFormatError: string;
-        holderCannotBeEmptyError: string;
-        birthdateInputLabel: string;
-        birthdateRequiredError: string;
-        birthdateFormatError: string;
-        birthdateCannotBeEmptyError: string;
-        saveTokenLabel: string;
-        saveAccountLabel: string;
-      };
-      secondaries: {
-        title: string;
-      };
-      primaries: {
-        paymentMethod: string;
-        useAnotherCard: string;
-        useAnotherAccount: string;
-        redirectionText: string;
-        CVV: string;
-        savedAccounts_one: string;
-        savedAccounts_other: string;
-        savedCards_one: string;
-        savedCards_other: string;
-      };
-      installments: {
-        financingCostWithAprc: string;
-        financingCost: string;
-        total: string;
-        yourPaymentSchedule: string;
-        installment_ordinal_one: string;
-        installment_ordinal_other: string;
-        computeInstallments: string;
-        computeInstallmentsError: string;
-      };
-      common: {
-        submittingPayment: string;
-        sessionExpired: string;
-        sessionTerminated: string;
-        today: string;
-      };
-      giftCards: {
-        cardsAndPartner_one: string;
-        cardsAndPartner_other: string;
-        gifts_one: string;
-        gifts_other: string;
-        giftCards_one: string;
-        giftCards_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        invalidCard: string;
-        availableAmount: string;
-        expiryDate: string;
-        apply: string;
-        applied_one: string;
-        applied_other: string;
-        cancel: string;
-        remove: string;
-        amountToUse: string;
-        insufficientBalance: string;
-        invalidAmount: string;
-        alreadyApplied: string;
-        failedToUseCard: string;
-        emptyCardBalance: string;
-        youCanAddUpTo: string;
-        currentStatus: string;
-        amountMax: string;
-        limitReachedForPartner: string;
-        limitReachedForPartnerAmount: string;
-      };
-      loyalty: {
-        insufficientBalance: string;
-        noAmountLeftToPay: string;
-        failedToLoadAccount: string;
-        minAmountNotMet: string;
-        loyaltyAccount: string;
-        balanceDetail: string;
-        amountUsed: string;
-      };
-      payButton: {
-        pay: string;
-      };
-      ancv: {
-        actionRequired: string;
-        ancvNotice: string;
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        ancv_one: string;
-        ancv_other: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        cancel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-        userActionTimeout: string;
-        userActionAborted: string;
-        userOtherTransactionPending: string;
-      };
-      vouchers: {
-        alreadyApplied: string;
-        emptyCardBalance: string;
-        invalidCard: string;
-        vouchers_one: string;
-        vouchers_other: string;
-        voucherLoss: string;
-        voucherLossExplain: string;
-        voucherNoticeTitle: string;
-        voucherNotice: string;
-        panPlaceholder: string;
-        panInputLabel: string;
-        cvvPlaceholder: string;
-        cvvInputLabel: string;
-        useCard: string;
-        applied_one: string;
-        applied_other: string;
-        limitReachedForPartnerAmount: string;
-      };
-      suspensions: {
-        minAmountNotMet: string;
-        maxAmountExceeded: string;
-        technical: string;
-        fulfilled: string;
-        mainAlert: {
-          title: string;
-          text: string;
-        };
-      };
-    };
-  };
+	readonly "de-AT": {
+		translation: {
+			ILLICADO_GIFTCARD: string;
+			method: {
+				"100EURO": string;
+				"10X": string;
+				"10XIBAN": string;
+				"10XSANSFRAIS": string;
+				"10XSANSFRAISIBAN": string;
+				"12X": string;
+				"15X": string;
+				"18X": string;
+				"20X": string;
+				"20XIBAN": string;
+				"20XSANSFRAISIBAN": string;
+				"24X": string;
+				"30EURO": string;
+				"30X": string;
+				"3X": string;
+				"4X": string;
+				"4XSANSFRAIS": string;
+				"5-12X": string;
+				"50EURO": string;
+				"5X": string;
+				"6X": string;
+				"70EURO": string;
+				"9X": string;
+				APPLEPAY: string;
+				BANCONTACT: string;
+				BIZUM: string;
+				BNPL: string;
+				CB10X: string;
+				CB10XSANSFRAIS: string;
+				CB12X: string;
+				CB12XSANSFRAIS: string;
+				CB2X: string;
+				CB3X: string;
+				"CB3X-PAYBYLINK": string;
+				CB3XSANSFRAIS: string;
+				CB4X: string;
+				"CB4X-PAYBYLINK": string;
+				CB4XSANSFRAIS: string;
+				COMPTANT: string;
+				CREDITCARD: string;
+				GOOGLEPAY: string;
+				IDEAL: string;
+				INSTALLMENT: string;
+				INSTALLMENTS: string;
+				INSTANTPAYMENT: string;
+				INVOICE: string;
+				LOAN: string;
+				MBWAY: string;
+				MULTIBANCO: string;
+				PAYLATER: string;
+				PAYPAL: string;
+				REVOLVING: string;
+				SEPA: string;
+				SEPAINSTANT: string;
+				SEPARECURRENT: string;
+				SEPASINGLE: string;
+				TWINT: string;
+				WALLET: string;
+				XPAY: string;
+				GIFTCARD: string;
+				VOUCHER: string;
+			};
+			dividerText: string;
+			hostedForm: {
+				panPlaceholder: string;
+				panInputLabel: string;
+				panRequiredError: string;
+				panFormatError: string;
+				panCannotBeEmptyError: string;
+				panTooltipText: string;
+				cvvPlaceholder: string;
+				cvv4Placeholder: string;
+				cvvInputLabel: string;
+				cvv4InputLabel: string;
+				cvvRequiredError: string;
+				cvvFormatError: string;
+				cvvCannotBeEmptyError: string;
+				cvvTooltipText: string;
+				expirationPlaceholder: string;
+				expirationInputLabel: string;
+				expirationRequiredError: string;
+				expirationFormatError: string;
+				expirationCannotBeEmptyError: string;
+				expirationOutOfRangeError: string;
+				expirationTooltipText: string;
+				holderPlaceholder: string;
+				holderInputLabel: string;
+				holderRequiredError: string;
+				holderFormatError: string;
+				holderCannotBeEmptyError: string;
+				birthdateInputLabel: string;
+				birthdateRequiredError: string;
+				birthdateFormatError: string;
+				birthdateCannotBeEmptyError: string;
+				saveTokenLabel: string;
+				saveAccountLabel: string;
+			};
+			secondaries: {
+				title: string;
+			};
+			primaries: {
+				paymentMethod: string;
+				useAnotherCard: string;
+				useAnotherAccount: string;
+				redirectionText: string;
+				CVV: string;
+				savedAccounts_one: string;
+				savedAccounts_other: string;
+				savedCards_one: string;
+				savedCards_other: string;
+			};
+			installments: {
+				financingCostWithAprc: string;
+				financingCost: string;
+				total: string;
+				yourPaymentSchedule: string;
+				installment_ordinal_one: string;
+				installment_ordinal_other: string;
+				computeInstallments: string;
+				computeInstallmentsError: string;
+			};
+			common: {
+				submittingPayment: string;
+				sessionExpired: string;
+				sessionTerminated: string;
+				today: string;
+			};
+			giftCards: {
+				cardsAndPartner_one: string;
+				cardsAndPartner_other: string;
+				gifts_one: string;
+				gifts_other: string;
+				giftCards_one: string;
+				giftCards_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				invalidCard: string;
+				availableAmount: string;
+				expiryDate: string;
+				apply: string;
+				applied_one: string;
+				applied_other: string;
+				cancel: string;
+				remove: string;
+				amountToUse: string;
+				insufficientBalance: string;
+				invalidAmount: string;
+				alreadyApplied: string;
+				failedToUseCard: string;
+				emptyCardBalance: string;
+				youCanAddUpTo: string;
+				currentStatus: string;
+				amountMax: string;
+				limitReachedForPartner: string;
+				limitReachedForPartnerAmount: string;
+			};
+			loyalty: {
+				insufficientBalance: string;
+				noAmountLeftToPay: string;
+				failedToLoadAccount: string;
+				minAmountNotMet: string;
+				loyaltyAccount: string;
+				balanceDetail: string;
+				amountUsed: string;
+			};
+			payButton: {
+				pay: string;
+			};
+			vouchers: {
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				vouchers_one: string;
+				vouchers_other: string;
+				voucherLoss: string;
+				voucherLossExplain: string;
+				voucherNoticeTitle: string;
+				voucherNotice: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+			};
+			suspensions: {
+				minAmountNotMet: string;
+				maxAmountExceeded: string;
+				technical: string;
+				fulfilled: string;
+				mainAlert: {
+					title: string;
+					text: string;
+				};
+			};
+		};
+	};
+	readonly "de-CH": {
+		translation: {
+			ILLICADO_GIFTCARD: string;
+			method: {
+				"100EURO": string;
+				"10X": string;
+				"10XIBAN": string;
+				"10XSANSFRAIS": string;
+				"10XSANSFRAISIBAN": string;
+				"12X": string;
+				"15X": string;
+				"18X": string;
+				"20X": string;
+				"20XIBAN": string;
+				"20XSANSFRAISIBAN": string;
+				"24X": string;
+				"30EURO": string;
+				"30X": string;
+				"3X": string;
+				"4X": string;
+				"4XSANSFRAIS": string;
+				"5-12X": string;
+				"50EURO": string;
+				"5X": string;
+				"6X": string;
+				"70EURO": string;
+				"9X": string;
+				APPLEPAY: string;
+				BANCONTACT: string;
+				BIZUM: string;
+				BNPL: string;
+				CB10X: string;
+				CB10XSANSFRAIS: string;
+				CB12X: string;
+				CB12XSANSFRAIS: string;
+				CB2X: string;
+				CB3X: string;
+				"CB3X-PAYBYLINK": string;
+				CB3XSANSFRAIS: string;
+				CB4X: string;
+				"CB4X-PAYBYLINK": string;
+				CB4XSANSFRAIS: string;
+				COMPTANT: string;
+				CREDITCARD: string;
+				GOOGLEPAY: string;
+				IDEAL: string;
+				INSTALLMENT: string;
+				INSTALLMENTS: string;
+				INSTANTPAYMENT: string;
+				INVOICE: string;
+				LOAN: string;
+				MBWAY: string;
+				MULTIBANCO: string;
+				PAYLATER: string;
+				PAYPAL: string;
+				REVOLVING: string;
+				SEPA: string;
+				SEPAINSTANT: string;
+				SEPARECURRENT: string;
+				SEPASINGLE: string;
+				TWINT: string;
+				WALLET: string;
+				XPAY: string;
+				GIFTCARD: string;
+				VOUCHER: string;
+			};
+			dividerText: string;
+			hostedForm: {
+				panPlaceholder: string;
+				panInputLabel: string;
+				panRequiredError: string;
+				panFormatError: string;
+				panCannotBeEmptyError: string;
+				panTooltipText: string;
+				cvvPlaceholder: string;
+				cvv4Placeholder: string;
+				cvvInputLabel: string;
+				cvv4InputLabel: string;
+				cvvRequiredError: string;
+				cvvFormatError: string;
+				cvvCannotBeEmptyError: string;
+				cvvTooltipText: string;
+				expirationPlaceholder: string;
+				expirationInputLabel: string;
+				expirationRequiredError: string;
+				expirationFormatError: string;
+				expirationCannotBeEmptyError: string;
+				expirationOutOfRangeError: string;
+				expirationTooltipText: string;
+				holderPlaceholder: string;
+				holderInputLabel: string;
+				holderRequiredError: string;
+				holderFormatError: string;
+				holderCannotBeEmptyError: string;
+				birthdateInputLabel: string;
+				birthdateRequiredError: string;
+				birthdateFormatError: string;
+				birthdateCannotBeEmptyError: string;
+				saveTokenLabel: string;
+				saveAccountLabel: string;
+			};
+			secondaries: {
+				title: string;
+			};
+			primaries: {
+				paymentMethod: string;
+				useAnotherCard: string;
+				useAnotherAccount: string;
+				redirectionText: string;
+				CVV: string;
+				savedAccounts_one: string;
+				savedAccounts_other: string;
+				savedCards_one: string;
+				savedCards_other: string;
+			};
+			installments: {
+				financingCostWithAprc: string;
+				financingCost: string;
+				total: string;
+				yourPaymentSchedule: string;
+				installment_ordinal_one: string;
+				installment_ordinal_other: string;
+				computeInstallments: string;
+				computeInstallmentsError: string;
+			};
+			common: {
+				submittingPayment: string;
+				sessionExpired: string;
+				sessionTerminated: string;
+				today: string;
+			};
+			giftCards: {
+				cardsAndPartner_one: string;
+				cardsAndPartner_other: string;
+				gifts_one: string;
+				gifts_other: string;
+				giftCards_one: string;
+				giftCards_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				invalidCard: string;
+				availableAmount: string;
+				expiryDate: string;
+				apply: string;
+				applied_one: string;
+				applied_other: string;
+				cancel: string;
+				remove: string;
+				amountToUse: string;
+				insufficientBalance: string;
+				invalidAmount: string;
+				alreadyApplied: string;
+				failedToUseCard: string;
+				emptyCardBalance: string;
+				youCanAddUpTo: string;
+				currentStatus: string;
+				amountMax: string;
+				limitReachedForPartner: string;
+				limitReachedForPartnerAmount: string;
+			};
+			loyalty: {
+				insufficientBalance: string;
+				noAmountLeftToPay: string;
+				failedToLoadAccount: string;
+				minAmountNotMet: string;
+				loyaltyAccount: string;
+				balanceDetail: string;
+				amountUsed: string;
+			};
+			payButton: {
+				pay: string;
+			};
+			vouchers: {
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				vouchers_one: string;
+				vouchers_other: string;
+				voucherLoss: string;
+				voucherLossExplain: string;
+				voucherNoticeTitle: string;
+				voucherNotice: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+			};
+			suspensions: {
+				minAmountNotMet: string;
+				maxAmountExceeded: string;
+				technical: string;
+				fulfilled: string;
+				mainAlert: {
+					title: string;
+					text: string;
+				};
+			};
+		};
+	};
+	readonly "de-DE": {
+		translation: {
+			ILLICADO_GIFTCARD: string;
+			method: {
+				"100EURO": string;
+				"10X": string;
+				"10XIBAN": string;
+				"10XSANSFRAIS": string;
+				"10XSANSFRAISIBAN": string;
+				"12X": string;
+				"15X": string;
+				"18X": string;
+				"20X": string;
+				"20XIBAN": string;
+				"20XSANSFRAISIBAN": string;
+				"24X": string;
+				"30EURO": string;
+				"30X": string;
+				"3X": string;
+				"4X": string;
+				"4XSANSFRAIS": string;
+				"5-12X": string;
+				"50EURO": string;
+				"5X": string;
+				"6X": string;
+				"70EURO": string;
+				"9X": string;
+				APPLEPAY: string;
+				BANCONTACT: string;
+				BIZUM: string;
+				BNPL: string;
+				CB10X: string;
+				CB10XSANSFRAIS: string;
+				CB12X: string;
+				CB12XSANSFRAIS: string;
+				CB2X: string;
+				CB3X: string;
+				"CB3X-PAYBYLINK": string;
+				CB3XSANSFRAIS: string;
+				CB4X: string;
+				"CB4X-PAYBYLINK": string;
+				CB4XSANSFRAIS: string;
+				COMPTANT: string;
+				CREDITCARD: string;
+				GOOGLEPAY: string;
+				IDEAL: string;
+				INSTALLMENT: string;
+				INSTALLMENTS: string;
+				INSTANTPAYMENT: string;
+				INVOICE: string;
+				LOAN: string;
+				MBWAY: string;
+				MULTIBANCO: string;
+				PAYLATER: string;
+				PAYPAL: string;
+				REVOLVING: string;
+				SEPA: string;
+				SEPAINSTANT: string;
+				SEPARECURRENT: string;
+				SEPASINGLE: string;
+				TWINT: string;
+				WALLET: string;
+				XPAY: string;
+				GIFTCARD: string;
+				VOUCHER: string;
+			};
+			dividerText: string;
+			hostedForm: {
+				panPlaceholder: string;
+				panInputLabel: string;
+				panRequiredError: string;
+				panFormatError: string;
+				panCannotBeEmptyError: string;
+				panTooltipText: string;
+				cvvPlaceholder: string;
+				cvv4Placeholder: string;
+				cvvInputLabel: string;
+				cvv4InputLabel: string;
+				cvvRequiredError: string;
+				cvvFormatError: string;
+				cvvCannotBeEmptyError: string;
+				cvvTooltipText: string;
+				expirationPlaceholder: string;
+				expirationInputLabel: string;
+				expirationRequiredError: string;
+				expirationFormatError: string;
+				expirationCannotBeEmptyError: string;
+				expirationOutOfRangeError: string;
+				expirationTooltipText: string;
+				holderPlaceholder: string;
+				holderInputLabel: string;
+				holderRequiredError: string;
+				holderFormatError: string;
+				holderCannotBeEmptyError: string;
+				birthdateInputLabel: string;
+				birthdateRequiredError: string;
+				birthdateFormatError: string;
+				birthdateCannotBeEmptyError: string;
+				saveTokenLabel: string;
+				saveAccountLabel: string;
+			};
+			secondaries: {
+				title: string;
+			};
+			primaries: {
+				paymentMethod: string;
+				useAnotherCard: string;
+				useAnotherAccount: string;
+				redirectionText: string;
+				CVV: string;
+				savedAccounts_one: string;
+				savedAccounts_other: string;
+				savedCards_one: string;
+				savedCards_other: string;
+			};
+			installments: {
+				financingCostWithAprc: string;
+				financingCost: string;
+				total: string;
+				yourPaymentSchedule: string;
+				installment_ordinal_one: string;
+				installment_ordinal_other: string;
+				computeInstallments: string;
+				computeInstallmentsError: string;
+			};
+			common: {
+				submittingPayment: string;
+				sessionExpired: string;
+				sessionTerminated: string;
+				today: string;
+			};
+			giftCards: {
+				cardsAndPartner_one: string;
+				cardsAndPartner_other: string;
+				gifts_one: string;
+				gifts_other: string;
+				giftCards_one: string;
+				giftCards_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				invalidCard: string;
+				availableAmount: string;
+				expiryDate: string;
+				apply: string;
+				applied_one: string;
+				applied_other: string;
+				cancel: string;
+				remove: string;
+				amountToUse: string;
+				insufficientBalance: string;
+				invalidAmount: string;
+				alreadyApplied: string;
+				failedToUseCard: string;
+				emptyCardBalance: string;
+				youCanAddUpTo: string;
+				currentStatus: string;
+				amountMax: string;
+				limitReachedForPartner: string;
+				limitReachedForPartnerAmount: string;
+			};
+			loyalty: {
+				insufficientBalance: string;
+				noAmountLeftToPay: string;
+				failedToLoadAccount: string;
+				minAmountNotMet: string;
+				loyaltyAccount: string;
+				balanceDetail: string;
+				amountUsed: string;
+			};
+			payButton: {
+				pay: string;
+			};
+			ancv: {
+				actionRequired: string;
+				ancvNotice: string;
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				ancv_one: string;
+				ancv_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				cancel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+				userActionTimeout: string;
+				userActionAborted: string;
+				userOtherTransactionPending: string;
+			};
+			vouchers: {
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				vouchers_one: string;
+				vouchers_other: string;
+				voucherLoss: string;
+				voucherLossExplain: string;
+				voucherNoticeTitle: string;
+				voucherNotice: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+			};
+			suspensions: {
+				minAmountNotMet: string;
+				maxAmountExceeded: string;
+				technical: string;
+				fulfilled: string;
+				mainAlert: {
+					title: string;
+					text: string;
+				};
+			};
+		};
+	};
+	readonly "en-GB": {
+		translation: {
+			ILLICADO_GIFTCARD: string;
+			method: {
+				"100EURO": string;
+				"10X": string;
+				"10XIBAN": string;
+				"10XSANSFRAIS": string;
+				"10XSANSFRAISIBAN": string;
+				"12X": string;
+				"15X": string;
+				"18X": string;
+				"20X": string;
+				"20XIBAN": string;
+				"20XSANSFRAISIBAN": string;
+				"24X": string;
+				"30EURO": string;
+				"30X": string;
+				"3X": string;
+				"4X": string;
+				"4XSANSFRAIS": string;
+				"5-12X": string;
+				"50EURO": string;
+				"5X": string;
+				"6X": string;
+				"70EURO": string;
+				"9X": string;
+				APPLEPAY: string;
+				BANCONTACT: string;
+				BIZUM: string;
+				BNPL: string;
+				CB10X: string;
+				CB10XSANSFRAIS: string;
+				CB12X: string;
+				CB12XSANSFRAIS: string;
+				CB2X: string;
+				CB3X: string;
+				"CB3X-PAYBYLINK": string;
+				CB3XSANSFRAIS: string;
+				CB4X: string;
+				"CB4X-PAYBYLINK": string;
+				CB4XSANSFRAIS: string;
+				COMPTANT: string;
+				CREDITCARD: string;
+				GOOGLEPAY: string;
+				IDEAL: string;
+				INSTALLMENT: string;
+				INSTALLMENTS: string;
+				INSTANTPAYMENT: string;
+				INVOICE: string;
+				LOAN: string;
+				MBWAY: string;
+				MULTIBANCO: string;
+				PAYLATER: string;
+				PAYPAL: string;
+				REVOLVING: string;
+				SEPA: string;
+				SEPAINSTANT: string;
+				SEPARECURRENT: string;
+				SEPASINGLE: string;
+				TWINT: string;
+				WALLET: string;
+				XPAY: string;
+				GIFTCARD: string;
+				VOUCHER: string;
+			};
+			dividerText: string;
+			hostedForm: {
+				panPlaceholder: string;
+				panInputLabel: string;
+				panRequiredError: string;
+				panFormatError: string;
+				panCannotBeEmptyError: string;
+				panTooltipText: string;
+				cvvPlaceholder: string;
+				cvv4Placeholder: string;
+				cvvInputLabel: string;
+				cvv4InputLabel: string;
+				cvvRequiredError: string;
+				cvvFormatError: string;
+				cvvCannotBeEmptyError: string;
+				cvvTooltipText: string;
+				expirationPlaceholder: string;
+				expirationInputLabel: string;
+				expirationRequiredError: string;
+				expirationFormatError: string;
+				expirationCannotBeEmptyError: string;
+				expirationOutOfRangeError: string;
+				expirationTooltipText: string;
+				holderPlaceholder: string;
+				holderInputLabel: string;
+				holderRequiredError: string;
+				holderFormatError: string;
+				holderCannotBeEmptyError: string;
+				birthdateInputLabel: string;
+				birthdateRequiredError: string;
+				birthdateFormatError: string;
+				birthdateCannotBeEmptyError: string;
+				saveTokenLabel: string;
+				saveAccountLabel: string;
+			};
+			secondaries: {
+				title: string;
+			};
+			primaries: {
+				paymentMethod: string;
+				useAnotherCard: string;
+				useAnotherAccount: string;
+				redirectionText: string;
+				CVV: string;
+				savedAccounts_one: string;
+				savedAccounts_other: string;
+				savedCards_one: string;
+				savedCards_other: string;
+			};
+			installments: {
+				financingCostWithAprc: string;
+				financingCost: string;
+				total: string;
+				yourPaymentSchedule: string;
+				installment_ordinal_one: string;
+				installment_ordinal_other: string;
+				computeInstallments: string;
+				computeInstallmentsError: string;
+			};
+			common: {
+				submittingPayment: string;
+				sessionExpired: string;
+				sessionTerminated: string;
+				today: string;
+			};
+			giftCards: {
+				cardsAndPartner_one: string;
+				cardsAndPartner_other: string;
+				gifts_one: string;
+				gifts_other: string;
+				giftCards_one: string;
+				giftCards_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				invalidCard: string;
+				availableAmount: string;
+				expiryDate: string;
+				apply: string;
+				applied_one: string;
+				applied_other: string;
+				cancel: string;
+				remove: string;
+				amountToUse: string;
+				insufficientBalance: string;
+				invalidAmount: string;
+				alreadyApplied: string;
+				failedToUseCard: string;
+				emptyCardBalance: string;
+				youCanAddUpTo: string;
+				currentStatus: string;
+				amountMax: string;
+				limitReachedForPartner: string;
+				limitReachedForPartnerAmount: string;
+			};
+			loyalty: {
+				insufficientBalance: string;
+				noAmountLeftToPay: string;
+				failedToLoadAccount: string;
+				minAmountNotMet: string;
+				loyaltyAccount: string;
+				balanceDetail: string;
+				amountUsed: string;
+			};
+			payButton: {
+				pay: string;
+			};
+			ancv: {
+				actionRequired: string;
+				ancvNotice: string;
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				ancv_one: string;
+				ancv_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				cancel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+				userActionTimeout: string;
+				userActionAborted: string;
+				userOtherTransactionPending: string;
+			};
+			vouchers: {
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				vouchers_one: string;
+				vouchers_other: string;
+				voucherLoss: string;
+				voucherLossExplain: string;
+				voucherNoticeTitle: string;
+				voucherNotice: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+			};
+			suspensions: {
+				minAmountNotMet: string;
+				maxAmountExceeded: string;
+				technical: string;
+				fulfilled: string;
+				mainAlert: {
+					title: string;
+					text: string;
+				};
+			};
+		};
+	};
+	readonly "en-US": {
+		translation: {
+			ILLICADO_GIFTCARD: string;
+			method: {
+				"100EURO": string;
+				"10X": string;
+				"10XIBAN": string;
+				"10XSANSFRAIS": string;
+				"10XSANSFRAISIBAN": string;
+				"12X": string;
+				"15X": string;
+				"18X": string;
+				"20X": string;
+				"20XIBAN": string;
+				"20XSANSFRAISIBAN": string;
+				"24X": string;
+				"30EURO": string;
+				"30X": string;
+				"3X": string;
+				"4X": string;
+				"4XSANSFRAIS": string;
+				"5-12X": string;
+				"50EURO": string;
+				"5X": string;
+				"6X": string;
+				"70EURO": string;
+				"9X": string;
+				APPLEPAY: string;
+				BANCONTACT: string;
+				BIZUM: string;
+				BNPL: string;
+				CB10X: string;
+				CB10XSANSFRAIS: string;
+				CB12X: string;
+				CB12XSANSFRAIS: string;
+				CB2X: string;
+				CB3X: string;
+				"CB3X-PAYBYLINK": string;
+				CB3XSANSFRAIS: string;
+				CB4X: string;
+				"CB4X-PAYBYLINK": string;
+				CB4XSANSFRAIS: string;
+				COMPTANT: string;
+				CREDITCARD: string;
+				GOOGLEPAY: string;
+				IDEAL: string;
+				INSTALLMENT: string;
+				INSTALLMENTS: string;
+				INSTANTPAYMENT: string;
+				INVOICE: string;
+				LOAN: string;
+				MBWAY: string;
+				MULTIBANCO: string;
+				PAYLATER: string;
+				PAYPAL: string;
+				REVOLVING: string;
+				SEPA: string;
+				SEPAINSTANT: string;
+				SEPARECURRENT: string;
+				SEPASINGLE: string;
+				TWINT: string;
+				WALLET: string;
+				XPAY: string;
+				GIFTCARD: string;
+				VOUCHER: string;
+			};
+			dividerText: string;
+			hostedForm: {
+				panPlaceholder: string;
+				panInputLabel: string;
+				panRequiredError: string;
+				panFormatError: string;
+				panCannotBeEmptyError: string;
+				panTooltipText: string;
+				cvvPlaceholder: string;
+				cvv4Placeholder: string;
+				cvvInputLabel: string;
+				cvv4InputLabel: string;
+				cvvRequiredError: string;
+				cvvFormatError: string;
+				cvvCannotBeEmptyError: string;
+				cvvTooltipText: string;
+				expirationPlaceholder: string;
+				expirationInputLabel: string;
+				expirationRequiredError: string;
+				expirationFormatError: string;
+				expirationCannotBeEmptyError: string;
+				expirationOutOfRangeError: string;
+				expirationTooltipText: string;
+				holderPlaceholder: string;
+				holderInputLabel: string;
+				holderRequiredError: string;
+				holderFormatError: string;
+				holderCannotBeEmptyError: string;
+				birthdateInputLabel: string;
+				birthdateRequiredError: string;
+				birthdateFormatError: string;
+				birthdateCannotBeEmptyError: string;
+				saveTokenLabel: string;
+				saveAccountLabel: string;
+			};
+			secondaries: {
+				title: string;
+			};
+			primaries: {
+				paymentMethod: string;
+				useAnotherCard: string;
+				useAnotherAccount: string;
+				redirectionText: string;
+				CVV: string;
+				savedAccounts_one: string;
+				savedAccounts_other: string;
+				savedCards_one: string;
+				savedCards_other: string;
+			};
+			installments: {
+				financingCostWithAprc: string;
+				financingCost: string;
+				total: string;
+				yourPaymentSchedule: string;
+				installment_ordinal_one: string;
+				installment_ordinal_other: string;
+				computeInstallments: string;
+				computeInstallmentsError: string;
+			};
+			common: {
+				submittingPayment: string;
+				sessionExpired: string;
+				sessionTerminated: string;
+				today: string;
+			};
+			giftCards: {
+				cardsAndPartner_one: string;
+				cardsAndPartner_other: string;
+				gifts_one: string;
+				gifts_other: string;
+				giftCards_one: string;
+				giftCards_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				invalidCard: string;
+				availableAmount: string;
+				expiryDate: string;
+				apply: string;
+				applied_one: string;
+				applied_other: string;
+				cancel: string;
+				remove: string;
+				amountToUse: string;
+				insufficientBalance: string;
+				invalidAmount: string;
+				alreadyApplied: string;
+				failedToUseCard: string;
+				emptyCardBalance: string;
+				youCanAddUpTo: string;
+				currentStatus: string;
+				amountMax: string;
+				limitReachedForPartner: string;
+				limitReachedForPartnerAmount: string;
+			};
+			loyalty: {
+				insufficientBalance: string;
+				noAmountLeftToPay: string;
+				failedToLoadAccount: string;
+				minAmountNotMet: string;
+				loyaltyAccount: string;
+				balanceDetail: string;
+				amountUsed: string;
+			};
+			payButton: {
+				pay: string;
+			};
+			ancv: {
+				actionRequired: string;
+				ancvNotice: string;
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				ancv_one: string;
+				ancv_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				cancel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+				userActionTimeout: string;
+				userActionAborted: string;
+				userOtherTransactionPending: string;
+			};
+			vouchers: {
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				vouchers_one: string;
+				vouchers_other: string;
+				voucherLoss: string;
+				voucherLossExplain: string;
+				voucherNoticeTitle: string;
+				voucherNotice: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+			};
+			suspensions: {
+				minAmountNotMet: string;
+				maxAmountExceeded: string;
+				technical: string;
+				fulfilled: string;
+				mainAlert: {
+					title: string;
+					text: string;
+				};
+			};
+		};
+	};
+	readonly "es-ES": {
+		translation: {
+			ILLICADO_GIFTCARD: string;
+			method: {
+				"100EURO": string;
+				"10X": string;
+				"10XIBAN": string;
+				"10XSANSFRAIS": string;
+				"10XSANSFRAISIBAN": string;
+				"12X": string;
+				"15X": string;
+				"18X": string;
+				"20X": string;
+				"20XIBAN": string;
+				"20XSANSFRAISIBAN": string;
+				"24X": string;
+				"30EURO": string;
+				"30X": string;
+				"3X": string;
+				"4X": string;
+				"4XSANSFRAIS": string;
+				"5-12X": string;
+				"50EURO": string;
+				"5X": string;
+				"6X": string;
+				"70EURO": string;
+				"9X": string;
+				APPLEPAY: string;
+				BANCONTACT: string;
+				BIZUM: string;
+				BNPL: string;
+				CB10X: string;
+				CB10XSANSFRAIS: string;
+				CB12X: string;
+				CB12XSANSFRAIS: string;
+				CB2X: string;
+				CB3X: string;
+				"CB3X-PAYBYLINK": string;
+				CB3XSANSFRAIS: string;
+				CB4X: string;
+				"CB4X-PAYBYLINK": string;
+				CB4XSANSFRAIS: string;
+				COMPTANT: string;
+				CREDITCARD: string;
+				GOOGLEPAY: string;
+				IDEAL: string;
+				INSTALLMENT: string;
+				INSTALLMENTS: string;
+				INSTANTPAYMENT: string;
+				INVOICE: string;
+				LOAN: string;
+				MBWAY: string;
+				MULTIBANCO: string;
+				PAYLATER: string;
+				PAYPAL: string;
+				REVOLVING: string;
+				SEPA: string;
+				SEPAINSTANT: string;
+				SEPARECURRENT: string;
+				SEPASINGLE: string;
+				TWINT: string;
+				WALLET: string;
+				XPAY: string;
+				GIFTCARD: string;
+				VOUCHER: string;
+			};
+			dividerText: string;
+			hostedForm: {
+				panPlaceholder: string;
+				panInputLabel: string;
+				panRequiredError: string;
+				panFormatError: string;
+				panCannotBeEmptyError: string;
+				panTooltipText: string;
+				cvvPlaceholder: string;
+				cvv4Placeholder: string;
+				cvvInputLabel: string;
+				cvv4InputLabel: string;
+				cvvRequiredError: string;
+				cvvFormatError: string;
+				cvvCannotBeEmptyError: string;
+				cvvTooltipText: string;
+				expirationPlaceholder: string;
+				expirationInputLabel: string;
+				expirationRequiredError: string;
+				expirationFormatError: string;
+				expirationCannotBeEmptyError: string;
+				expirationOutOfRangeError: string;
+				expirationTooltipText: string;
+				holderPlaceholder: string;
+				holderInputLabel: string;
+				holderRequiredError: string;
+				holderFormatError: string;
+				holderCannotBeEmptyError: string;
+				birthdateInputLabel: string;
+				birthdateRequiredError: string;
+				birthdateFormatError: string;
+				birthdateCannotBeEmptyError: string;
+				saveTokenLabel: string;
+				saveAccountLabel: string;
+			};
+			secondaries: {
+				title: string;
+			};
+			primaries: {
+				paymentMethod: string;
+				useAnotherCard: string;
+				useAnotherAccount: string;
+				redirectionText: string;
+				CVV: string;
+				savedAccounts_one: string;
+				savedAccounts_other: string;
+				savedCards_one: string;
+				savedCards_other: string;
+			};
+			installments: {
+				financingCostWithAprc: string;
+				financingCost: string;
+				total: string;
+				yourPaymentSchedule: string;
+				installment_ordinal_one: string;
+				installment_ordinal_other: string;
+				computeInstallments: string;
+				computeInstallmentsError: string;
+			};
+			common: {
+				submittingPayment: string;
+				sessionExpired: string;
+				sessionTerminated: string;
+				today: string;
+			};
+			giftCards: {
+				cardsAndPartner_one: string;
+				cardsAndPartner_other: string;
+				gifts_one: string;
+				gifts_other: string;
+				giftCards_one: string;
+				giftCards_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				invalidCard: string;
+				availableAmount: string;
+				expiryDate: string;
+				apply: string;
+				applied_one: string;
+				applied_other: string;
+				cancel: string;
+				remove: string;
+				amountToUse: string;
+				insufficientBalance: string;
+				invalidAmount: string;
+				alreadyApplied: string;
+				failedToUseCard: string;
+				emptyCardBalance: string;
+				youCanAddUpTo: string;
+				currentStatus: string;
+				amountMax: string;
+				limitReachedForPartner: string;
+				limitReachedForPartnerAmount: string;
+			};
+			loyalty: {
+				insufficientBalance: string;
+				noAmountLeftToPay: string;
+				failedToLoadAccount: string;
+				minAmountNotMet: string;
+				loyaltyAccount: string;
+				balanceDetail: string;
+				amountUsed: string;
+			};
+			payButton: {
+				pay: string;
+			};
+			ancv: {
+				actionRequired: string;
+				ancvNotice: string;
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				ancv_one: string;
+				ancv_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				cancel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+				userActionTimeout: string;
+				userActionAborted: string;
+				userOtherTransactionPending: string;
+			};
+			vouchers: {
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				vouchers_one: string;
+				vouchers_other: string;
+				voucherLoss: string;
+				voucherLossExplain: string;
+				voucherNoticeTitle: string;
+				voucherNotice: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+			};
+			suspensions: {
+				minAmountNotMet: string;
+				maxAmountExceeded: string;
+				technical: string;
+				fulfilled: string;
+				mainAlert: {
+					title: string;
+					text: string;
+				};
+			};
+		};
+	};
+	readonly "fr-FR": {
+		translation: {
+			ILLICADO_GIFTCARD: string;
+			method: {
+				"100EURO": string;
+				"10X": string;
+				"10XIBAN": string;
+				"10XSANSFRAIS": string;
+				"10XSANSFRAISIBAN": string;
+				"12X": string;
+				"15X": string;
+				"18X": string;
+				"20X": string;
+				"20XIBAN": string;
+				"20XSANSFRAISIBAN": string;
+				"24X": string;
+				"30EURO": string;
+				"30X": string;
+				"3X": string;
+				"4X": string;
+				"4XSANSFRAIS": string;
+				"5-12X": string;
+				"50EURO": string;
+				"5X": string;
+				"6X": string;
+				"70EURO": string;
+				"9X": string;
+				APPLEPAY: string;
+				BANCONTACT: string;
+				BIZUM: string;
+				BNPL: string;
+				CB10X: string;
+				CB10XSANSFRAIS: string;
+				CB12X: string;
+				CB12XSANSFRAIS: string;
+				CB2X: string;
+				CB3X: string;
+				"CB3X-PAYBYLINK": string;
+				CB3XSANSFRAIS: string;
+				CB4X: string;
+				"CB4X-PAYBYLINK": string;
+				CB4XSANSFRAIS: string;
+				COMPTANT: string;
+				CREDITCARD: string;
+				GOOGLEPAY: string;
+				IDEAL: string;
+				INSTALLMENT: string;
+				INSTALLMENTS: string;
+				INSTANTPAYMENT: string;
+				INVOICE: string;
+				LOAN: string;
+				MBWAY: string;
+				MULTIBANCO: string;
+				PAYLATER: string;
+				PAYPAL: string;
+				REVOLVING: string;
+				SEPA: string;
+				SEPAINSTANT: string;
+				SEPARECURRENT: string;
+				SEPASINGLE: string;
+				TWINT: string;
+				WALLET: string;
+				XPAY: string;
+				GIFTCARD: string;
+				VOUCHER: string;
+			};
+			dividerText: string;
+			hostedForm: {
+				panPlaceholder: string;
+				panInputLabel: string;
+				panRequiredError: string;
+				panFormatError: string;
+				panCannotBeEmptyError: string;
+				panTooltipText: string;
+				cvvPlaceholder: string;
+				cvv4Placeholder: string;
+				cvvInputLabel: string;
+				cvv4InputLabel: string;
+				cvvRequiredError: string;
+				cvvFormatError: string;
+				cvvCannotBeEmptyError: string;
+				cvvTooltipText: string;
+				expirationPlaceholder: string;
+				expirationInputLabel: string;
+				expirationRequiredError: string;
+				expirationFormatError: string;
+				expirationCannotBeEmptyError: string;
+				expirationOutOfRangeError: string;
+				expirationTooltipText: string;
+				holderPlaceholder: string;
+				holderInputLabel: string;
+				holderRequiredError: string;
+				holderFormatError: string;
+				holderCannotBeEmptyError: string;
+				birthdateInputLabel: string;
+				birthdateRequiredError: string;
+				birthdateFormatError: string;
+				birthdateCannotBeEmptyError: string;
+				saveTokenLabel: string;
+				saveAccountLabel: string;
+			};
+			secondaries: {
+				title: string;
+			};
+			primaries: {
+				paymentMethod: string;
+				useAnotherCard: string;
+				useAnotherAccount: string;
+				redirectionText: string;
+				CVV: string;
+				savedAccounts_one: string;
+				savedAccounts_other: string;
+				savedCards_one: string;
+				savedCards_other: string;
+			};
+			installments: {
+				financingCostWithAprc: string;
+				financingCost: string;
+				total: string;
+				yourPaymentSchedule: string;
+				installment_ordinal_one: string;
+				installment_ordinal_other: string;
+				computeInstallments: string;
+				computeInstallmentsError: string;
+			};
+			common: {
+				submittingPayment: string;
+				sessionExpired: string;
+				sessionTerminated: string;
+				today: string;
+			};
+			giftCards: {
+				cardsAndPartner_one: string;
+				cardsAndPartner_other: string;
+				gifts_one: string;
+				gifts_other: string;
+				giftCards_one: string;
+				giftCards_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				invalidCard: string;
+				availableAmount: string;
+				expiryDate: string;
+				apply: string;
+				applied_one: string;
+				applied_other: string;
+				cancel: string;
+				remove: string;
+				amountToUse: string;
+				insufficientBalance: string;
+				invalidAmount: string;
+				alreadyApplied: string;
+				failedToUseCard: string;
+				emptyCardBalance: string;
+				youCanAddUpTo: string;
+				currentStatus: string;
+				amountMax: string;
+				limitReachedForPartner: string;
+				limitReachedForPartnerAmount: string;
+			};
+			loyalty: {
+				insufficientBalance: string;
+				noAmountLeftToPay: string;
+				failedToLoadAccount: string;
+				minAmountNotMet: string;
+				loyaltyAccount: string;
+				balanceDetail: string;
+				amountUsed: string;
+			};
+			payButton: {
+				pay: string;
+			};
+			ancv: {
+				actionRequired: string;
+				ancvNotice: string;
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				ancv_one: string;
+				ancv_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				cancel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+				userActionTimeout: string;
+				userActionAborted: string;
+				userOtherTransactionPending: string;
+			};
+			vouchers: {
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				vouchers_one: string;
+				vouchers_other: string;
+				voucherLoss: string;
+				voucherLossExplain: string;
+				voucherNoticeTitle: string;
+				voucherNotice: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+			};
+			suspensions: {
+				minAmountNotMet: string;
+				maxAmountExceeded: string;
+				technical: string;
+				fulfilled: string;
+				mainAlert: {
+					title: string;
+					text: string;
+				};
+			};
+		};
+	};
+	readonly "it-CH": {
+		translation: {
+			ILLICADO_GIFTCARD: string;
+			method: {
+				"100EURO": string;
+				"10X": string;
+				"10XIBAN": string;
+				"10XSANSFRAIS": string;
+				"10XSANSFRAISIBAN": string;
+				"12X": string;
+				"15X": string;
+				"18X": string;
+				"20X": string;
+				"20XIBAN": string;
+				"20XSANSFRAISIBAN": string;
+				"24X": string;
+				"30EURO": string;
+				"30X": string;
+				"3X": string;
+				"4X": string;
+				"4XSANSFRAIS": string;
+				"5-12X": string;
+				"50EURO": string;
+				"5X": string;
+				"6X": string;
+				"70EURO": string;
+				"9X": string;
+				APPLEPAY: string;
+				BANCONTACT: string;
+				BIZUM: string;
+				BNPL: string;
+				CB10X: string;
+				CB10XSANSFRAIS: string;
+				CB12X: string;
+				CB12XSANSFRAIS: string;
+				CB2X: string;
+				CB3X: string;
+				"CB3X-PAYBYLINK": string;
+				CB3XSANSFRAIS: string;
+				CB4X: string;
+				"CB4X-PAYBYLINK": string;
+				CB4XSANSFRAIS: string;
+				COMPTANT: string;
+				CREDITCARD: string;
+				GOOGLEPAY: string;
+				IDEAL: string;
+				INSTALLMENT: string;
+				INSTALLMENTS: string;
+				INSTANTPAYMENT: string;
+				INVOICE: string;
+				LOAN: string;
+				MBWAY: string;
+				MULTIBANCO: string;
+				PAYLATER: string;
+				PAYPAL: string;
+				REVOLVING: string;
+				SEPA: string;
+				SEPAINSTANT: string;
+				SEPARECURRENT: string;
+				SEPASINGLE: string;
+				TWINT: string;
+				WALLET: string;
+				XPAY: string;
+				GIFTCARD: string;
+				VOUCHER: string;
+			};
+			dividerText: string;
+			hostedForm: {
+				panPlaceholder: string;
+				panInputLabel: string;
+				panRequiredError: string;
+				panFormatError: string;
+				panCannotBeEmptyError: string;
+				panTooltipText: string;
+				cvvPlaceholder: string;
+				cvv4Placeholder: string;
+				cvvInputLabel: string;
+				cvv4InputLabel: string;
+				cvvRequiredError: string;
+				cvvFormatError: string;
+				cvvCannotBeEmptyError: string;
+				cvvTooltipText: string;
+				expirationPlaceholder: string;
+				expirationInputLabel: string;
+				expirationRequiredError: string;
+				expirationFormatError: string;
+				expirationCannotBeEmptyError: string;
+				expirationOutOfRangeError: string;
+				expirationTooltipText: string;
+				holderPlaceholder: string;
+				holderInputLabel: string;
+				holderRequiredError: string;
+				holderFormatError: string;
+				holderCannotBeEmptyError: string;
+				birthdateInputLabel: string;
+				birthdateRequiredError: string;
+				birthdateFormatError: string;
+				birthdateCannotBeEmptyError: string;
+				saveTokenLabel: string;
+				saveAccountLabel: string;
+			};
+			secondaries: {
+				title: string;
+			};
+			primaries: {
+				paymentMethod: string;
+				useAnotherCard: string;
+				useAnotherAccount: string;
+				redirectionText: string;
+				CVV: string;
+				savedAccounts_one: string;
+				savedAccounts_other: string;
+				savedCards_one: string;
+				savedCards_other: string;
+			};
+			installments: {
+				financingCostWithAprc: string;
+				financingCost: string;
+				total: string;
+				yourPaymentSchedule: string;
+				installment_ordinal_one: string;
+				installment_ordinal_other: string;
+				computeInstallments: string;
+				computeInstallmentsError: string;
+			};
+			common: {
+				submittingPayment: string;
+				sessionExpired: string;
+				sessionTerminated: string;
+				today: string;
+			};
+			giftCards: {
+				cardsAndPartner_one: string;
+				cardsAndPartner_other: string;
+				gifts_one: string;
+				gifts_other: string;
+				giftCards_one: string;
+				giftCards_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				invalidCard: string;
+				availableAmount: string;
+				expiryDate: string;
+				apply: string;
+				applied_one: string;
+				applied_other: string;
+				cancel: string;
+				remove: string;
+				amountToUse: string;
+				insufficientBalance: string;
+				invalidAmount: string;
+				alreadyApplied: string;
+				failedToUseCard: string;
+				emptyCardBalance: string;
+				youCanAddUpTo: string;
+				currentStatus: string;
+				amountMax: string;
+				limitReachedForPartner: string;
+				limitReachedForPartnerAmount: string;
+			};
+			loyalty: {
+				insufficientBalance: string;
+				noAmountLeftToPay: string;
+				failedToLoadAccount: string;
+				minAmountNotMet: string;
+				loyaltyAccount: string;
+				balanceDetail: string;
+				amountUsed: string;
+			};
+			payButton: {
+				pay: string;
+			};
+			ancv: {
+				actionRequired: string;
+				ancvNotice: string;
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				ancv_one: string;
+				ancv_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				cancel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+				userActionTimeout: string;
+				userActionAborted: string;
+				userOtherTransactionPending: string;
+			};
+			vouchers: {
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				vouchers_one: string;
+				vouchers_other: string;
+				voucherLoss: string;
+				voucherLossExplain: string;
+				voucherNoticeTitle: string;
+				voucherNotice: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+			};
+			suspensions: {
+				minAmountNotMet: string;
+				maxAmountExceeded: string;
+				technical: string;
+				fulfilled: string;
+				mainAlert: {
+					title: string;
+					text: string;
+				};
+			};
+		};
+	};
+	readonly "it-IT": {
+		translation: {
+			ILLICADO_GIFTCARD: string;
+			method: {
+				"100EURO": string;
+				"10X": string;
+				"10XIBAN": string;
+				"10XSANSFRAIS": string;
+				"10XSANSFRAISIBAN": string;
+				"12X": string;
+				"15X": string;
+				"18X": string;
+				"20X": string;
+				"20XIBAN": string;
+				"20XSANSFRAISIBAN": string;
+				"24X": string;
+				"30EURO": string;
+				"30X": string;
+				"3X": string;
+				"4X": string;
+				"4XSANSFRAIS": string;
+				"5-12X": string;
+				"50EURO": string;
+				"5X": string;
+				"6X": string;
+				"70EURO": string;
+				"9X": string;
+				APPLEPAY: string;
+				BANCONTACT: string;
+				BIZUM: string;
+				BNPL: string;
+				CB10X: string;
+				CB10XSANSFRAIS: string;
+				CB12X: string;
+				CB12XSANSFRAIS: string;
+				CB2X: string;
+				CB3X: string;
+				"CB3X-PAYBYLINK": string;
+				CB3XSANSFRAIS: string;
+				CB4X: string;
+				"CB4X-PAYBYLINK": string;
+				CB4XSANSFRAIS: string;
+				COMPTANT: string;
+				CREDITCARD: string;
+				GOOGLEPAY: string;
+				IDEAL: string;
+				INSTALLMENT: string;
+				INSTALLMENTS: string;
+				INSTANTPAYMENT: string;
+				INVOICE: string;
+				LOAN: string;
+				MBWAY: string;
+				MULTIBANCO: string;
+				PAYLATER: string;
+				PAYPAL: string;
+				REVOLVING: string;
+				SEPA: string;
+				SEPAINSTANT: string;
+				SEPARECURRENT: string;
+				SEPASINGLE: string;
+				TWINT: string;
+				WALLET: string;
+				XPAY: string;
+				GIFTCARD: string;
+				VOUCHER: string;
+			};
+			dividerText: string;
+			hostedForm: {
+				panPlaceholder: string;
+				panInputLabel: string;
+				panRequiredError: string;
+				panFormatError: string;
+				panCannotBeEmptyError: string;
+				panTooltipText: string;
+				cvvPlaceholder: string;
+				cvv4Placeholder: string;
+				cvvInputLabel: string;
+				cvv4InputLabel: string;
+				cvvRequiredError: string;
+				cvvFormatError: string;
+				cvvCannotBeEmptyError: string;
+				cvvTooltipText: string;
+				expirationPlaceholder: string;
+				expirationInputLabel: string;
+				expirationRequiredError: string;
+				expirationFormatError: string;
+				expirationCannotBeEmptyError: string;
+				expirationOutOfRangeError: string;
+				expirationTooltipText: string;
+				holderPlaceholder: string;
+				holderInputLabel: string;
+				holderRequiredError: string;
+				holderFormatError: string;
+				holderCannotBeEmptyError: string;
+				birthdateInputLabel: string;
+				birthdateRequiredError: string;
+				birthdateFormatError: string;
+				birthdateCannotBeEmptyError: string;
+				saveTokenLabel: string;
+				saveAccountLabel: string;
+			};
+			secondaries: {
+				title: string;
+			};
+			primaries: {
+				paymentMethod: string;
+				useAnotherCard: string;
+				useAnotherAccount: string;
+				redirectionText: string;
+				CVV: string;
+				savedAccounts_one: string;
+				savedAccounts_other: string;
+				savedCards_one: string;
+				savedCards_other: string;
+			};
+			installments: {
+				financingCostWithAprc: string;
+				financingCost: string;
+				total: string;
+				yourPaymentSchedule: string;
+				installment_ordinal_one: string;
+				installment_ordinal_other: string;
+				computeInstallments: string;
+				computeInstallmentsError: string;
+			};
+			common: {
+				submittingPayment: string;
+				sessionExpired: string;
+				sessionTerminated: string;
+				today: string;
+			};
+			giftCards: {
+				cardsAndPartner_one: string;
+				cardsAndPartner_other: string;
+				gifts_one: string;
+				gifts_other: string;
+				giftCards_one: string;
+				giftCards_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				invalidCard: string;
+				availableAmount: string;
+				expiryDate: string;
+				apply: string;
+				applied_one: string;
+				applied_other: string;
+				cancel: string;
+				remove: string;
+				amountToUse: string;
+				insufficientBalance: string;
+				invalidAmount: string;
+				alreadyApplied: string;
+				failedToUseCard: string;
+				emptyCardBalance: string;
+				youCanAddUpTo: string;
+				currentStatus: string;
+				amountMax: string;
+				limitReachedForPartner: string;
+				limitReachedForPartnerAmount: string;
+			};
+			loyalty: {
+				insufficientBalance: string;
+				noAmountLeftToPay: string;
+				failedToLoadAccount: string;
+				minAmountNotMet: string;
+				loyaltyAccount: string;
+				balanceDetail: string;
+				amountUsed: string;
+			};
+			payButton: {
+				pay: string;
+			};
+			ancv: {
+				actionRequired: string;
+				ancvNotice: string;
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				ancv_one: string;
+				ancv_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				cancel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+				userActionTimeout: string;
+				userActionAborted: string;
+				userOtherTransactionPending: string;
+			};
+			vouchers: {
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				vouchers_one: string;
+				vouchers_other: string;
+				voucherLoss: string;
+				voucherLossExplain: string;
+				voucherNoticeTitle: string;
+				voucherNotice: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+			};
+			suspensions: {
+				minAmountNotMet: string;
+				maxAmountExceeded: string;
+				technical: string;
+				fulfilled: string;
+				mainAlert: {
+					title: string;
+					text: string;
+				};
+			};
+		};
+	};
+	readonly "nl-BE": {
+		translation: {
+			ILLICADO_GIFTCARD: string;
+			method: {
+				"100EURO": string;
+				"10X": string;
+				"10XIBAN": string;
+				"10XSANSFRAIS": string;
+				"10XSANSFRAISIBAN": string;
+				"12X": string;
+				"15X": string;
+				"18X": string;
+				"20X": string;
+				"20XIBAN": string;
+				"20XSANSFRAISIBAN": string;
+				"24X": string;
+				"30EURO": string;
+				"30X": string;
+				"3X": string;
+				"4X": string;
+				"4XSANSFRAIS": string;
+				"5-12X": string;
+				"50EURO": string;
+				"5X": string;
+				"6X": string;
+				"70EURO": string;
+				"9X": string;
+				APPLEPAY: string;
+				BANCONTACT: string;
+				BIZUM: string;
+				BNPL: string;
+				CB10X: string;
+				CB10XSANSFRAIS: string;
+				CB12X: string;
+				CB12XSANSFRAIS: string;
+				CB2X: string;
+				CB3X: string;
+				"CB3X-PAYBYLINK": string;
+				CB3XSANSFRAIS: string;
+				CB4X: string;
+				"CB4X-PAYBYLINK": string;
+				CB4XSANSFRAIS: string;
+				COMPTANT: string;
+				CREDITCARD: string;
+				GOOGLEPAY: string;
+				IDEAL: string;
+				INSTALLMENT: string;
+				INSTALLMENTS: string;
+				INSTANTPAYMENT: string;
+				INVOICE: string;
+				LOAN: string;
+				MBWAY: string;
+				MULTIBANCO: string;
+				PAYLATER: string;
+				PAYPAL: string;
+				REVOLVING: string;
+				SEPA: string;
+				SEPAINSTANT: string;
+				SEPARECURRENT: string;
+				SEPASINGLE: string;
+				TWINT: string;
+				WALLET: string;
+				XPAY: string;
+				GIFTCARD: string;
+				VOUCHER: string;
+			};
+			dividerText: string;
+			hostedForm: {
+				panPlaceholder: string;
+				panInputLabel: string;
+				panRequiredError: string;
+				panFormatError: string;
+				panCannotBeEmptyError: string;
+				panTooltipText: string;
+				cvvPlaceholder: string;
+				cvv4Placeholder: string;
+				cvvInputLabel: string;
+				cvv4InputLabel: string;
+				cvvRequiredError: string;
+				cvvFormatError: string;
+				cvvCannotBeEmptyError: string;
+				cvvTooltipText: string;
+				expirationPlaceholder: string;
+				expirationInputLabel: string;
+				expirationRequiredError: string;
+				expirationFormatError: string;
+				expirationCannotBeEmptyError: string;
+				expirationOutOfRangeError: string;
+				expirationTooltipText: string;
+				holderPlaceholder: string;
+				holderInputLabel: string;
+				holderRequiredError: string;
+				holderFormatError: string;
+				holderCannotBeEmptyError: string;
+				birthdateInputLabel: string;
+				birthdateRequiredError: string;
+				birthdateFormatError: string;
+				birthdateCannotBeEmptyError: string;
+				saveTokenLabel: string;
+				saveAccountLabel: string;
+			};
+			secondaries: {
+				title: string;
+			};
+			primaries: {
+				paymentMethod: string;
+				useAnotherCard: string;
+				useAnotherAccount: string;
+				redirectionText: string;
+				CVV: string;
+				savedAccounts_one: string;
+				savedAccounts_other: string;
+				savedCards_one: string;
+				savedCards_other: string;
+			};
+			installments: {
+				financingCostWithAprc: string;
+				financingCost: string;
+				total: string;
+				yourPaymentSchedule: string;
+				installment_ordinal_one: string;
+				installment_ordinal_other: string;
+				computeInstallments: string;
+				computeInstallmentsError: string;
+			};
+			common: {
+				submittingPayment: string;
+				sessionExpired: string;
+				sessionTerminated: string;
+				today: string;
+			};
+			giftCards: {
+				cardsAndPartner_one: string;
+				cardsAndPartner_other: string;
+				gifts_one: string;
+				gifts_other: string;
+				giftCards_one: string;
+				giftCards_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				invalidCard: string;
+				availableAmount: string;
+				expiryDate: string;
+				apply: string;
+				applied_one: string;
+				applied_other: string;
+				cancel: string;
+				remove: string;
+				amountToUse: string;
+				insufficientBalance: string;
+				invalidAmount: string;
+				alreadyApplied: string;
+				failedToUseCard: string;
+				emptyCardBalance: string;
+				youCanAddUpTo: string;
+				currentStatus: string;
+				amountMax: string;
+				limitReachedForPartner: string;
+				limitReachedForPartnerAmount: string;
+			};
+			loyalty: {
+				insufficientBalance: string;
+				noAmountLeftToPay: string;
+				failedToLoadAccount: string;
+				minAmountNotMet: string;
+				loyaltyAccount: string;
+				balanceDetail: string;
+				amountUsed: string;
+			};
+			payButton: {
+				pay: string;
+			};
+			ancv: {
+				actionRequired: string;
+				ancvNotice: string;
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				ancv_one: string;
+				ancv_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				cancel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+				userActionTimeout: string;
+				userActionAborted: string;
+				userOtherTransactionPending: string;
+			};
+			vouchers: {
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				vouchers_one: string;
+				vouchers_other: string;
+				voucherLoss: string;
+				voucherLossExplain: string;
+				voucherNoticeTitle: string;
+				voucherNotice: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+			};
+			suspensions: {
+				minAmountNotMet: string;
+				maxAmountExceeded: string;
+				technical: string;
+				fulfilled: string;
+				mainAlert: {
+					title: string;
+					text: string;
+				};
+			};
+		};
+	};
+	readonly "nl-NL": {
+		translation: {
+			ILLICADO_GIFTCARD: string;
+			method: {
+				"100EURO": string;
+				"10X": string;
+				"10XIBAN": string;
+				"10XSANSFRAIS": string;
+				"10XSANSFRAISIBAN": string;
+				"12X": string;
+				"15X": string;
+				"18X": string;
+				"20X": string;
+				"20XIBAN": string;
+				"20XSANSFRAISIBAN": string;
+				"24X": string;
+				"30EURO": string;
+				"30X": string;
+				"3X": string;
+				"4X": string;
+				"4XSANSFRAIS": string;
+				"5-12X": string;
+				"50EURO": string;
+				"5X": string;
+				"6X": string;
+				"70EURO": string;
+				"9X": string;
+				APPLEPAY: string;
+				BANCONTACT: string;
+				BIZUM: string;
+				BNPL: string;
+				CB10X: string;
+				CB10XSANSFRAIS: string;
+				CB12X: string;
+				CB12XSANSFRAIS: string;
+				CB2X: string;
+				CB3X: string;
+				"CB3X-PAYBYLINK": string;
+				CB3XSANSFRAIS: string;
+				CB4X: string;
+				"CB4X-PAYBYLINK": string;
+				CB4XSANSFRAIS: string;
+				COMPTANT: string;
+				CREDITCARD: string;
+				GOOGLEPAY: string;
+				IDEAL: string;
+				INSTALLMENT: string;
+				INSTALLMENTS: string;
+				INSTANTPAYMENT: string;
+				INVOICE: string;
+				LOAN: string;
+				MBWAY: string;
+				MULTIBANCO: string;
+				PAYLATER: string;
+				PAYPAL: string;
+				REVOLVING: string;
+				SEPA: string;
+				SEPAINSTANT: string;
+				SEPARECURRENT: string;
+				SEPASINGLE: string;
+				TWINT: string;
+				WALLET: string;
+				XPAY: string;
+				GIFTCARD: string;
+				VOUCHER: string;
+			};
+			dividerText: string;
+			hostedForm: {
+				panPlaceholder: string;
+				panInputLabel: string;
+				panRequiredError: string;
+				panFormatError: string;
+				panCannotBeEmptyError: string;
+				panTooltipText: string;
+				cvvPlaceholder: string;
+				cvv4Placeholder: string;
+				cvvInputLabel: string;
+				cvv4InputLabel: string;
+				cvvRequiredError: string;
+				cvvFormatError: string;
+				cvvCannotBeEmptyError: string;
+				cvvTooltipText: string;
+				expirationPlaceholder: string;
+				expirationInputLabel: string;
+				expirationRequiredError: string;
+				expirationFormatError: string;
+				expirationCannotBeEmptyError: string;
+				expirationOutOfRangeError: string;
+				expirationTooltipText: string;
+				holderPlaceholder: string;
+				holderInputLabel: string;
+				holderRequiredError: string;
+				holderFormatError: string;
+				holderCannotBeEmptyError: string;
+				birthdateInputLabel: string;
+				birthdateRequiredError: string;
+				birthdateFormatError: string;
+				birthdateCannotBeEmptyError: string;
+				saveTokenLabel: string;
+				saveAccountLabel: string;
+			};
+			secondaries: {
+				title: string;
+			};
+			primaries: {
+				paymentMethod: string;
+				useAnotherCard: string;
+				useAnotherAccount: string;
+				redirectionText: string;
+				CVV: string;
+				savedAccounts_one: string;
+				savedAccounts_other: string;
+				savedCards_one: string;
+				savedCards_other: string;
+			};
+			installments: {
+				financingCostWithAprc: string;
+				financingCost: string;
+				total: string;
+				yourPaymentSchedule: string;
+				installment_ordinal_one: string;
+				installment_ordinal_other: string;
+				computeInstallments: string;
+				computeInstallmentsError: string;
+			};
+			common: {
+				submittingPayment: string;
+				sessionExpired: string;
+				sessionTerminated: string;
+				today: string;
+			};
+			giftCards: {
+				cardsAndPartner_one: string;
+				cardsAndPartner_other: string;
+				gifts_one: string;
+				gifts_other: string;
+				giftCards_one: string;
+				giftCards_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				invalidCard: string;
+				availableAmount: string;
+				expiryDate: string;
+				apply: string;
+				applied_one: string;
+				applied_other: string;
+				cancel: string;
+				remove: string;
+				amountToUse: string;
+				insufficientBalance: string;
+				invalidAmount: string;
+				alreadyApplied: string;
+				failedToUseCard: string;
+				emptyCardBalance: string;
+				youCanAddUpTo: string;
+				currentStatus: string;
+				amountMax: string;
+				limitReachedForPartner: string;
+				limitReachedForPartnerAmount: string;
+			};
+			loyalty: {
+				insufficientBalance: string;
+				noAmountLeftToPay: string;
+				failedToLoadAccount: string;
+				minAmountNotMet: string;
+				loyaltyAccount: string;
+				balanceDetail: string;
+				amountUsed: string;
+			};
+			payButton: {
+				pay: string;
+			};
+			ancv: {
+				actionRequired: string;
+				ancvNotice: string;
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				ancv_one: string;
+				ancv_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				cancel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+				userActionTimeout: string;
+				userActionAborted: string;
+				userOtherTransactionPending: string;
+			};
+			vouchers: {
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				vouchers_one: string;
+				vouchers_other: string;
+				voucherLoss: string;
+				voucherLossExplain: string;
+				voucherNoticeTitle: string;
+				voucherNotice: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+			};
+			suspensions: {
+				minAmountNotMet: string;
+				maxAmountExceeded: string;
+				technical: string;
+				fulfilled: string;
+				mainAlert: {
+					title: string;
+					text: string;
+				};
+			};
+		};
+	};
+	readonly "pt-BR": {
+		translation: {
+			ILLICADO_GIFTCARD: string;
+			method: {
+				"100EURO": string;
+				"10X": string;
+				"10XIBAN": string;
+				"10XSANSFRAIS": string;
+				"10XSANSFRAISIBAN": string;
+				"12X": string;
+				"15X": string;
+				"18X": string;
+				"20X": string;
+				"20XIBAN": string;
+				"20XSANSFRAISIBAN": string;
+				"24X": string;
+				"30EURO": string;
+				"30X": string;
+				"3X": string;
+				"4X": string;
+				"4XSANSFRAIS": string;
+				"5-12X": string;
+				"50EURO": string;
+				"5X": string;
+				"6X": string;
+				"70EURO": string;
+				"9X": string;
+				APPLEPAY: string;
+				BANCONTACT: string;
+				BIZUM: string;
+				BNPL: string;
+				CB10X: string;
+				CB10XSANSFRAIS: string;
+				CB12X: string;
+				CB12XSANSFRAIS: string;
+				CB2X: string;
+				CB3X: string;
+				"CB3X-PAYBYLINK": string;
+				CB3XSANSFRAIS: string;
+				CB4X: string;
+				"CB4X-PAYBYLINK": string;
+				CB4XSANSFRAIS: string;
+				COMPTANT: string;
+				CREDITCARD: string;
+				GOOGLEPAY: string;
+				IDEAL: string;
+				INSTALLMENT: string;
+				INSTALLMENTS: string;
+				INSTANTPAYMENT: string;
+				INVOICE: string;
+				LOAN: string;
+				MBWAY: string;
+				MULTIBANCO: string;
+				PAYLATER: string;
+				PAYPAL: string;
+				REVOLVING: string;
+				SEPA: string;
+				SEPAINSTANT: string;
+				SEPARECURRENT: string;
+				SEPASINGLE: string;
+				TWINT: string;
+				WALLET: string;
+				XPAY: string;
+				GIFTCARD: string;
+				VOUCHER: string;
+			};
+			dividerText: string;
+			hostedForm: {
+				panPlaceholder: string;
+				panInputLabel: string;
+				panRequiredError: string;
+				panFormatError: string;
+				panCannotBeEmptyError: string;
+				panTooltipText: string;
+				cvvPlaceholder: string;
+				cvv4Placeholder: string;
+				cvvInputLabel: string;
+				cvv4InputLabel: string;
+				cvvRequiredError: string;
+				cvvFormatError: string;
+				cvvCannotBeEmptyError: string;
+				cvvTooltipText: string;
+				expirationPlaceholder: string;
+				expirationInputLabel: string;
+				expirationRequiredError: string;
+				expirationFormatError: string;
+				expirationCannotBeEmptyError: string;
+				expirationOutOfRangeError: string;
+				expirationTooltipText: string;
+				holderPlaceholder: string;
+				holderInputLabel: string;
+				holderRequiredError: string;
+				holderFormatError: string;
+				holderCannotBeEmptyError: string;
+				birthdateInputLabel: string;
+				birthdateRequiredError: string;
+				birthdateFormatError: string;
+				birthdateCannotBeEmptyError: string;
+				saveTokenLabel: string;
+				saveAccountLabel: string;
+			};
+			secondaries: {
+				title: string;
+			};
+			primaries: {
+				paymentMethod: string;
+				useAnotherCard: string;
+				useAnotherAccount: string;
+				redirectionText: string;
+				CVV: string;
+				savedAccounts_one: string;
+				savedAccounts_other: string;
+				savedCards_one: string;
+				savedCards_other: string;
+			};
+			installments: {
+				financingCostWithAprc: string;
+				financingCost: string;
+				total: string;
+				yourPaymentSchedule: string;
+				installment_ordinal_one: string;
+				installment_ordinal_other: string;
+				computeInstallments: string;
+				computeInstallmentsError: string;
+			};
+			common: {
+				submittingPayment: string;
+				sessionExpired: string;
+				sessionTerminated: string;
+				today: string;
+			};
+			giftCards: {
+				cardsAndPartner_one: string;
+				cardsAndPartner_other: string;
+				gifts_one: string;
+				gifts_other: string;
+				giftCards_one: string;
+				giftCards_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				invalidCard: string;
+				availableAmount: string;
+				expiryDate: string;
+				apply: string;
+				applied_one: string;
+				applied_other: string;
+				cancel: string;
+				remove: string;
+				amountToUse: string;
+				insufficientBalance: string;
+				invalidAmount: string;
+				alreadyApplied: string;
+				failedToUseCard: string;
+				emptyCardBalance: string;
+				youCanAddUpTo: string;
+				currentStatus: string;
+				amountMax: string;
+				limitReachedForPartner: string;
+				limitReachedForPartnerAmount: string;
+			};
+			loyalty: {
+				insufficientBalance: string;
+				noAmountLeftToPay: string;
+				failedToLoadAccount: string;
+				minAmountNotMet: string;
+				loyaltyAccount: string;
+				balanceDetail: string;
+				amountUsed: string;
+			};
+			payButton: {
+				pay: string;
+			};
+			ancv: {
+				actionRequired: string;
+				ancvNotice: string;
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				ancv_one: string;
+				ancv_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				cancel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+				userActionTimeout: string;
+				userActionAborted: string;
+				userOtherTransactionPending: string;
+			};
+			vouchers: {
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				vouchers_one: string;
+				vouchers_other: string;
+				voucherLoss: string;
+				voucherLossExplain: string;
+				voucherNoticeTitle: string;
+				voucherNotice: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+			};
+			suspensions: {
+				minAmountNotMet: string;
+				maxAmountExceeded: string;
+				technical: string;
+				fulfilled: string;
+				mainAlert: {
+					title: string;
+					text: string;
+				};
+			};
+		};
+	};
+	readonly "pt-PT": {
+		translation: {
+			ILLICADO_GIFTCARD: string;
+			method: {
+				"100EURO": string;
+				"10X": string;
+				"10XIBAN": string;
+				"10XSANSFRAIS": string;
+				"10XSANSFRAISIBAN": string;
+				"12X": string;
+				"15X": string;
+				"18X": string;
+				"20X": string;
+				"20XIBAN": string;
+				"20XSANSFRAISIBAN": string;
+				"24X": string;
+				"30EURO": string;
+				"30X": string;
+				"3X": string;
+				"4X": string;
+				"4XSANSFRAIS": string;
+				"5-12X": string;
+				"50EURO": string;
+				"5X": string;
+				"6X": string;
+				"70EURO": string;
+				"9X": string;
+				APPLEPAY: string;
+				BANCONTACT: string;
+				BIZUM: string;
+				BNPL: string;
+				CB10X: string;
+				CB10XSANSFRAIS: string;
+				CB12X: string;
+				CB12XSANSFRAIS: string;
+				CB2X: string;
+				CB3X: string;
+				"CB3X-PAYBYLINK": string;
+				CB3XSANSFRAIS: string;
+				CB4X: string;
+				"CB4X-PAYBYLINK": string;
+				CB4XSANSFRAIS: string;
+				COMPTANT: string;
+				CREDITCARD: string;
+				GOOGLEPAY: string;
+				IDEAL: string;
+				INSTALLMENT: string;
+				INSTALLMENTS: string;
+				INSTANTPAYMENT: string;
+				INVOICE: string;
+				LOAN: string;
+				MBWAY: string;
+				MULTIBANCO: string;
+				PAYLATER: string;
+				PAYPAL: string;
+				REVOLVING: string;
+				SEPA: string;
+				SEPAINSTANT: string;
+				SEPARECURRENT: string;
+				SEPASINGLE: string;
+				TWINT: string;
+				WALLET: string;
+				XPAY: string;
+				GIFTCARD: string;
+				VOUCHER: string;
+			};
+			dividerText: string;
+			hostedForm: {
+				panPlaceholder: string;
+				panInputLabel: string;
+				panRequiredError: string;
+				panFormatError: string;
+				panCannotBeEmptyError: string;
+				panTooltipText: string;
+				cvvPlaceholder: string;
+				cvv4Placeholder: string;
+				cvvInputLabel: string;
+				cvv4InputLabel: string;
+				cvvRequiredError: string;
+				cvvFormatError: string;
+				cvvCannotBeEmptyError: string;
+				cvvTooltipText: string;
+				expirationPlaceholder: string;
+				expirationInputLabel: string;
+				expirationRequiredError: string;
+				expirationFormatError: string;
+				expirationCannotBeEmptyError: string;
+				expirationOutOfRangeError: string;
+				expirationTooltipText: string;
+				holderPlaceholder: string;
+				holderInputLabel: string;
+				holderRequiredError: string;
+				holderFormatError: string;
+				holderCannotBeEmptyError: string;
+				birthdateInputLabel: string;
+				birthdateRequiredError: string;
+				birthdateFormatError: string;
+				birthdateCannotBeEmptyError: string;
+				saveTokenLabel: string;
+				saveAccountLabel: string;
+			};
+			secondaries: {
+				title: string;
+			};
+			primaries: {
+				paymentMethod: string;
+				useAnotherCard: string;
+				useAnotherAccount: string;
+				redirectionText: string;
+				CVV: string;
+				savedAccounts_one: string;
+				savedAccounts_other: string;
+				savedCards_one: string;
+				savedCards_other: string;
+			};
+			installments: {
+				financingCostWithAprc: string;
+				financingCost: string;
+				total: string;
+				yourPaymentSchedule: string;
+				installment_ordinal_one: string;
+				installment_ordinal_other: string;
+				computeInstallments: string;
+				computeInstallmentsError: string;
+			};
+			common: {
+				submittingPayment: string;
+				sessionExpired: string;
+				sessionTerminated: string;
+				today: string;
+			};
+			giftCards: {
+				cardsAndPartner_one: string;
+				cardsAndPartner_other: string;
+				gifts_one: string;
+				gifts_other: string;
+				giftCards_one: string;
+				giftCards_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				invalidCard: string;
+				availableAmount: string;
+				expiryDate: string;
+				apply: string;
+				applied_one: string;
+				applied_other: string;
+				cancel: string;
+				remove: string;
+				amountToUse: string;
+				insufficientBalance: string;
+				invalidAmount: string;
+				alreadyApplied: string;
+				failedToUseCard: string;
+				emptyCardBalance: string;
+				youCanAddUpTo: string;
+				currentStatus: string;
+				amountMax: string;
+				limitReachedForPartner: string;
+				limitReachedForPartnerAmount: string;
+			};
+			loyalty: {
+				insufficientBalance: string;
+				noAmountLeftToPay: string;
+				failedToLoadAccount: string;
+				minAmountNotMet: string;
+				loyaltyAccount: string;
+				balanceDetail: string;
+				amountUsed: string;
+			};
+			payButton: {
+				pay: string;
+			};
+			ancv: {
+				actionRequired: string;
+				ancvNotice: string;
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				ancv_one: string;
+				ancv_other: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				cancel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+				userActionTimeout: string;
+				userActionAborted: string;
+				userOtherTransactionPending: string;
+			};
+			vouchers: {
+				alreadyApplied: string;
+				emptyCardBalance: string;
+				invalidCard: string;
+				vouchers_one: string;
+				vouchers_other: string;
+				voucherLoss: string;
+				voucherLossExplain: string;
+				voucherNoticeTitle: string;
+				voucherNotice: string;
+				panPlaceholder: string;
+				panInputLabel: string;
+				cvvPlaceholder: string;
+				cvvInputLabel: string;
+				useCard: string;
+				applied_one: string;
+				applied_other: string;
+				limitReachedForPartnerAmount: string;
+			};
+			suspensions: {
+				minAmountNotMet: string;
+				maxAmountExceeded: string;
+				technical: string;
+				fulfilled: string;
+				mainAlert: {
+					title: string;
+					text: string;
+				};
+			};
+		};
+	};
 };
 export type InitOptions = {
-  session: PurseHeadlessCheckoutV1Params | string;
-  eventListener?: EventListener$1<DropinEventBusEvent>;
-  theme?: DropinTheme;
-  locale?: keyof typeof translationFiles;
-  hidePayButton?: boolean;
+	session: PurseHeadlessCheckoutV1Params | string;
+	eventListener?: EventListener$1<DropinEventBusEvent>;
+	theme?: DropinTheme;
+	locale?: keyof typeof translationFiles;
+	hidePayButton?: boolean;
 };
 declare class PurseDropin {
-  private readonly _headlessCheckoutInstance;
-  private readonly _theme;
-  private readonly _locale?;
-  private readonly _hidePayButton;
-  private _app?;
-  private readonly _eventBus;
-  private readonly _apiLogger;
-  isPaymentFulfilled: Readable<boolean>;
-  remainingAmountToPay: Readable<number>;
-  paymentSplit: Readable<{
-    partner: string;
-    method: string;
-    amount: number;
-  }[]>;
-  sessionState: Readable<PurseHeadlessCheckoutSessionState>;
-  private constructor();
-  static init({ session, eventListener, theme, locale, hidePayButton }: InitOptions): Promise<PurseDropin>;
-  setSession(session: PurseHeadlessCheckoutV1Params["paymentSession"] | string): Promise<void>;
-  setWalletSession(walletSession: OnePayWalletSession$2): Promise<any>;
-  submitPayment(): Promise<any>;
-  mount(target: HTMLElement): Promise<unknown>;
-  unmount(): Promise<void>;
+	private readonly _headlessCheckoutInstance;
+	private readonly _theme;
+	private readonly _locale?;
+	private readonly _hidePayButton;
+	private _app?;
+	private readonly _eventBus;
+	private readonly _apiLogger;
+	isPaymentFulfilled: Readable<boolean>;
+	remainingAmountToPay: Readable<number>;
+	paymentSplit: Readable<{
+		partner: string;
+		method: string;
+		amount: number;
+	}[]>;
+	sessionState: Readable<PurseHeadlessCheckoutSessionState>;
+	private constructor();
+	static init({ session, eventListener, theme, locale, hidePayButton }: InitOptions): Promise<PurseDropin>;
+	setSession(session: PurseHeadlessCheckoutV1Params["paymentSession"] | string): Promise<void>;
+	setWalletSession(walletSession: OnePayWalletSession$2): Promise<any>;
+	submitPayment(): Promise<any>;
+	mount(target: HTMLElement): Promise<unknown>;
+	unmount(): Promise<void>;
 }
 export declare function createDropinCheckout(options: InitOptions): Promise<PurseDropin>;
 
