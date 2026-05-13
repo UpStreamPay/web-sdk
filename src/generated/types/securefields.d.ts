@@ -43,36 +43,88 @@ export interface SubmitOptions {
 	cardHolderName?: string;
 }
 /**
- * Submit result from the SecureFields SDK
+ * Standard / PCI Proxy tokenization — `vault_form_token` is always present;
+ * `card` is optional; `birth_date` is never present.
  * @category Core
  */
-export type SubmitResult = SubmitResultSuccess | {
-	/**
-	 * Potential error message if tokenization failed
-	 */
-	error?: string;
-};
-/**
- * Submit result object on success from the SecureFields SDK
- * @category Core
- */
-export type SubmitResultSuccess = {
-	/**
-	 * The token representing the card details
-	 */
+export type SubmitResultToken = {
+	/** The token representing the card details. */
 	vault_form_token: string;
 	/**
-	 * Additional card informations linked to the token
+	 * Additional card information linked to the token.
 	 * @see {@link CardInfo}
 	 */
 	card?: CardInfo;
+	birth_date?: never;
+	error?: never;
+};
+/**
+ * Oney full-form — both `vault_form_token` and `birth_date` are present; `card` is absent.
+ * @category Core
+ */
+export type SubmitResultTokenWithBirthDate = {
+	/** The token representing the card details. */
+	vault_form_token: string;
+	card?: never;
 	/**
 	 * The cardholder's birth date in ISO 8601 format (YYYY-MM-DD).
-	 * Only present for Oney private-label cards, where the birth date replaces the CVV.
-	 * This value is not sent to the vault — it must be forwarded by the merchant when creating the payment.
+	 * Required by Oney — must be forwarded by the merchant when creating the payment.
 	 */
-	birth_date?: string;
+	birth_date: string;
+	error?: never;
 };
+/**
+ * Oney CVV-only — only `birth_date` is present; no vault tokenization occurs.
+ * @category Core
+ */
+export type SubmitResultBirthDateOnly = {
+	vault_form_token?: never;
+	card?: never;
+	/**
+	 * The cardholder's birth date in ISO 8601 format (YYYY-MM-DD).
+	 * Required by Oney — must be forwarded by the merchant when creating the payment.
+	 */
+	birth_date: string;
+	error?: never;
+};
+/**
+ * Tokenization failed — `error` is always a non-empty string.
+ * @category Core
+ */
+export type SubmitResultError = {
+	vault_form_token?: never;
+	card?: never;
+	birth_date?: never;
+	/** Human-readable description of why tokenization failed. */
+	error: string;
+	/**
+	 * HTTP status code returned by the tokenization endpoint when the
+	 * request reached the server. Absent for early/local failures.
+	 */
+	status?: number;
+	/**
+	 * Response headers forwarded from the tokenization endpoint, useful
+	 * for debugging (e.g. Cf-Ray for Cloudflare-traced requests).
+	 */
+	headers?: {
+		"Cf-Ray": string | null;
+	};
+};
+/**
+ * Union of all possible success variants.
+ * @category Core
+ */
+export type SubmitResultSuccess = SubmitResultToken | SubmitResultTokenWithBirthDate | SubmitResultBirthDateOnly;
+/**
+ * Submit result from the SecureFields SDK.
+ *
+ * This is a strict discriminated union — an empty object `{}` does not satisfy any branch.
+ * Use `'error' in result` (or {@link isSubmitError}) to distinguish failures from successes,
+ * then use `'birth_date' in result` / `'vault_form_token' in result` to narrow the success variant.
+ *
+ * @category Core
+ */
+export type SubmitResult = SubmitResultSuccess | SubmitResultError;
 /**
  * Card informations after tokenization
  * @prop  detected_brands Detected card brands based on the card number
@@ -104,15 +156,18 @@ export type SecureFieldsChangeEventPayload = {
 } & {
 	length?: number;
 	valid?: boolean;
+	touched?: boolean;
 } & {
 	fields: {
 		cardNumber?: {
 			length?: number;
 			valid?: boolean;
+			touched?: boolean;
 		};
 		cvv?: {
 			length?: number;
 			valid?: boolean;
+			touched?: boolean;
 		};
 	};
 };
@@ -127,13 +182,33 @@ export interface SecureFieldsEventsPayload {
 	 */
 	ready: void;
 	/**
-	 * Triggered when the submission has been successful
-	 * @returns {vault_form_token: string, card?: CardInfo}
-	 * The `vault_form_token` is the identifier for the vault form, and `card` contains information about the card such as the masked bin, the last digit and the detected brands.
+	 * Triggered when the submission has been successful.
+	 *
+	 * Three mutually exclusive cases:
+	 * - **Standard / PCI Proxy card**: `vault_form_token` is present; `card` is optionally present;
+	 *   `birth_date` is absent.
+	 * - **Oney full-form**: both `vault_form_token` and `birth_date` are present; `card` is absent.
+	 * - **Oney CVV-only**: only `birth_date` is present; `vault_form_token` and `card` are absent.
+	 *
+	 * Use `'vault_form_token' in payload` or `'birth_date' in payload` to narrow the variant.
 	 */
 	success: {
+		/** Standard or PCI Proxy tokenization — always present in this variant. */
 		vault_form_token: string;
+		/** Card metadata returned by the backend. Present when the backend supplies it. */
 		card?: CardInfo;
+		birth_date?: never;
+	} | {
+		/** Vault token issued for the Oney full-form path. */
+		vault_form_token: string;
+		card?: never;
+		/** ISO 8601 date of birth required by Oney (`YYYY-MM-DD`). */
+		birth_date: string;
+	} | {
+		vault_form_token?: never;
+		card?: never;
+		/** ISO 8601 date of birth for Oney CVV-only — no vault tokenization occurs. */
+		birth_date: string;
 	};
 	/**
 	 * Triggered for multiple errors while using the SDK.
