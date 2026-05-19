@@ -1,3 +1,12 @@
+# [0.7.0](https://github.com/UpStreamPay/web-sdk/compare/v0.6.1...v0.7.0) (2026-05-19)
+
+
+### Features
+
+* **sdk:** bump package types and npm dependencies for May '26 ([51a4ffd](https://github.com/UpStreamPay/web-sdk/commit/51a4ffdeec8ec52c128240f29ace2d33684a16ba)), closes [#78](https://github.com/UpStreamPay/web-sdk/issues/78) [#79](https://github.com/UpStreamPay/web-sdk/issues/79) [#77](https://github.com/UpStreamPay/web-sdk/issues/77)
+
+
+
 ## [0.6.1](https://github.com/UpStreamPay/web-sdk/compare/v0.6.0...v0.6.1) (2026-05-04)
 
 
