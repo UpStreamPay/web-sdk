@@ -2345,6 +2345,10 @@ export interface PurseHeadlessCheckoutMethod extends PurseHeadlessCheckoutPaymen
  * ```
  */
 export interface PurseHeadlessCheckoutToken extends PurseHeadlessCheckoutPaymentItemBase, PurseHeadlessCheckoutEditable {
+	/**
+	 * User-friendly name for the token, provided by the user during registration or by the payment partner.
+	 * This name is used for display purposes in the UI to help users identify their saved payment methods.
+	 * */
 	name: string;
 	type: "token" | "temporary_token";
 	/**
@@ -2544,7 +2548,7 @@ export interface PurseHeadlessCheckoutPrimaryToken extends PurseHeadlessCheckout
 	 */
 	description: {
 		/**
-		 * Label is optional, the user have not necessarily given a label to the token when creating it.
+		 * Label is the way the partner formats the masked pan. Might be 4111********1111 or ****1111 etc.
 		 */
 		label?: string;
 		/**
