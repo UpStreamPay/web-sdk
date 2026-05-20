@@ -1,3 +1,12 @@
+## [0.7.1](https://github.com/UpStreamPay/web-sdk/compare/v0.7.0...v0.7.1) (2026-05-20)
+
+
+### Bug Fixes
+
+* types upgrades after 3.67.1 ([ff142c7](https://github.com/UpStreamPay/web-sdk/commit/ff142c719d512bf0fbfabed27403964e8c7796f7)), closes [#81](https://github.com/UpStreamPay/web-sdk/issues/81)
+
+
+
 # [0.7.0](https://github.com/UpStreamPay/web-sdk/compare/v0.6.1...v0.7.0) (2026-05-19)
 
 
