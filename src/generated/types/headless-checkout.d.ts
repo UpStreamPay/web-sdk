@@ -629,6 +629,7 @@ export interface MonitoringApiEventMessage<Event> {
 	instanceId?: string;
 	entityId?: string;
 	paymentSessionId?: string;
+	walletSessionId?: string;
 	version?: string;
 	env?: EnvironmentTarget;
 	event: Event;
@@ -660,7 +661,7 @@ export interface WalletAPI {
 }
 export interface MonitoringAPI<E> {
 	getApiKey(): string;
-	patchExtrasData(E: Pick<MonitoringApiEventMessage<E>, "instanceId" | "entityId" | "paymentSessionId" | "version">): void;
+	patchExtrasData(E: Pick<MonitoringApiEventMessage<E>, "instanceId" | "entityId" | "paymentSessionId" | "walletSessionId" | "version">): void;
 	sendLogs(E: E[]): void;
 }
 export type APIPaths = {
@@ -676,7 +677,7 @@ declare class FetchMonitoringAPI<Event> implements MonitoringAPI<Event> {
 	private extras;
 	constructor(env: EnvironmentTarget, root: string, apiKey: string);
 	getApiKey(): string;
-	patchExtrasData: (payload: Partial<Pick<MonitoringApiEventMessage<Event>, "instanceId" | "entityId" | "paymentSessionId" | "version">>) => void;
+	patchExtrasData: (payload: Partial<Pick<MonitoringApiEventMessage<Event>, "instanceId" | "entityId" | "paymentSessionId" | "walletSessionId" | "version">>) => void;
 	sendLogs: (events: Event[]) => void;
 }
 export declare type ButtonOptions = google.payments.api.ButtonOptions;
@@ -776,13 +777,15 @@ declare const Events: {
 	readonly modalIn: {
 		readonly code: "modalIn";
 		readonly topics: readonly [
-			"info"
+			"info",
+			"modalIn"
 		];
 	};
 	readonly modalOut: {
 		readonly code: "modalOut";
 		readonly topics: readonly [
-			"info"
+			"info",
+			"modalOut"
 		];
 	};
 	readonly optionsSet: {
@@ -873,20 +876,6 @@ declare const Events: {
 		readonly code: "other";
 		readonly topics: readonly [
 			"info"
-		];
-	};
-	readonly methodSelected: {
-		readonly code: "methodSelected";
-		readonly topics: readonly [
-			"info",
-			"methodSelected"
-		];
-	};
-	readonly methodUnselected: {
-		readonly code: "methodUnselected";
-		readonly topics: readonly [
-			"info",
-			"methodUnselected"
 		];
 	};
 	readonly partnerError: {
@@ -1113,6 +1102,11 @@ declare interface HostedFormUIOptions {
 	 * Useful for payment methods that do not require CVV verification.
 	 */
 	noCVV?: boolean;
+	/**
+	 * When true, the cardholder name field is hidden and not required for payment.
+	 * In hostedFields mode, either this must be true or hostedFields.fields.holderName.target must be defined.
+	 */
+	hideHolderName?: boolean;
 	expirationPlaceholder?: string;
 	expirationInputLabel?: string;
 	expirationRequiredError?: string;
@@ -1468,8 +1462,12 @@ export declare interface UnifiedEventPayload {
 		responseHeaders?: Record<string, string | null>;
 	};
 	cancelled: null;
-	modalIn: Record<string, any> | null;
-	modalOut: Record<string, any> | null;
+	modalIn: {
+		method: string;
+	} | null;
+	modalOut: {
+		method: string;
+	} | null;
 	optionsSet: Record<string, any> | null;
 	pluginClientDestroyed: Record<string, any> | null;
 	formStateChanged: Record<FrameName, string | null> & {
@@ -1504,12 +1502,6 @@ export declare interface UnifiedEventPayload {
 		error: boolean;
 	} | null;
 	other: Record<string, any> | null;
-	methodSelected: {
-		method: string;
-	};
-	methodUnselected: {
-		method: string;
-	};
 	partnerError: {
 		error: Omit<KRError_2, "metadata">;
 		method: string;
@@ -1754,7 +1746,7 @@ export interface PurseHeadlessCheckoutSecondaryTokenProvider {
 	 */
 	getSecondaryToken(pan: string, cvv?: string, signal?: AbortSignal): Promise<PurseHeadlessCheckoutTemporarySecondaryToken>;
 }
-export type PaymentElementEventName = "fatalError" | "formValid" | "validationRequested" | "methodSelected" | "methodUnselected" | "change" | "focus" | "modalIn" | "modalOut" | "blur" | "ready" | "keyup" | "keydown" | "partnerError";
+export type PaymentElementEventName = "fatalError" | "formValid" | "validationRequested" | "change" | "focus" | "modalIn" | "modalOut" | "blur" | "ready" | "keyup" | "keydown" | "partnerError";
 export interface PaymentElementEventsPayload {
 	fatalError: {
 		code: string;
@@ -1765,8 +1757,6 @@ export interface PaymentElementEventsPayload {
 		isValid: boolean;
 	};
 	validationRequested: UnifiedEventPayload["requestValidate"];
-	methodSelected: UnifiedEventPayload["methodSelected"];
-	methodUnselected: UnifiedEventPayload["methodUnselected"];
 	partnerError: UnifiedEventPayload["partnerError"];
 	change: UnifiedEventPayload["change"];
 	focus: UnifiedEventPayload["focus"];
@@ -1784,10 +1774,6 @@ export interface PaymentElementEventsCallback {
 	formValid: (payload: PaymentElementEventsPayload["formValid"]) => void;
 	/** Handler for validation request events */
 	validationRequested: (payload: PaymentElementEventsPayload["validationRequested"]) => void;
-	/** Handler for method selected events */
-	methodSelected: (payload: PaymentElementEventsPayload["methodSelected"]) => void;
-	/** Handler for method unselected events */
-	methodUnselected: (payload: PaymentElementEventsPayload["methodUnselected"]) => void;
 	/** Handler for partner error events */
 	partnerError: (payload: PaymentElementEventsPayload["partnerError"]) => void;
 	change: (payload: PaymentElementEventsPayload["change"]) => void;
@@ -2258,6 +2244,10 @@ export type DisabledState = {
 export declare function disabledStateShouldBeFiltered(state: DisabledState | null | undefined): boolean;
 export declare function isTechnicallyDisabled(state: DisabledState | null | undefined): boolean;
 export declare function disabledStateRequiresUIClear(state: DisabledState | null | undefined): boolean;
+export interface CardSchemeAsset {
+	url: string;
+	label: string;
+}
 export type PurseHeadlessCheckoutSessionState = "idle" | "ready" | "submitting" | "submitted" | "error" | "expired" | "terminated";
 /**
  * Represents a payment split configuration where multiple payment sources can be combined to fulfill the total payment amount.
@@ -2314,6 +2304,23 @@ export interface PurseHeadlessCheckoutPaymentItemBase {
 	 * <img src={method.iconUrl} alt={method.method} />
 	 */
 	iconUrl: string;
+	/**
+	 * Additional assets associated with this payment item, primarily card scheme logos.
+	 *
+	 * For credit card methods with vault support, this contains one entry per supported
+	 * card scheme (e.g. Visa, Mastercard, CB). For all other payment methods the array
+	 * is empty.
+	 *
+	 * Each asset provides a CDN URL and a human-readable label suitable for display and
+	 * accessibility purposes.
+	 *
+	 * @example
+	 * // React
+	 * {method.additionalAssets.map(asset => (
+	 *   <img key={asset.url} src={asset.url} alt={asset.label} />
+	 * ))}
+	 */
+	additionalAssets: CardSchemeAsset[];
 }
 /**
  * Represents an available payment method in the Purse checkout system.
@@ -2360,7 +2367,7 @@ export interface PurseHeadlessCheckoutToken extends PurseHeadlessCheckoutPayment
  * HostedFieldsOptions let you override theme configuration, render targets and placeholders for hosted fields.
  * @see {@link PurseHeadlessCheckoutUIOptions.locale} for locale configuration
  */
-export type HostedFieldsOptions = Pick<Options, "locale"> & HostedFieldsUIOptions & {
+export type HostedFieldsOptions = Pick<Options, "locale" | "hostedForm"> & HostedFieldsUIOptions & {
 	/**
 	 * This section holds the theme configuration. Matters like, font, colors, spacing can be override using this config.
 	 * {@link HostedFieldsTheme}
@@ -2484,6 +2491,8 @@ export interface PurseHeadlessCheckoutPrimaryMethod extends PurseHeadlessCheckou
 	 * ```
 	 */
 	getHostedFields(options?: HostedFieldsOptions): PurseHeadlessCheckoutHostedFields;
+	/** Returns the currently active element instance — whichever of `getPaymentElement` / `getHostedFields` was last called. */
+	getElementInstance(): PurseHeadlessCheckoutPaymentElement | PurseHeadlessCheckoutHostedFields | undefined;
 	/**
 	 * Changes the active primary payment source in the current payment split.
 	 * Use this when you have multiple primary payment elements mounted (e.g., Wallet AND installments).
@@ -2614,6 +2623,8 @@ export interface PurseHeadlessCheckoutPrimaryToken extends PurseHeadlessCheckout
 	 * ```
 	 */
 	getHostedFields(options?: HostedFieldsOptions): PurseHeadlessCheckoutHostedFields;
+	/** Returns the currently active element instance — whichever of `getPaymentElement` / `getHostedFields` was last called. */
+	getElementInstance(): PurseHeadlessCheckoutPaymentElement | PurseHeadlessCheckoutHostedFields | undefined;
 	/** Use this method if you want to change which primary to use in the split.
 	 * This can be useful if you have mounted multiple primary payment elements (ie. Wallet AND installments for
 	 * instance).
@@ -2943,6 +2954,12 @@ export interface PurseHeadlessCheckoutEventPayload {
 	HEADLESS_CHECKOUT_CLIENT_HOOK_ERROR: Record<never, never>;
 	HEADLESS_CHECKOUT_CREATE: {
 		sessionType: "v1" | "v2";
+		screen: {
+			width: number;
+			height: number;
+			devicePixelRatio: number;
+		};
+		user_agent: string;
 	};
 	HEADLESS_CHECKOUT_DELETE_ALL_TOKENS: Record<never, never>;
 	HEADLESS_CHECKOUT_EXPIRED_SESSION: {
@@ -2980,6 +2997,20 @@ export interface PurseHeadlessCheckoutEventPayload {
 		method: string;
 		value?: unknown;
 	} & Record<string, string | number | undefined>;
+	HEADLESS_CHECKOUT_PARTNER_API_CALL_START: {
+		partner: string;
+		method: string;
+		call: string;
+		path: string;
+	};
+	HEADLESS_CHECKOUT_PARTNER_API_CALL_END: {
+		partner: string;
+		method: string;
+		call: string;
+		path: string;
+		durationMs: number;
+		success: boolean;
+	};
 	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_APPEND_TO: {
 		partner: string;
 		method: string;
@@ -3003,9 +3034,39 @@ export interface PurseHeadlessCheckoutEventPayload {
 		method: string;
 		eventName?: string;
 	};
-	HEADLESS_CHECKOUT_VALIDATION_STARTED: Record<never, never>;
-	HEADLESS_CHECKOUT_PRE_VALIDATION_FAILED: Record<never, never>;
-	HEADLESS_CHECKOUT_VALIDATION_ENDED: Record<never, never>;
+	HEADLESS_CHECKOUT_VALIDATION_STARTED: {
+		session_id: string;
+		nb_items: number;
+	};
+	HEADLESS_CHECKOUT_PRE_VALIDATION_FAILED: {
+		partner: string;
+		method: string;
+		validationState: unknown;
+	};
+	HEADLESS_CHECKOUT_VALIDATION_SUCCESS: {
+		global_status: string;
+		results: {
+			method: string;
+			partner: string;
+			status: {
+				state: string;
+				code: string;
+				description?: string;
+			};
+		}[];
+	};
+	HEADLESS_CHECKOUT_VALIDATION_FAILED: {
+		global_status: string;
+		results: {
+			method: string;
+			partner: string;
+			status: {
+				state: string;
+				code: string;
+				description?: string;
+			};
+		}[];
+	};
 	HEADLESS_CHECKOUT_PAYMENT_ERROR: {
 		message?: string;
 		api_status?: string;
@@ -3042,6 +3103,8 @@ export interface PurseHeadlessCheckoutEventPayload {
 		paymentSessionId: string;
 		sessionType: "v1" | "v2" | "unknown";
 		message?: string;
+		amount?: number;
+		nb_methods?: number;
 	};
 	HEADLESS_CHECKOUT_SET_WALLET_SESSION: {
 		walletSessionId: string;
