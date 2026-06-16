@@ -1,3 +1,12 @@
+# [0.8.0](https://github.com/UpStreamPay/web-sdk/compare/v0.7.1...v0.8.0) (2026-06-16)
+
+
+### Features
+
+* **types:** dropin/headless types upgrade for June '26 ([ee1ae07](https://github.com/UpStreamPay/web-sdk/commit/ee1ae07e306442496ac271397ce00cd69b2efab7)), closes [#84](https://github.com/UpStreamPay/web-sdk/issues/84)
+
+
+
 ## [0.7.1](https://github.com/UpStreamPay/web-sdk/compare/v0.7.0...v0.7.1) (2026-05-20)
 
 
