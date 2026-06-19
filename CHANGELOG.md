@@ -1,3 +1,12 @@
+# [0.9.0](https://github.com/UpStreamPay/web-sdk/compare/v0.8.0...v0.9.0) (2026-06-19)
+
+
+### Features
+
+* **types:** dropin/headless doc sync for June '26 ([#90](https://github.com/UpStreamPay/web-sdk/issues/90)) ([023d73d](https://github.com/UpStreamPay/web-sdk/commit/023d73d0690621bcf31f38360f4716a34086764f))
+
+
+
 # [0.8.0](https://github.com/UpStreamPay/web-sdk/compare/v0.7.1...v0.8.0) (2026-06-16)
 
 
