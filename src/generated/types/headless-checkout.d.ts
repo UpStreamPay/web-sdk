@@ -255,6 +255,7 @@ export type IntegratedToken = {
 	name?: string;
 	source?: "MERCHANT" | "SHARED_WALLET";
 	savable_to_shared_wallet?: boolean;
+	created_at?: string;
 };
 export interface MethodConfiguration {
 	stable: boolean;
@@ -658,6 +659,9 @@ export interface WalletAPI {
 		reason?: string;
 	}): Promise<void>;
 	deleteAllTokens(): Promise<void>;
+	setAsFavorite(data: {
+		id: string;
+	}): Promise<void>;
 }
 export interface MonitoringAPI<E> {
 	getApiKey(): string;
@@ -1861,6 +1865,11 @@ declare const PurseHeadlessCheckoutErrors: {
 		readonly message: "Method not found.";
 		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#payment_method_not_found";
 	};
+	readonly METHOD_DOES_NOT_SUPPORT_HOSTED_FIELDS: {
+		readonly code: "METHOD_DOES_NOT_SUPPORT_HOSTED_FIELDS";
+		readonly message: "The resolved payment method does not support hosted fields.";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/headless-checkout/error-handling/error-codes#method_does_not_support_hosted_fields";
+	};
 	readonly UNKNOWN_ERROR: {
 		readonly code: "UNKNOWN_ERROR";
 		readonly message: "An error occurred.";
@@ -2080,6 +2089,10 @@ export interface PurseHeadlessCheckoutErrorsPayload {
 		partner: Partner;
 		method: Method;
 		session: string;
+	};
+	METHOD_DOES_NOT_SUPPORT_HOSTED_FIELDS?: {
+		partner: string;
+		method: string;
 	};
 	UNKNOWN_ERROR?: {
 		message: string;
@@ -2359,6 +2372,11 @@ export interface PurseHeadlessCheckoutToken extends PurseHeadlessCheckoutPayment
 	name: string;
 	type: "token" | "temporary_token";
 	/**
+	 * ISO 8601 date string indicating when the token was created.
+	 * Useful for sorting saved payment methods chronologically.
+	 */
+	createdAt?: string;
+	/**
 	 * Indicates if the payment token is disabled with an error code and message
 	 */
 	disabled: Readable<DisabledState | null>;
@@ -2387,15 +2405,18 @@ export type PaymentElementOptions = Omit<Options, "hostedFields">;
  *
  * - `hostedForm` and `hostedFields` are mutually exclusive. If both are provided,
  *   `hostedForm` wins and a warning is emitted.
- * - `method` is required for `hostedForm`; it is optional when only `hostedFields`
- *   is provided (the first compatible method on `partner` is picked).
- * - A warning is emitted when `hostedFields` is requested but the resolved method
- *   does not support hosted fields.
+ * - `partner` is optional. When omitted, the first primary matching `method` is used.
+ *   If multiple partners expose the same method a warning is emitted — pass `partner`
+ *   to disambiguate.
+ * - `method` is optional when only `hostedFields` is provided (the first hosted-fields-
+ *   compatible method is picked; falls back to the first available primary).
+ * - Throws `METHOD_DOES_NOT_SUPPORT_HOSTED_FIELDS` when the resolved method does not
+ *   support hosted fields.
  * - Throws `PAYMENT_METHOD_NOT_FOUND` if no matching method exists.
  */
 export interface PurseHeadlessCheckoutGetPaymentElementOptions {
-	/** Partner identifier (e.g. `'ingenico'`, `'hipay'`). */
-	partner: string;
+	/** Partner identifier (e.g. `'ingenico'`, `'hipay'`). Optional — omit to match by method alone. */
+	partner?: string;
 	/** Method identifier (e.g. `'creditcard'`). Optional only when using `hostedFields`. */
 	method?: string;
 	/** Theme overrides — passed through as-is to the underlying element. */
@@ -2406,6 +2427,8 @@ export interface PurseHeadlessCheckoutGetPaymentElementOptions {
 	hostedForm?: HostedFormUIOptions;
 	/** Hosted fields configuration — see {@link HostedFieldsUIOptions.fields}. */
 	hostedFields?: HostedFieldsUIOptions["fields"];
+	/** xPay button configuration (Apple Pay, Google Pay) — see {@link XPayButtonUIOptions}. */
+	xPayButton?: XPayButtonUIOptions;
 }
 /**
  * Represents a primary payment method in the Purse checkout system.
@@ -2431,6 +2454,8 @@ export interface PurseHeadlessCheckoutPrimaryMethod extends PurseHeadlessCheckou
 	isSecondary: false;
 	/** Whether the method can provide loan simulation or not*/
 	simulable: boolean;
+	/** Whether the method supports hosted fields (secure card input via iframes) */
+	supportsHostedFields: boolean;
 	/**
 	 * Creates and returns a payment element UI instance for this payment method.
 	 * The instance is created only on the first call and cached for subsequent calls.
@@ -2551,6 +2576,8 @@ export interface PurseHeadlessCheckoutPrimaryToken extends PurseHeadlessCheckout
 	type: "token";
 	/** Indicates if the token is a secondary mean of payment */
 	isSecondary: false;
+	/** Whether the token supports hosted fields (secure card input via iframes) */
+	supportsHostedFields: boolean;
 	/**
 	 * Description holds all display values to describe the token in a UI. This is useful since the rendering of a token
 	 * is limited to the CVV.
@@ -2638,6 +2665,22 @@ export interface PurseHeadlessCheckoutPrimaryToken extends PurseHeadlessCheckout
 	 * ```
 	 */
 	setAsPrimarySource(): void;
+	/** Whether this token is the user's favorite payment method. Reflects `IntegratedToken.favorite`. */
+	isFavorite: Readable<boolean>;
+	/**
+	 * Mark this token as the user's favorite. Persists the change via the wallet API.
+	 *
+	 * @throws - {@link PurseHeadlessCheckoutError} `MISSING_WALLET_SESSION` \
+	 * If no wallet session is loaded
+	 * @throws - {@link PurseHeadlessCheckoutError} `MISSING_TOKEN` \
+	 * If the token is not found in the wallet
+	 *
+	 * @example
+	 * ```typescript
+	 * await token.setAsFavorite();
+	 * ```
+	 */
+	setAsFavorite(): Promise<void>;
 	/**
 	 * @internal
 	 * this is useful for completing the payment
@@ -3166,7 +3209,8 @@ declare class ApiLogger extends FetchMonitoringAPI<PurseHeadlessCheckoutEventBus
 }
 export interface PaymentSession {
 	id: string;
-	source: OrchestrationPaymentSession | LegacyPaymentSession;
+	source: LegacyPaymentSession;
+	rawSource?: OrchestrationPaymentSession;
 	amount: number;
 	amountCts: number;
 	isInformationRequest: boolean;
@@ -3207,7 +3251,7 @@ export interface Payment {
 	paymentSession: Readable<PaymentSession | null>;
 	session: PaymentSession;
 	walletSession: WalletSession | null;
-	setSession(session: OrchestrationPaymentSession | LegacyPaymentSession): Promise<void>;
+	setSession(session: LegacyPaymentSession): Promise<void>;
 	onExpires(callback: () => void): () => void;
 	getMop(mop: Partial<PurseHeadlessCheckoutPaymentItemBase>): PurseHeadlessCheckoutPaymentItem | null;
 	deleteAllTokens(): Promise<void>;
@@ -3244,7 +3288,7 @@ declare class PursePayment implements Payment {
 	});
 	get session(): PaymentSession;
 	get walletSession(): WalletSession | null;
-	setSession(session: OrchestrationPaymentSession | LegacyPaymentSession): Promise<void>;
+	setSession(session: LegacyPaymentSession): Promise<void>;
 	setWalletSession(session: OnePayWalletSession): Promise<void>;
 	onExpires(callback: () => void): () => void;
 	getMop(mop: Partial<PurseHeadlessCheckoutPaymentItem>): PurseHeadlessCheckoutPaymentItem | null;
