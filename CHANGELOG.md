@@ -1,3 +1,12 @@
+# [0.10.0](https://github.com/UpStreamPay/web-sdk/compare/v0.9.0...v0.10.0) (2026-07-21)
+
+
+### Features
+
+* **securefields:** shadow add securefielres test loading ([#92](https://github.com/UpStreamPay/web-sdk/issues/92)) ([59a1e77](https://github.com/UpStreamPay/web-sdk/commit/59a1e77d3f1bf666984fa3615c366fa66a22069a))
+
+
+
 # [0.9.0](https://github.com/UpStreamPay/web-sdk/compare/v0.8.0...v0.9.0) (2026-06-19)
 
 
