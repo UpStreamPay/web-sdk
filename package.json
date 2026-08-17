@@ -20,25 +20,22 @@
     "clean": "rimraf dist",
     "prettier": "prettier './**/*.{js,ts,md,html,css}' --write",
     "check-format": "prettier --check './**/*.{js,ts,md,html,css}'",
-    "check-exports": "attw --pack ."
+    "check-exports": "attw --pack . --ignore-rules named-exports"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.15.3",
-    "@typescript-eslint/eslint-plugin": "^8.38.0",
-    "@typescript-eslint/parser": "^8.38.0",
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@eslint/js": "^10.0.1",
     "conditional-type-checks": "^1.0.5",
-    "eslint": "^9.31.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-prettier": "^3.1.1",
-    "jsdom": "^26.1.0",
+    "eslint": "^10.8.1",
+    "globals": "^17.11.0",
+    "jsdom": "^30.0.1",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.38.0",
-    "vite": "^8.0.16",
-    "vite-plugin-dts": "^4.5.4",
-    "vitest": "^4.1.0"
+    "typescript-eslint": "^8.67.0",
+    "vite": "^8.2.1",
+    "vite-plugin-dts": "^5.0.3",
+    "vitest": "^4.1.10"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-arm64-gnu": "^4.0.0"
