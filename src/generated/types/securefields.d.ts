@@ -13,6 +13,13 @@ declare const Brands: {
 	readonly JCB: "JCB";
 };
 export type Brand = (typeof Brands)[keyof typeof Brands];
+declare const PublicFrames: {
+	readonly cardNumber: "cardNumber";
+	readonly cvv: "cvv";
+	readonly expDate: "expDate";
+	readonly holderName: "holderName";
+};
+export type PublicFrameName = keyof typeof PublicFrames;
 /**
  * Submit payload for the vault SDK
  * @category Core
@@ -137,6 +144,262 @@ export interface CardInfo {
 	bin: string;
 	last_four_digits: string;
 }
+declare const FieldValidationErrors: readonly [
+	"none",
+	"format",
+	"length",
+	"empty",
+	"expired"
+];
+export type FieldValidationError = (typeof FieldValidationErrors)[number];
+/**
+ * Every text the hosted form displays, plus the handful of layout switches that travel with them.
+ *
+ * This mirrors `HostedFormUIOptions` from `@upstreampay/partner-ui` key for key, so a merchant
+ * already integrating the widget can hand the exact same object to Secure Fields. Keys for payment
+ * methods Secure Fields does not collect (`iban*`, `email*`, `phone*`, `consent*`, `loanSimulation`)
+ * are accepted and ignored — they exist so a shared text bag type-checks against both products.
+ *
+ * Every key is optional: {@link DEFAULT_HOSTED_FORM_TEXTS} fills the gaps.
+ */
+export interface HostedFormUIOptions {
+	panPlaceholder?: string;
+	panInputLabel?: string;
+	panRequiredError?: string;
+	/** @deprecated use panRequiredError */
+	panCannotBeEmptyError?: string;
+	panFormatError?: string;
+	panTooltipText?: string;
+	birthdatePlaceholder?: string;
+	birthdateInputLabel?: string;
+	birthdateRequiredError?: string;
+	/** @deprecated use birthdateRequiredError */
+	birthdateCannotBeEmptyError?: string;
+	birthdateFormatError?: string;
+	birthdateOutOfRangeError?: string;
+	birthdateTooltipText?: string;
+	cvvPlaceholder?: string;
+	cvvInputLabel?: string;
+	/**
+	 * Accepted and ignored. In the widget these only reach Adyen's own card component, which owns the
+	 * 3 vs 4 digit switch; the Purse hosted fields path labels a 4 digit code "CVV" like any other, and
+	 * Secure Fields matches it.
+	 */
+	cvv4Placeholder?: string;
+	/** Accepted and ignored — see {@link HostedFormUIOptions.cvv4Placeholder}. */
+	cvv4InputLabel?: string;
+	cvvRequiredError?: string;
+	/** @deprecated use cvvRequiredError */
+	cvvCannotBeEmptyError?: string;
+	cvvFormatError?: string;
+	cvvTooltipText?: string;
+	expirationPlaceholder?: string;
+	expirationInputLabel?: string;
+	expirationRequiredError?: string;
+	/** @deprecated use expirationRequiredError */
+	expirationCannotBeEmptyError?: string;
+	expirationFormatError?: string;
+	expirationOutOfRangeError?: string;
+	expirationTooltipText?: string;
+	holderPlaceholder?: string;
+	holderInputLabel?: string;
+	holderRequiredError?: string;
+	/** @deprecated use holderRequiredError */
+	holderCannotBeEmptyError?: string;
+	holderFormatError?: string;
+	/**
+	 * When true the CVV field is not rendered and not required.
+	 */
+	noCVV?: boolean;
+	/**
+	 * When true the cardholder name field is not rendered and not required.
+	 */
+	hideHolderName?: boolean;
+	/**
+	 * - `implicit` — the detected brand is shown as a badge inside the card number field, with a
+	 *   native select over it for co-badged cards. This is the default.
+	 * - `explicit` — a labelled select on its own row below the form.
+	 * - `hidden` — no selector is rendered; listen to `brandDetected` and pass `selectedNetwork` to
+	 *   `submit()` yourself.
+	 */
+	brandSelectionMode?: BrandSelectionMode;
+	/** Label of the select rendered in `explicit` mode. */
+	explicitBrandText?: string;
+	/** Overrides the displayed name of one or more card brands. */
+	brandLabels?: {
+		[key in Brand]?: string;
+	};
+	consentInputLabel?: string;
+	consentRequiredError?: string;
+	consentText?: string;
+	ibanPlaceholder?: string;
+	ibanInputLabel?: string;
+	ibanRequiredError?: string;
+	/** @deprecated use ibanRequiredError */
+	ibanCannotBeEmptyError?: string;
+	ibanFormatError?: string;
+	emailPlaceholder?: string;
+	emailInputLabel?: string;
+	emailRequiredError?: string;
+	/** @deprecated use emailRequiredError */
+	emailCannotBeEmptyError?: string;
+	emailFormatError?: string;
+	phonePlaceholder?: string;
+	phoneInputLabel?: string;
+	phoneRequiredError?: string;
+	/** @deprecated use phoneRequiredError */
+	phoneCannotBeEmptyError?: string;
+	phoneFormatError?: string;
+	loanSimulation?: string;
+}
+declare const BrandSelectionModes: readonly [
+	"implicit",
+	"explicit",
+	"hidden"
+];
+export type BrandSelectionMode = (typeof BrandSelectionModes)[number];
+declare const THEME_SCOPES: readonly [
+	"global",
+	"input",
+	"label",
+	"helperText",
+	"tooltip"
+];
+export type ThemeScopeName = (typeof THEME_SCOPES)[number];
+declare const THEME_SCOPES_CSS_KEYS: {
+	readonly global: readonly [
+		"color",
+		"fontSize",
+		"fontFamily",
+		"fontWeight",
+		"gap"
+	];
+	readonly input: readonly [
+		"color",
+		"fontSize",
+		"fontFamily",
+		"borderRadius",
+		"backgroundColor",
+		"borderColor",
+		"borderStyle",
+		"borderWidth",
+		"fontWeight",
+		"fontStyle",
+		"padding",
+		"boxShadow",
+		"outlineColor",
+		"outlineStyle",
+		"outlineWidth"
+	];
+	readonly helperText: readonly [
+		"color",
+		"fontSize",
+		"fontFamily",
+		"fontWeight",
+		"margin"
+	];
+	readonly tooltip: readonly [
+		"color",
+		"fontSize",
+		"fontFamily",
+		"fontWeight",
+		"borderRadius",
+		"backgroundColor",
+		"padding",
+		"boxShadow"
+	];
+	readonly label: readonly [
+		"color",
+		"fontSize",
+		"fontFamily",
+		"fontWeight",
+		"margin"
+	];
+};
+export type ThemeScopeCSSKeyMap = {
+	[K in ThemeScopeName]: (typeof THEME_SCOPES_CSS_KEYS)[K][number];
+};
+export type ThemeScopeCSSKeys<S extends ThemeScopeName> = ThemeScopeCSSKeyMap[S];
+declare const THEME_SCOPES_VARIANTS: {
+	readonly global: readonly [
+		":valid",
+		":invalid"
+	];
+	readonly input: readonly [
+		":hover",
+		":valid",
+		":focus",
+		":invalid",
+		"::placeholder",
+		"::placeholder:disabled",
+		":-webkit-autofill"
+	];
+	readonly helperText: readonly [
+		":disabled",
+		":valid",
+		":invalid"
+	];
+	readonly tooltip: readonly [
+		":focus",
+		":invalid"
+	];
+	readonly label: readonly [
+		":valid",
+		":invalid"
+	];
+};
+export type ThemeScopesVariantsMap = {
+	[K in ThemeScopeName]: (typeof THEME_SCOPES_VARIANTS)[K][number];
+};
+export type ThemeScopesVariants<Scope extends ThemeScopeName> = ThemeScopesVariantsMap[Scope];
+export type DeepPartial<T> = T extends unknown[] ? T : {
+	[P in keyof T]?: DeepPartial<T[P]>;
+};
+export type ThemeScope<Scope extends ThemeScopeName> = {
+	[cssKey in ThemeScopeCSSKeys<Scope>]?: CSSStyleDeclaration[cssKey];
+} & {
+	[variant in ThemeScopesVariants<Scope>]?: {
+		[cssKey in ThemeScopeCSSKeys<Scope>]?: CSSStyleDeclaration[cssKey];
+	};
+};
+/**
+ * A complete (non-partial) theme. `global` acts as the default value store the other scopes fall
+ * back to — see {@link scaffoldThemeValues}.
+ */
+export type VaultTheme = {
+	global: ThemeScope<"global"> & {
+		/**
+		 * URL of a merchant font, forwarded to the iframes.
+		 * `fontSrc` is not a valid css style declaration key.
+		 */
+		fontSrc?: string;
+	};
+	input: ThemeScope<"input">;
+	label: ThemeScope<"label">;
+	helperText: ThemeScope<"helperText">;
+	tooltip: ThemeScope<"tooltip">;
+};
+/**
+ * The merchant-facing theme: every scope, css key and variant is optional. Missing values are
+ * resolved by {@link scaffoldThemeValues}.
+ *
+ * @example
+ * ```ts
+ * const theme: VaultOptionsTheme = {
+ *   global: { color: '#222', fontSize: '16px', gap: '8px' },
+ *   input: {
+ *     borderRadius: '4px',
+ *     padding: '8px',
+ *     ':focus': { borderColor: '#007bff' },
+ *     ':invalid': { color: '#a00', borderColor: '#a00' },
+ *     '::placeholder': { color: '#aaa' },
+ *   },
+ *   label: { fontSize: '14px', color: '#444' },
+ *   helperText: { fontSize: '12px', ':invalid': { color: '#a00' } },
+ * };
+ * ```
+ */
+export type VaultOptionsTheme = DeepPartial<VaultTheme>;
 /**
  * @category undocumented
  */
@@ -144,7 +407,20 @@ export type FieldsState = SecureFieldsChangeEventPayload["fields"];
 /**
  * @category undocumented
  */
-export type FieldState = Exclude<FieldsState["cardNumber"] | FieldsState["cvv"], undefined>;
+export type FieldState = Exclude<FieldsState[PublicFrameName], undefined>;
+/**
+ * The state of a single field, with no value: card data never leaves the iframe.
+ * @category Events
+ */
+export type SecureFieldsFieldState = {
+	length?: number;
+	valid?: boolean;
+	touched?: boolean;
+	/**
+	 * Which validation rule the field currently fails, or `'none'` when it is valid.
+	 */
+	error?: FieldValidationError;
+};
 /**
  * Payload for events that include the state of a specific field and all fields.
  * `fieldName` indicates which field triggered the event.
@@ -153,23 +429,8 @@ export type FieldState = Exclude<FieldsState["cardNumber"] | FieldsState["cvv"],
  */
 export type SecureFieldsChangeEventPayload = {
 	fieldName: string;
-} & {
-	length?: number;
-	valid?: boolean;
-	touched?: boolean;
-} & {
-	fields: {
-		cardNumber?: {
-			length?: number;
-			valid?: boolean;
-			touched?: boolean;
-		};
-		cvv?: {
-			length?: number;
-			valid?: boolean;
-			touched?: boolean;
-		};
-	};
+} & SecureFieldsFieldState & {
+	fields: Partial<Record<PublicFrameName, SecureFieldsFieldState>>;
 };
 /**
  * Payload for each event emitted by the Secure Fields SDK.
@@ -287,6 +548,14 @@ export interface SecureFieldsEventsPayload {
  */
 export type SecureFieldsEvents = "ready" | "success" | "error" | "formValid" | "focus" | "blur" | "autocomplete" | "keyup" | "keydown" | "change" | "brandDetected" | "brandUserSelection" | "brandNotDetected";
 /**
+ * Visual theme for {@link SecureFieldsHostedFormConfig}.
+ *
+ * Identical in shape to the theme accepted by `@upstreampay/partner-ui`, so the same object can be
+ * used for both.
+ * @category Configuration
+ */
+export type SecureFieldsTheme = VaultOptionsTheme;
+/**
  * CSS styles applicable to the iframe fields.
  * Each property is optional;
  * @category Configuration
@@ -322,12 +591,54 @@ export interface SecureFieldsFieldConfig {
 	 * (Optional) Title attribute for the iframe for accessibility.
 	 */
 	iframeTitle?: string;
+	/**
+	 * (Optional) The message to announce for each validation error the field can raise.
+	 *
+	 * A screen reader reading the input cannot reach error text you render on your own page, because the
+	 * input lives in a cross-origin iframe. Supplying the messages here lets the field announce the right
+	 * one from inside the frame, where `aria-describedby` can reach it.
+	 *
+	 * Hosted form mode fills this in for you from the texts in `hostedForm`.
+	 *
+	 * @example
+	 * ```ts
+	 * errorMessages: {
+	 *   empty: 'The card number is required',
+	 *   format: 'The card number is invalid',
+	 * }
+	 * ```
+	 */
+	errorMessages?: Partial<Record<FieldValidationError, string>>;
+	/**
+	 * Card number field only: overrides the displayed name of one or more card brands, in the in-field
+	 * badge and in the co-badge list drawn inside the frame.
+	 *
+	 * Hosted form mode fills this in for you from `hostedForm.brandLabels`.
+	 */
+	brandLabels?: Partial<Record<Brand, string>>;
 }
 /**
  * Configuration for the Vault SDK Adapter.
+ *
+ * There are two modes, discriminated by `mode`:
+ * - {@link SecureFieldsHostedFieldsConfig} (`'hosted_fields'`, the default) — you place and lay out
+ *   each card field yourself, giving each one a target element.
+ * - {@link SecureFieldsHostedFormConfig} (`'hosted_form'`) — the SDK renders a complete card form into
+ *   a single container for you.
+ *
  * @category Configuration
  */
-export interface SecureFieldsConfig {
+export type SecureFieldsConfig = SecureFieldsHostedFieldsConfig | SecureFieldsHostedFormConfig;
+/**
+ * Hosted fields mode: one iframe per card field, each rendered into a target element you provide and
+ * laid out by your own markup.
+ * @category Configuration
+ */
+export interface SecureFieldsHostedFieldsConfig {
+	/**
+	 * Optional and defaults to `'hosted_fields'`, so an existing integration needs no change.
+	 */
+	mode?: "hosted_fields";
 	/**
 	 * Eligible card networks for the vault form.
 	 */
@@ -384,6 +695,80 @@ export interface SecureFieldsConfig {
 			[key in CSSPseudoClasses]?: SecureFieldsStyles;
 		};
 	};
+}
+/**
+ * Hosted form mode: the SDK renders a complete, ready to use card form — card number, expiry date, CVV
+ * and cardholder name — into a single container, with a fixed layout.
+ *
+ * The card fields are still cross-origin iframes the SDK mounts into the form it draws, so card data
+ * remains inaccessible to your page exactly as in hosted fields mode. What you gain is not having to
+ * build and style the form yourself; what you give up is control over the arrangement of the fields.
+ *
+ * `hostedForm` and `theme` mirror the options accepted by `@upstreampay/partner-ui`, so a merchant
+ * already integrating the Purse widget can reuse the same objects.
+ *
+ * @example
+ * ```ts
+ * const client = await initSecureFields({
+ *   tenantId: 'tenant_xxx',
+ *   config: {
+ *     mode: 'hosted_form',
+ *     container: 'secure-fields-form',
+ *     brands: ['VISA', 'MASTERCARD', 'CARTE_BANCAIRE'],
+ *     hostedForm: {
+ *       panInputLabel: 'Card number',
+ *       panPlaceholder: '1234 5678 9012 3456',
+ *       panRequiredError: 'The card number is required',
+ *       brandSelectionMode: 'implicit',
+ *     },
+ *     theme: {
+ *       global: { color: '#181818', fontSize: '16px' },
+ *       input: { borderRadius: '4px', ':focus': { borderColor: '#0070f3' } },
+ *       label: { fontSize: '14px', color: '#344054' },
+ *       helperText: { fontSize: '12px', ':invalid': { color: '#d32f2f' } },
+ *     },
+ *   },
+ * });
+ * client.render();
+ * ```
+ * @category Configuration
+ */
+export interface SecureFieldsHostedFormConfig {
+	mode: "hosted_form";
+	/**
+	 * Eligible card networks, in order of preference. The first is used when several match a co-badged
+	 * card and the cardholder has not chosen.
+	 */
+	brands: Brand[];
+	/**
+	 * Where the form is rendered: the `id` of an element, or the element itself. Its existing content is
+	 * replaced.
+	 *
+	 * Note this is an element id, not a css selector, consistent with the `target` of the individual
+	 * fields in hosted fields mode.
+	 */
+	container: string | HTMLElement;
+	/**
+	 * Every text the form displays, plus `noCVV`, `hideHolderName` and the brand selector mode.
+	 * Any key you omit falls back to a shipped English default.
+	 */
+	hostedForm?: HostedFormUIOptions;
+	/**
+	 * Colours, typography, borders, spacing and the focus/error/success states of the form.
+	 */
+	theme?: SecureFieldsTheme;
+	/**
+	 * Per-field overrides for the iframe `title` and the input's accessible name. Both default to the
+	 * field's label from `hostedForm`, which is normally what you want — set these only to override.
+	 *
+	 * There is no `target`: the form owns the layout and mounts each field itself.
+	 */
+	fields?: Partial<Record<PublicFrameName, Omit<SecureFieldsFieldConfig, "target">>>;
+	/**
+	 * Not available in hosted form mode — use `theme` instead. Declared so `SecureFieldsConfig['styles']`
+	 * still resolves across the mode union.
+	 */
+	styles?: never;
 }
 /**
  * Common interface for all vault SDK adapters.
@@ -455,6 +840,37 @@ export interface SecureFieldsClient {
 	 */
 	submit: (payload?: SubmitOptions) => Promise<SubmitResult>;
 	/**
+	 * Tells the card fields which brand was chosen for a co-badged card.
+	 *
+	 * Without this, the fields keep formatting against the brand the BIN lookup ranked first: the digit
+	 * grouping of the card number and the accepted CVV length follow the *detected* brand rather than
+	 * the *chosen* one. Call it as soon as the choice is made, not at submit.
+	 *
+	 * When to call it:
+	 * - **Hosted fields** — whenever you run your own brand `<select>`. Not needed if you let the SDK
+	 *   render the in-field selector.
+	 * - **Hosted form, `hidden` mode** — the only way in; there is no selector on screen.
+	 * - **Hosted form, `explicit` mode** — done for you by the rendered `<select>`.
+	 *
+	 * The chosen brand is also the one tokenized by {@link SecureFieldsClient.submit}, so passing
+	 * `selectedNetwork` there as well is no longer required. A brand the BIN lookup did not match is
+	 * ignored.
+	 *
+	 * @param brand - The chosen brand, e.g. `'CARTE_BANCAIRE'`.
+	 * @throws SecureFieldsErrors.FIELDS_NOT_RENDERED If the fields have not been rendered yet.
+	 * @throws SecureFieldsErrors.INSTANCE_DESTROYED If the instance has been destroyed.
+	 * @example
+	 * ```ts
+	 * secureFields.on('brandDetected', ({ brands }) => renderMyBrandChoices(brands));
+	 * myBrandSelect.addEventListener('change', (e) => {
+	 *   secureFields.setSelectedBrand(e.target.value);
+	 * });
+	 * ```
+	 *
+	 * @see {@link SecureFieldsErrors}
+	 */
+	setSelectedBrand: (brand: Brand) => void;
+	/**
 	 * Registers an event listener for the specified event.
 	 */
 	on<K extends SecureFieldsEvents>(event: K, callback: (data: SecureFieldsEventsPayload[K]) => void): void;
@@ -510,11 +926,6 @@ export declare const SecureFieldsErrors: {
 		readonly message: "SDK initialization failed";
 		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/";
 	};
-	readonly CONTAINER_NOT_FOUND: {
-		readonly code: "CONTAINER_NOT_FOUND";
-		readonly message: "Container element not found in the DOM";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/sdk-references/Configuration/SecureFieldsFieldConfig#target";
-	};
 	readonly FIELD_RENDER_FAILED: {
 		readonly code: "FIELD_RENDER_FAILED";
 		readonly message: "Failed to render one or more fields";
@@ -550,7 +961,349 @@ export declare const SecureFieldsErrors: {
 		readonly message: "An unexpected error occurred";
 		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/";
 	};
+	readonly THREEDS_INVALID_URL: {
+		readonly code: "THREEDS_INVALID_URL";
+		readonly message: "The 3DS endpoint must be a valid http(s) URL";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/";
+	};
+	readonly THREEDS_INVALID_INPUT: {
+		readonly code: "THREEDS_INVALID_INPUT";
+		readonly message: "Invalid 3DS parameters";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/";
+	};
+	readonly CONTAINER_NOT_FOUND: {
+		readonly code: "CONTAINER_NOT_FOUND";
+		readonly message: "Container element not found in the DOM";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/sdk-references/Configuration/SecureFieldsFieldConfig#target";
+	};
 };
+/**
+ * EMVCo-specified challenge window sizes, as sent in the AReq `browserInformation.challengeWindowSize`
+ * and echoed back with the challenge data.
+ *
+ * | Value | Size          |
+ * |-------|---------------|
+ * | `01`  | 250 x 400     |
+ * | `02`  | 390 x 400     |
+ * | `03`  | 500 x 600     |
+ * | `04`  | 600 x 400     |
+ * | `05`  | fills the container |
+ *
+ * @category 3DS
+ */
+export declare const ChallengeWindowSizes: readonly [
+	"01",
+	"02",
+	"03",
+	"04",
+	"05"
+];
+/**
+ * @category 3DS
+ * @see {@link ChallengeWindowSizes}
+ */
+export type ChallengeWindowSize = (typeof ChallengeWindowSizes)[number];
+/**
+ * How a 3DS iframe reports that it is done.
+ *
+ * Both the 3DS Method iframe and the challenge iframe are cross-origin: their content is unreadable
+ * from your page. The only way they can hand a result back is a `postMessage` to the parent window,
+ * sent by the page the flow finally lands on — the notification endpoint's response in the EMVCo
+ * browser flow, the PSP's collection endpoint for a device-data collection, or your own return page
+ * for a PSP that posts the result to a merchant URL.
+ *
+ * `origins` is an allowlist of exact origins (scheme + host + port). A message from anywhere else is
+ * ignored. On top of that, the message must come from the iframe the helper created — so another
+ * frame, a popup, or a dev-tool posting on your own origin cannot end the flow with a forged result.
+ *
+ * @category 3DS
+ */
+export interface ThreeDSCompletion {
+	/**
+	 * Exact origins allowed to complete the flow, e.g. `['https://api.purse.tech']`. Wildcards are not
+	 * supported: an entry must match `event.origin` exactly.
+	 */
+	origins: string[];
+	/**
+	 * Decides whether a message from an allowed origin is *the* completion. Receives the decoded
+	 * payload — JSON and base64-encoded JSON are both decoded for you, anything else is handed over as
+	 * the raw string.
+	 *
+	 * Defaults to accepting the first message from an allowed origin.
+	 *
+	 * @example
+	 * ```ts
+	 * match: (data) => (data as { MessageType?: string }).MessageType === 'profile.completed'
+	 * ```
+	 */
+	match?: (data: unknown, event: MessageEvent) => boolean;
+}
+/**
+ * Why the wait ended.
+ *
+ * - `message` — a `postMessage` matching {@link ThreeDSCompletion} arrived.
+ * - `load` — the iframe finished the expected number of navigations. A timing signal only: it says
+ *   "you may proceed", never whether the flow succeeded.
+ * - `timeout` — nothing arrived before `timeoutMs`.
+ * - `abort` — the `AbortSignal` you passed was aborted.
+ *
+ * @category 3DS
+ */
+export type ThreeDSFrameReason = "message" | "load" | "timeout" | "abort";
+/**
+ * Outcome of {@link threeDSFingerprint} or {@link threeDSChallenge}.
+ *
+ * Neither helper rejects on `timeout` or `abort` — they resolve with the corresponding `status`, so a
+ * silent ACS can never leave your checkout hanging on a rejected promise.
+ *
+ * @category 3DS
+ */
+export interface ThreeDSFrameResult {
+	/** `completed` for `message` and `load`, otherwise the matching failure state. */
+	status: "completed" | "timeout" | "aborted";
+	/** @see {@link ThreeDSFrameReason} */
+	reason: ThreeDSFrameReason;
+	/** Decoded completion payload. Only present when `reason` is `message`. */
+	data?: unknown;
+	/** Time from form submission to settlement, in milliseconds. */
+	durationMs: number;
+}
+/**
+ * The two ways to say where to post and what to post.
+ *
+ * Either the generic pair — `url` plus a `fields` map, which fits any provider — or the EMVCo aliases
+ * of the specific helper. The aliases win if both are given.
+ *
+ * @category 3DS
+ */
+export interface ThreeDSFormPost {
+	/** Endpoint the form is posted to. Must be `http:` or `https:`. */
+	url?: string;
+	/** Form fields to post, one hidden input per entry. */
+	fields?: Record<string, string>;
+}
+/** Options shared by both helpers. */
+export interface ThreeDSFrameOptionsBase extends ThreeDSFormPost {
+	/**
+	 * `name` and `id` given to the iframe. Defaults to a unique per-call name; set it only if you need
+	 * to find the frame yourself.
+	 */
+	frameName?: string;
+	/**
+	 * How the iframe reports completion. Required for a challenge — there is no other way to know the
+	 * cardholder is done.
+	 */
+	completion?: ThreeDSCompletion;
+	/** Aborts the flow: the iframe is torn down and the promise resolves with `status: 'aborted'`. */
+	signal?: AbortSignal;
+	/**
+	 * Keeps the iframe and its form in the DOM after settling. Off by default — leaving 3DS frames
+	 * behind is what leaks memory across retries.
+	 */
+	keepFrame?: boolean;
+}
+/**
+ * Options for {@link threeDSFingerprint}.
+ *
+ * @category 3DS
+ */
+export interface ThreeDSFingerprintOptions extends ThreeDSFrameOptionsBase {
+	/** EMVCo alias for `url` — the ACS 3DS Method endpoint from the versioning response. */
+	threeDSMethodUrl?: string;
+	/** EMVCo alias for `fields` — posted as a single `threeDSMethodData` field. */
+	threeDSMethodData?: string;
+	/**
+	 * Where the hidden iframe is attached: an element id or the element itself. Defaults to
+	 * `document.body`.
+	 */
+	container?: string | HTMLElement;
+	/** Hard stop, in milliseconds. Defaults to `10_000` — the EMVCo 3DS Method rule. */
+	timeoutMs?: number;
+	/**
+	 * How many navigations of the iframe count as "done".
+	 *
+	 * The EMVCo 3DS Method navigates twice: the ACS fingerprinting page, then its auto-submitted form
+	 * to the notification URL. Hence the default of `2`. Set `1` for a provider whose collection
+	 * endpoint answers in a single response.
+	 */
+	resolveAfterLoads?: number;
+}
+/**
+ * Options for {@link threeDSChallenge}.
+ *
+ * @category 3DS
+ */
+export interface ThreeDSChallengeOptions extends ThreeDSFrameOptionsBase {
+	/** EMVCo alias for `url` — the issuer ACS challenge endpoint from the authentication response. */
+	acsUrl?: string;
+	/** EMVCo alias for `fields` — posted as a single `creq` field. */
+	creq?: string;
+	/**
+	 * Where the challenge is rendered: an element id or the element itself. Required — the challenge is
+	 * shown in-context, in a slot your checkout controls, and the SDK adds no overlay of its own.
+	 */
+	container: string | HTMLElement;
+	/**
+	 * Iframe size, as the EMVCo code. Defaults to `05` (fills the container).
+	 *
+	 * Pass through the value the authentication response echoed back: EMVCo requires the rendered size
+	 * to match what was announced in the AReq, so this is not a client-side choice.
+	 */
+	challengeWindowSize?: ChallengeWindowSize;
+	/** Explicit CSS size, for a provider that does not use the EMVCo codes. Overrides the code. */
+	size?: {
+		width: string;
+		height: string;
+	};
+	/** Required: a challenge has no other way to report that the cardholder is done. */
+	completion: ThreeDSCompletion;
+	/**
+	 * Hard stop, in milliseconds. Defaults to `600_000` (10 min) — long enough for an OTP or a banking
+	 * app confirmation, short enough that a silent ACS eventually releases the checkout.
+	 */
+	timeoutMs?: number;
+	/**
+	 * Called on each navigation of the challenge iframe — a timing signal, useful to swap a spinner for
+	 * the frame. It carries no outcome.
+	 */
+	onLoad?: () => void;
+}
+/**
+ * The JS-reachable part of the EMVCo `browserInformation` block, as returned by
+ * {@link getBrowserData}. The remaining fields (`browserIP`, `browserAcceptHeader`) are only
+ * available server-side, from the request itself.
+ *
+ * @category 3DS
+ */
+export interface ThreeDSBrowserData {
+	browserJavaEnabled: boolean;
+	browserJavascriptEnabled: boolean;
+	/** IETF BCP47 language tag, e.g. `fr-FR`. */
+	browserLanguage: string;
+	/** Screen colour depth in bits, narrowed to the values EMVCo accepts. */
+	browserColorDepth: string;
+	browserScreenHeight: string;
+	browserScreenWidth: string;
+	/** Offset between UTC and local time in minutes, as returned by `Date.getTimezoneOffset()`. */
+	browserTZ: string;
+}
+/**
+ * Runs a 3DS device-fingerprinting step in a hidden iframe: the EMVCo *3DS Method*, or any provider's
+ * equivalent device-data collection.
+ *
+ * Fingerprinting is best-effort. It exists to give the ACS more device data so it challenges less
+ * often, and it is never a gate: a timeout, an unreachable endpoint or a blocked iframe are all
+ * absorbed here and reported as a `status`, so a payment is never blocked by this call. Whether the
+ * data actually reached the 3DS server is only known server-side — the signal this returns is a
+ * timing signal, telling you it is time to proceed with the authentication.
+ *
+ * @returns Always resolves. `status` is `completed`, `timeout` or `aborted`.
+ * @throws SdkError If the input is invalid (never for a failed or slow fingerprint).
+ * Possible errors include:
+ *
+ * | Error Code             |
+ * |------------------------|
+ * | THREEDS_INVALID_URL    |
+ * | THREEDS_INVALID_INPUT  |
+ * | CONTAINER_NOT_FOUND    |
+ *
+ * @example EMVCo 3DS Method, from the versioning response
+ * ```ts
+ * const { status } = await threeDSFingerprint({
+ *   threeDSMethodUrl,
+ *   threeDSMethodData,
+ * });
+ * // proceed with the authentication whatever `status` is
+ * ```
+ *
+ * @example A provider that reports collection over postMessage
+ * ```ts
+ * await threeDSFingerprint({
+ *   url: deviceDataCollectionUrl,
+ *   fields: { JWT: accessToken },
+ *   completion: {
+ *     origins: ['https://centinelapi.cardinalcommerce.com'],
+ *     match: (data) => (data as { MessageType?: string }).MessageType === 'profile.completed',
+ *   },
+ * });
+ * ```
+ *
+ * @see {@link SecureFieldsErrors}
+ * @category 3DS
+ */
+export declare const threeDSFingerprint: (options: ThreeDSFingerprintOptions) => Promise<ThreeDSFrameResult>;
+/**
+ * Renders a 3DS challenge in an iframe inside your checkout and resolves when the cardholder is done.
+ *
+ * The challenge is shown in-context: the iframe goes into the `container` you provide, sized per the
+ * EMVCo `challengeWindowSize` the authentication response echoed back. The SDK adds no overlay, no
+ * dialog and no styling of its own — the surrounding UI is yours.
+ *
+ * Completion is a `postMessage` from the page the flow lands on, which is why `completion.origins` is
+ * required: only those exact origins can end the wait. A message from anywhere else is ignored.
+ *
+ * Note the challenge outcome is authoritative **server-side**. Whatever this resolves with, confirm
+ * the payment through your backend before fulfilling: an abandoned or timed-out challenge is settled
+ * server-side too, so `status: 'timeout'` does not mean the payment failed.
+ *
+ * @returns Always resolves. `status` is `completed`, `timeout` or `aborted`.
+ * @throws SdkError If the input is invalid.
+ * Possible errors include:
+ *
+ * | Error Code             |
+ * |------------------------|
+ * | THREEDS_INVALID_URL    |
+ * | THREEDS_INVALID_INPUT  |
+ * | CONTAINER_NOT_FOUND    |
+ *
+ * @example EMVCo challenge, from the authentication response
+ * ```ts
+ * const { status, data } = await threeDSChallenge({
+ *   acsUrl,
+ *   creq,
+ *   challengeWindowSize,          // pass through — EMVCo requires the announced size
+ *   container: 'checkout-3ds-slot',
+ *   completion: { origins: ['https://api.purse.tech'] },
+ * });
+ * ```
+ *
+ * @example A provider posting the result back through your own return page
+ * ```ts
+ * await threeDSChallenge({
+ *   url: stepUpUrl,
+ *   fields: { JWT: accessToken, MD: merchantData },
+ *   container: challengeSlot,
+ *   size: { width: '100%', height: '600px' },
+ *   completion: {
+ *     origins: [window.location.origin],
+ *     match: (data) => (data as { MessageType?: string }).MessageType === 'stepUpComplete',
+ *   },
+ * });
+ * ```
+ *
+ * @see {@link SecureFieldsErrors}
+ * @category 3DS
+ */
+export declare const threeDSChallenge: (options: ThreeDSChallengeOptions) => Promise<ThreeDSFrameResult>;
+/**
+ * Collects the browser information a 3DS authentication request needs.
+ *
+ * These are the JS-reachable EMVCo `browserInformation` fields; `browserIP` and `browserAcceptHeader`
+ * are filled in server-side from the request itself. Pass the result to your backend along with the
+ * vault form token so it can build the authentication request.
+ *
+ * @example
+ * ```ts
+ * const { vault_form_token } = await secureFields.submit();
+ * await fetch('/checkout/authenticate', {
+ *   method: 'POST',
+ *   body: JSON.stringify({ vault_form_token, browserData: getBrowserData() }),
+ * });
+ * ```
+ *
+ * @category 3DS
+ */
+export declare const getBrowserData: () => ThreeDSBrowserData;
 /**
  * @function
  * Initializes the Secure Fields SDK with the provided tenant ID and configuration.
