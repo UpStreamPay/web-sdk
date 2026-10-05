@@ -1,6 +1,6 @@
 {
   "name": "@purse-eu/web-sdk",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "Purse web SDK loaders",
   "keywords": [
     "purse",

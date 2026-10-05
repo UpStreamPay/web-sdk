@@ -1,9 +1,10 @@
-## [0.10.1](https://github.com/UpStreamPay/web-sdk/compare/v0.10.0...v0.10.1) (2026-09-07)
+## [0.10.2](https://github.com/UpStreamPay/web-sdk/compare/v0.10.0...v0.10.2) (2026-10-05)
 
 
 ### Bug Fixes
 
 * **securefields-js-sdk:** sync references 1.7.5 ([#96](https://github.com/UpStreamPay/web-sdk/issues/96)) ([f3a5cd7](https://github.com/UpStreamPay/web-sdk/commit/f3a5cd7a6d72bcee76fe76040d2196c64c464a6b))
+* sync generated types and bump undici ([#102](https://github.com/UpStreamPay/web-sdk/issues/102)) ([0124b27](https://github.com/UpStreamPay/web-sdk/commit/0124b275ec91b0ad26c930ddf2c47ee1047242de)), closes [#97](https://github.com/UpStreamPay/web-sdk/issues/97) [#98](https://github.com/UpStreamPay/web-sdk/issues/98) [#100](https://github.com/UpStreamPay/web-sdk/issues/100) [#101](https://github.com/UpStreamPay/web-sdk/issues/101)
 
 
 
