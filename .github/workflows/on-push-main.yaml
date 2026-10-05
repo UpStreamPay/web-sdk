@@ -1,22 +1,25 @@
 name: ON | PUSH | MAIN
-run-name: CREATE RELEASE | MAIN
+run-name: RELEASE PLEASE | MAIN
 
-# When pushing to main, run the following jobs:
-# - Call the release-manager to create a release
+# When pushing to main, release-please opens or updates the release PR.
+# Merging the release PR creates the vX.Y.Z tag and GitHub release,
+# which triggers on-push-tag-release.yaml to publish to npm.
+# The org token is required: tags and PRs created with GITHUB_TOKEN
+# do not trigger other workflows (npm publish, CodeQL, lints).
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: 'read'
+
 jobs:
-  release-manager:
-    permissions:
-      contents: 'write'
-      id-token: 'write'
-    uses: ./.github/workflows/release-manager.yaml
-    with:
-      version-file: package.json
-      version-path: version
-    secrets:
-      GITHUB_ACCESS_TOKEN: ${{ secrets.USP_GITHUB_ADMIN_FINE_GRAINED_ACCES_TOKEN }}
+  release-please:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: googleapis/release-please-action@v5
+        with:
+          token: ${{ secrets.USP_GITHUB_ADMIN_FINE_GRAINED_ACCES_TOKEN }}
