@@ -50,5 +50,11 @@
     "dist"
   ],
   "author": "@upstreampay",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "final-form": "^4.20.10",
+    "lit": "^3.3.3",
+    "lit-html": "^3.3.3",
+    "zod": "^3.25.76"
+  }
 }

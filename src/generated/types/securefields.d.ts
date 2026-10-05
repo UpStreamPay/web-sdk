@@ -50,7 +50,7 @@ export interface SubmitOptions {
 	cardHolderName?: string;
 }
 /**
- * Standard / PCI Proxy tokenization — `vault_form_token` is always present;
+ * Standard tokenization — `vault_form_token` is always present;
  * `card` is optional; `birth_date` is never present.
  * @category Core
  */
@@ -116,6 +116,14 @@ export type SubmitResultError = {
 	headers?: {
 		"Cf-Ray": string | null;
 	};
+	/** Per-field snapshot, no card values. Attached only when the submit was blocked before the API call. */
+	fields?: Partial<Record<PublicFrameName, {
+		fieldName: PublicFrameName;
+		length: number;
+		valid: boolean;
+		touched: boolean;
+		error: FieldValidationError;
+	}>>;
 };
 /**
  * Union of all possible success variants.
@@ -181,12 +189,14 @@ export interface HostedFormUIOptions {
 	cvvPlaceholder?: string;
 	cvvInputLabel?: string;
 	/**
-	 * Accepted and ignored. In the widget these only reach Adyen's own card component, which owns the
-	 * 3 vs 4 digit switch; the Purse hosted fields path labels a 4 digit code "CVV" like any other, and
-	 * Secure Fields matches it.
+	 * Placeholder of the cvv slot while the detected brand asks for a 4 digit code (American Express).
+	 * Falls back to `cvvPlaceholder` when the merchant set that one and not this, then to `1234`.
 	 */
 	cvv4Placeholder?: string;
-	/** Accepted and ignored — see {@link HostedFormUIOptions.cvv4Placeholder}. */
+	/**
+	 * Label — and accessible name — of the cvv slot while the detected brand asks for a 4 digit code.
+	 * Falls back to `cvvInputLabel`: a 4 digit code is still a CVV, so the same name is usually right.
+	 */
 	cvv4InputLabel?: string;
 	cvvRequiredError?: string;
 	/** @deprecated use cvvRequiredError */
@@ -446,25 +456,32 @@ export interface SecureFieldsEventsPayload {
 	 * Triggered when the submission has been successful.
 	 *
 	 * Three mutually exclusive cases:
-	 * - **Standard / PCI Proxy card**: `vault_form_token` is present; `card` is optionally present;
+	 * - **Standard card**: `vault_form_token` is present; `card` is optionally present;
 	 *   `birth_date` is absent.
 	 * - **Oney full-form**: both `vault_form_token` and `birth_date` are present; `card` is absent.
 	 * - **Oney CVV-only**: only `birth_date` is present; `vault_form_token` and `card` are absent.
 	 *
 	 * Use `'vault_form_token' in payload` or `'birth_date' in payload` to narrow the variant.
+	 *
+	 * With 3DS enabled at init, this fires only once the 3DS sequence has run, and carries its
+	 * `three_ds_server_trans_id` — a submit whose 3DS could not be attempted emits `error`, never `success`.
 	 */
 	success: {
-		/** Standard or PCI Proxy tokenization — always present in this variant. */
+		/** Standard tokenization — always present in this variant. */
 		vault_form_token: string;
 		/** Card metadata returned by the backend. Present when the backend supplies it. */
 		card?: CardInfo;
 		birth_date?: never;
+		/** Present when 3DS is enabled: correlates every 3DS step of this authentication. */
+		three_ds_server_trans_id?: string;
 	} | {
 		/** Vault token issued for the Oney full-form path. */
 		vault_form_token: string;
 		card?: never;
 		/** ISO 8601 date of birth required by Oney (`YYYY-MM-DD`). */
 		birth_date: string;
+		/** Present when 3DS is enabled: correlates every 3DS step of this authentication. */
+		three_ds_server_trans_id?: string;
 	} | {
 		vault_form_token?: never;
 		card?: never;
@@ -617,8 +634,54 @@ export interface SecureFieldsFieldConfig {
 	 */
 	brandLabels?: Partial<Record<Brand, string>>;
 }
+export declare const Environments: readonly [
+	"sandbox",
+	"production"
+];
+export type Environment = (typeof Environments)[number];
+declare const AllowedFields: string[];
+export type AllowedFields = (typeof AllowedFields)[number];
+export declare const SecureFieldsModes: readonly [
+	"hosted_fields",
+	"hosted_form"
+];
+export type SecureFieldsMode = (typeof SecureFieldsModes)[number];
 /**
- * Configuration for the Vault SDK Adapter.
+ * Turns the built-in 3DS sequence on.
+ *
+ * With `enabled: true`, {@link SecureFieldsClient.submit} chains the 3DS steps after tokenization —
+ * the versioning call, then the 3DS Method (device fingerprint) in a hidden iframe when the card
+ * range has one — and resolves with `three_ds_server_trans_id` on top of the usual tokenization result.
+ *
+ * The chain cannot run at init: it needs the form token, which only exists once the card form has
+ * been tokenized. This flag only arms it.
+ *
+ * @category Configuration
+ */
+export interface SecureFieldsThreeDSConfig {
+	/** Off by default, so an existing integration is unaffected. */
+	enabled: boolean;
+}
+/**
+ * What {@link SecureFieldsClient.submit} adds to the tokenization result when 3DS is enabled.
+ *
+ * Forward it, with the form token, to your own backend: it goes in the payment creation call, next to
+ * the browser information from {@link getBrowserData} and the `browserIP` / `Accept` header the
+ * backend captures from the cardholder's request itself.
+ *
+ * @category Core
+ */
+export interface ThreeDSSubmitData {
+	/** Correlates every 3DS step of this authentication. */
+	three_ds_server_trans_id?: string;
+}
+/**
+ * The tokenization result, plus the 3DS data when 3DS is enabled at init.
+ * @category Core
+ */
+export type SecureFieldsSubmitResult = SubmitResult & ThreeDSSubmitData;
+/**
+ * Configuration accepted by {@link initSecureFields}.
  *
  * There are two modes, discriminated by `mode`:
  * - {@link SecureFieldsHostedFieldsConfig} (`'hosted_fields'`, the default) — you place and lay out
@@ -695,6 +758,10 @@ export interface SecureFieldsHostedFieldsConfig {
 			[key in CSSPseudoClasses]?: SecureFieldsStyles;
 		};
 	};
+	/**
+	 * Runs the 3DS sequence inside `submit()`. See {@link SecureFieldsThreeDSConfig}.
+	 */
+	threeDS?: SecureFieldsThreeDSConfig;
 }
 /**
  * Hosted form mode: the SDK renders a complete, ready to use card form — card number, expiry date, CVV
@@ -769,9 +836,35 @@ export interface SecureFieldsHostedFormConfig {
 	 * still resolves across the mode union.
 	 */
 	styles?: never;
+	/**
+	 * Runs the 3DS sequence inside `submit()`. See {@link SecureFieldsThreeDSConfig}.
+	 */
+	threeDS?: SecureFieldsThreeDSConfig;
 }
 /**
- * Common interface for all vault SDK adapters.
+ * Partial update for {@link SecureFieldsConfig}.
+ * Only the specified keys are updated; everything else is left as it is.
+ * @category Configuration
+ */
+export type SecureFieldsConfigUpdate = Partial<{
+	/**
+	 * Per-field texts. Targets cannot be patched — the fields do not move.
+	 */
+	fields: Partial<{
+		[key in AllowedFields]: Omit<SecureFieldsFieldConfig, "target">;
+	}>;
+	styles: SecureFieldsHostedFieldsConfig["styles"];
+	/**
+	 * Hosted form mode only: replaces the displayed texts.
+	 */
+	hostedForm: HostedFormUIOptions;
+	/**
+	 * Hosted form mode only: replaces the theme.
+	 */
+	theme: SecureFieldsTheme;
+}>;
+/**
+ * The client returned by {@link initSecureFields}.
  * @category Core
  */
 export interface SecureFieldsClient {
@@ -830,6 +923,13 @@ export interface SecureFieldsClient {
 	 *   *   }
 	 *   ```
 	 *
+	 * With `threeDS: { enabled: true }` in the init config, the same call also runs the 3DS sequence
+	 * after tokenization — versioning, then the 3DS Method in a hidden iframe when the card range has
+	 * one — and the result carries the `three_ds_server_trans_id` your backend needs for the payment
+	 * creation call, alongside the browser information you collect with `getBrowserData()`.
+	 * Fingerprinting is best-effort and never blocks the submit; a failed versioning call does, since
+	 * 3DS cannot be attempted without it.
+	 *
 	 * @see {@link SecureFieldsErrors}
 	 *
 	 * ### Events
@@ -838,7 +938,7 @@ export interface SecureFieldsClient {
 	 *
 	 * `error` Emitted when there is an error during the tokenization process.
 	 */
-	submit: (payload?: SubmitOptions) => Promise<SubmitResult>;
+	submit: (payload?: SubmitOptions) => Promise<SecureFieldsSubmitResult>;
 	/**
 	 * Tells the card fields which brand was chosen for a co-badged card.
 	 *
@@ -875,14 +975,6 @@ export interface SecureFieldsClient {
 	 */
 	on<K extends SecureFieldsEvents>(event: K, callback: (data: SecureFieldsEventsPayload[K]) => void): void;
 }
-declare const VAULT_VENDORS: readonly [
-	"purse",
-	"pci_proxy"
-];
-/**
- * @hidden
- */
-export type Vendor = (typeof VAULT_VENDORS)[number];
 /**
  * Error codes and messages for the Secure Fields SDK.
  * @category Errors
@@ -894,87 +986,87 @@ export declare const SecureFieldsErrors: {
 	readonly TENANT_ID_REQUIRED: {
 		readonly code: "TENANT_ID_REQUIRED";
 		readonly message: "Tenant ID is required for Secure Fields initialization";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/#prerequisites";
-	};
-	readonly TENANT_ID_FORMAT_MISMATCH_VENDOR: {
-		readonly code: "TENANT_ID_FORMAT_MISMATCH_VENDOR";
-		readonly message: "Tenant ID format mismatch the one implied by vendor";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/#prerequisites";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/#prerequisites";
 	};
 	readonly INVALID_BRANDS: {
 		readonly code: "INVALID_BRANDS";
 		readonly message: "One or more specified card brands are not supported";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/sdk-references/Configuration/SecureFieldsConfig#brands";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/sdk-references/Configuration/SecureFieldsConfig#brands";
 	};
 	readonly NOT_SUPPORTED_FIELD: {
 		readonly code: "NOT_SUPPORTED_FIELD";
 		readonly message: "The specified field type is not supported";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/sdk-references/Configuration/SecureFieldsConfig#fields";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/sdk-references/Configuration/SecureFieldsConfig#fields";
 	};
 	readonly FIELD_CONFIG_REQUIRED: {
 		readonly code: "FIELD_CONFIG_REQUIRED";
 		readonly message: "Fields configuration is mandatory for SDK initialization";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/sdk-references/Configuration/SecureFieldsConfig#fields";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/sdk-references/Configuration/SecureFieldsConfig#fields";
 	};
 	readonly FIELD_TARGET_INVALID: {
 		readonly code: "FIELD_TARGET_INVALID";
 		readonly message: "Fields target must be valid DOM element IDs";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/sdk-references/Configuration/SecureFieldsFieldConfig#target";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/sdk-references/Configuration/SecureFieldsFieldConfig#target";
 	};
 	readonly INIT_FAILED: {
 		readonly code: "INIT_FAILED";
 		readonly message: "SDK initialization failed";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/";
 	};
 	readonly FIELD_RENDER_FAILED: {
 		readonly code: "FIELD_RENDER_FAILED";
 		readonly message: "Failed to render one or more fields";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/";
 	};
 	readonly FIELDS_NOT_RENDERED: {
 		readonly code: "FIELDS_NOT_RENDERED";
 		readonly message: "Fields must be rendered before performing this action";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/sdk-references/Core/SecureFieldsClient#submit";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/sdk-references/Core/SecureFieldsClient#submit";
 	};
 	readonly INVALID_FORM: {
 		readonly code: "INVALID_FORM";
 		readonly message: "Form validation failed - check field values";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/sdk-references/Core/SecureFieldsClient#submit";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/sdk-references/Core/SecureFieldsClient#submit";
 	};
 	readonly TOKENIZATION_FAILED: {
 		readonly code: "TOKENIZATION_FAILED";
 		readonly message: "Failed to tokenize payment information";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/sdk-references/Core/SecureFieldsClient#submit";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/sdk-references/Core/SecureFieldsClient#submit";
+	};
+	readonly THREEDS_VERSIONING_FAILED: {
+		readonly code: "THREEDS_VERSIONING_FAILED";
+		readonly message: "The 3DS versioning call failed - 3DS cannot be attempted";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/";
 	};
 	readonly NETWORK_ERROR: {
 		readonly code: "NETWORK_ERROR";
 		readonly message: "Network request failed - check your connection";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/";
 	};
 	readonly INSTANCE_DESTROYED: {
 		readonly code: "INSTANCE_DESTROYED";
 		readonly message: "Instance has been destroyed and cannot be used";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/";
 	};
 	readonly UNEXPECTED_ERROR: {
 		readonly code: "UNEXPECTED_ERROR";
 		readonly message: "An unexpected error occurred";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/";
 	};
 	readonly THREEDS_INVALID_URL: {
 		readonly code: "THREEDS_INVALID_URL";
 		readonly message: "The 3DS endpoint must be a valid http(s) URL";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/";
 	};
 	readonly THREEDS_INVALID_INPUT: {
 		readonly code: "THREEDS_INVALID_INPUT";
 		readonly message: "Invalid 3DS parameters";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/";
 	};
 	readonly CONTAINER_NOT_FOUND: {
 		readonly code: "CONTAINER_NOT_FOUND";
 		readonly message: "Container element not found in the DOM";
-		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-checkout/advanced-flow/sdk-references/Configuration/SecureFieldsFieldConfig#target";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/sdk-references/Configuration/SecureFieldsFieldConfig#target";
 	};
 };
 /**
@@ -1120,13 +1212,29 @@ export interface ThreeDSFingerprintOptions extends ThreeDSFrameOptionsBase {
 	/** Hard stop, in milliseconds. Defaults to `10_000` — the EMVCo 3DS Method rule. */
 	timeoutMs?: number;
 	/**
-	 * How many navigations of the iframe count as "done".
-	 *
-	 * The EMVCo 3DS Method navigates twice: the ACS fingerprinting page, then its auto-submitted form
-	 * to the notification URL. Hence the default of `2`. Set `1` for a provider whose collection
-	 * endpoint answers in a single response.
+	 * How many navigations of the iframe count as "done". Defaults to `1`, the ACS fingerprinting
+	 * page: its POST to the notification URL may never surface as a load event here, so counting it
+	 * would only spend the timeout. Set `2` for an ACS that navigates the frame itself.
 	 */
 	resolveAfterLoads?: number;
+}
+/**
+ * The `browser` node of `POST /v2/payments`: snake_case, integer numerics. Produced by
+ * {@link toPaymentBrowserNode}. `referrer`, `accept_header`, `user_agent` and `accept_language` are
+ * absent — those are read from the request server-side.
+ *
+ * @category 3DS
+ */
+export interface PaymentBrowserNode {
+	java_enabled: boolean;
+	javascript_enabled: boolean;
+	/** Browser language as a BCP 47 tag, e.g. `fr-FR`. */
+	locale: string;
+	color_depth: number;
+	screen_height: number;
+	screen_width: number;
+	/** Offset between UTC and local time, in minutes. */
+	utc_time_zone: number;
 }
 /**
  * Options for {@link threeDSChallenge}.
@@ -1134,6 +1242,12 @@ export interface ThreeDSFingerprintOptions extends ThreeDSFrameOptionsBase {
  * @category 3DS
  */
 export interface ThreeDSChallengeOptions extends ThreeDSFrameOptionsBase {
+	/**
+	 * The opaque `challenge_data` blob from the `POST /v2/payments` answer, forwarded verbatim.
+	 * Supplies `acsUrl`, `creq` and `challengeWindowSize`. Explicit options override it, except the
+	 * window size: the blob's value is the one the AReq announced, so it wins.
+	 */
+	challengeData?: string;
 	/** EMVCo alias for `url` — the issuer ACS challenge endpoint from the authentication response. */
 	acsUrl?: string;
 	/** EMVCo alias for `fields` — posted as a single `creq` field. */
@@ -1144,19 +1258,27 @@ export interface ThreeDSChallengeOptions extends ThreeDSFrameOptionsBase {
 	 */
 	container: string | HTMLElement;
 	/**
-	 * Iframe size, as the EMVCo code. Defaults to `05` (fills the container).
+	 * Iframe size, as the EMVCo code, for a call that carries no `challengeData`. Defaults to `05`
+	 * (fills the container).
 	 *
-	 * Pass through the value the authentication response echoed back: EMVCo requires the rendered size
-	 * to match what was announced in the AReq, so this is not a client-side choice.
+	 * The size is an AReq echo, not a client-side choice — EMVCo requires the rendered frame to match
+	 * what was announced — so a `challengeWindowSize` inside the blob wins over this one.
 	 */
 	challengeWindowSize?: ChallengeWindowSize;
-	/** Explicit CSS size, for a provider that does not use the EMVCo codes. Overrides the code. */
-	size?: {
-		width: string;
-		height: string;
-	};
-	/** Required: a challenge has no other way to report that the cardholder is done. */
-	completion: ThreeDSCompletion;
+	/**
+	 * How the ACS reports that the cardholder is done. Required unless `resolveAfterLoads` is set —
+	 * a challenge has no other way to report a result.
+	 */
+	completion?: ThreeDSCompletion;
+	/**
+	 * Settle after this many navigations of the iframe instead of on a message.
+	 *
+	 * For a provider whose result page is a plain navigation rather than a `postMessage`, this is the
+	 * only signal there is — the Purse 3DS challenge posts one, so use `completion` there. The
+	 * about:blank document the iframe starts on is not counted, so `1` means the first real
+	 * navigation. Can be combined with `completion`: whichever fires first settles the challenge.
+	 */
+	resolveAfterLoads?: number;
 	/**
 	 * Hard stop, in milliseconds. Defaults to `600_000` (10 min) — long enough for an OTP or a banking
 	 * app confirmation, short enough that a silent ACS eventually releases the checkout.
@@ -1239,8 +1361,11 @@ export declare const threeDSFingerprint: (options: ThreeDSFingerprintOptions) =>
  * EMVCo `challengeWindowSize` the authentication response echoed back. The SDK adds no overlay, no
  * dialog and no styling of its own — the surrounding UI is yours.
  *
- * Completion is a `postMessage` from the page the flow lands on, which is why `completion.origins` is
- * required: only those exact origins can end the wait. A message from anywhere else is ignored.
+ * Two ways to know the cardholder is done, and a call needs at least one. `completion` waits for a
+ * `postMessage` from the page the flow lands on, which is why `completion.origins` is required —
+ * only those exact origins can end the wait — the Purse 3DS challenge included: its notification
+ * endpoint answers with a page that posts the completion. `resolveAfterLoads` waits for the iframe to
+ * navigate instead, for a provider whose result page posts nothing.
  *
  * Note the challenge outcome is authoritative **server-side**. Whatever this resolves with, confirm
  * the payment through your backend before fulfilling: an abandoned or timed-out challenge is settled
@@ -1255,6 +1380,22 @@ export declare const threeDSFingerprint: (options: ThreeDSFingerprintOptions) =>
  * | THREEDS_INVALID_URL    |
  * | THREEDS_INVALID_INPUT  |
  * | CONTAINER_NOT_FOUND    |
+ *
+ * @example Purse 3DS, from the `authentication.challenge_data` blob of the `POST /v2/payments` answer
+ * ```ts
+ * const { status, data } = await threeDSChallenge({
+ *   challengeData,                // forwarded verbatim from your backend
+ *   container: 'checkout-3ds-slot',
+ *   completion: {
+ *     // The Purse API origin your payments are created against — ask Purse for the one matching
+ *     // your environment. A message from any other origin is ignored.
+ *     origins: [PURSE_API_ORIGIN],
+ *     match: (data) => (data as { type?: string }).type === 'purse:3ds:challenge-completed',
+ *   },
+ * });
+ * // `data` carries `result` (`SETTLED` | `PENDING` | `REJECTED`) and `payment_id`; confirm the
+ * // payment through your backend either way.
+ * ```
  *
  * @example EMVCo challenge, from the authentication response
  * ```ts
@@ -1273,7 +1414,6 @@ export declare const threeDSFingerprint: (options: ThreeDSFingerprintOptions) =>
  *   url: stepUpUrl,
  *   fields: { JWT: accessToken, MD: merchantData },
  *   container: challengeSlot,
- *   size: { width: '100%', height: '600px' },
  *   completion: {
  *     origins: [window.location.origin],
  *     match: (data) => (data as { MessageType?: string }).MessageType === 'stepUpComplete',
@@ -1292,18 +1432,45 @@ export declare const threeDSChallenge: (options: ThreeDSChallengeOptions) => Pro
  * are filled in server-side from the request itself. Pass the result to your backend along with the
  * vault form token so it can build the authentication request.
  *
+ * Field names are the EMVCo ones — for the `browser` node of `POST /v2/payments`, map them with
+ * {@link toPaymentBrowserNode}.
+ *
  * @example
  * ```ts
  * const { vault_form_token } = await secureFields.submit();
  * await fetch('/checkout/authenticate', {
  *   method: 'POST',
- *   body: JSON.stringify({ vault_form_token, browserData: getBrowserData() }),
+ *   body: JSON.stringify({ vault_form_token, browser: toPaymentBrowserNode() }),
  * });
  * ```
  *
  * @category 3DS
  */
 export declare const getBrowserData: () => ThreeDSBrowserData;
+/**
+ * Maps {@link getBrowserData} onto the `browser` node of `POST /v2/payments`, which takes
+ * snake_case keys and integers where EMVCo uses `browser*` and strings.
+ *
+ * `referrer`, `accept_header`, `user_agent` and `accept_language` are left out: they come from the
+ * request your backend receives, not from the page.
+ *
+ * @example
+ * ```ts
+ * const { vault_form_token, three_ds_server_trans_id } = await secureFields.submit();
+ * await fetch('/checkout/pay', {
+ *   method: 'POST',
+ *   body: JSON.stringify({
+ *     vault_form_token,
+ *     three_ds_server_trans_id,
+ *     browser: toPaymentBrowserNode(),
+ *   }),
+ * });
+ * ```
+ *
+ * @param data Browser data to map. Collected with {@link getBrowserData} when omitted.
+ * @category 3DS
+ */
+export declare const toPaymentBrowserNode: (data?: ThreeDSBrowserData) => PaymentBrowserNode;
 /**
  * @function
  * Initializes the Secure Fields SDK with the provided tenant ID and configuration.
@@ -1335,7 +1502,6 @@ export declare const initSecureFields: (sdkConfiguration: {
 	 * Configuration for the secure fields. See {@link SecureFieldsConfig} for supported options.
 	 */
 	config: SecureFieldsConfig;
-	vault_vendor?: Vendor;
 }) => Promise<SecureFieldsClient>;
 
 export {};
