@@ -4,6 +4,7 @@ export const SDKs = {
     loadErrorMessage: 'Purse headless checkout failed.',
     sandbox: 'https://cdn.purse-sandbox.com/headless-checkout/latest/purse.umd.js',
     production: 'https://cdn.purse-secure.com/headless-checkout/stable/purse.umd.js',
+    test: 'https://cdn.purse-test.com/headless-checkout/latest/purse.umd.js',
   },
   securefields: {
     namespace: 'PurseSecureFields',
@@ -17,5 +18,6 @@ export const SDKs = {
     loadErrorMessage: "Can't load dropin SDK",
     sandbox: 'https://cdn.purse-sandbox.com/dropin-checkout/latest/purse.js',
     production: 'https://cdn.purse-secure.com/dropin-checkout/stable/purse.js',
+    test: 'https://cdn.purse-test.com/dropin-checkout/latest/purse.js',
   },
 } as const;
