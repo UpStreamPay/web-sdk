@@ -4,7 +4,8 @@ run-name: RELEASE PLEASE | MAIN
 # When pushing to main, release-please opens or updates the release PR.
 # Merging the release PR creates the vX.Y.Z tag and GitHub release,
 # which triggers on-push-tag-release.yaml to publish to npm.
-# The org token is required: tags and PRs created with GITHUB_TOKEN
+# A dedicated fine-grained PAT is required:
+# tags and PRs created with GITHUB_TOKEN
 # do not trigger other workflows (npm publish, CodeQL, lints).
 
 on:
@@ -22,4 +23,4 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v5
         with:
-          token: ${{ secrets.USP_GITHUB_ADMIN_FINE_GRAINED_ACCES_TOKEN }}
+          token: ${{ secrets.TF_REPO_AUTOMATION_PAT }}
