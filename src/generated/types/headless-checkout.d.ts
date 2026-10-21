@@ -132,9 +132,11 @@ export declare const Partners: {
 	readonly centralpay: "centralpay";
 	readonly checkout: "checkout";
 	readonly cofidis: "cofidis";
+	readonly cybersource: "cybersource";
 	readonly dalenys: "dalenys";
 	readonly easycollect: "easycollect";
 	readonly easy2play: "easy2play";
+	readonly edenred: "edenred";
 	readonly fintecture: "fintecture";
 	readonly floa: "floa";
 	readonly gocardless: "gocardless";
@@ -152,6 +154,7 @@ export declare const Partners: {
 	readonly payzen: "payzen";
 	readonly purse: "purse";
 	readonly redsys: "redsys";
+	readonly revolut: "revolut";
 	readonly riverty: "riverty";
 	readonly scalapay: "scalapay";
 	readonly scellius: "scellius";
@@ -197,10 +200,12 @@ export declare const Methods: {
 	readonly loan: "loan";
 	readonly maxxing: "maxxing";
 	readonly mbway: "mbway";
+	readonly mealvoucher: "mealvoucher";
 	readonly multibanco: "multibanco";
 	readonly paybylink: "paybylink";
 	readonly paylater: "paylater";
 	readonly paypal: "paypal";
+	readonly revolut_pay: "revolut_pay";
 	readonly revolving: "revolving";
 	readonly sepa: "sepa";
 	readonly sdd: "sdd";
@@ -326,6 +331,11 @@ export type LegacyPaymentSession = {
 	wallet?: {
 		shared_wallet_user?: boolean;
 	};
+	/** Copied from the root of `widget.data`; absent on a V1 session. */
+	three_ds_settings?: ThreeDSSettings;
+};
+export type ThreeDSSettings = {
+	vendor: "NETCETERA" | "PARTNER";
 };
 export type SessionVault = {
 	vendor_front_data: {
@@ -621,6 +631,11 @@ export type ValidationResultData<PluginLogs = void> = {
 		name?: string;
 	};
 	global_status: StatusState;
+	/** Purse 3DS: `challenge_data` is present on a `C` verdict, which also has no `global_status` and no results. */
+	authentication?: {
+		status?: string;
+		challenge_data?: string;
+	};
 };
 export type APIEnv = Environment & {
 	paymentAPIRoot?: string;
@@ -660,6 +675,14 @@ declare class ApiError extends PurseError {
 	responseHeaders?: Record<string, string | null>;
 	/** HTTP status of the response that produced this error, when available (e.g. 400, 429, 500). */
 	status?: number;
+	/**
+	 * Orchestration's problem+json `type` (a URN, e.g. `urn:eu.purse:validation:invalid-request-body`), when the
+	 * response used that envelope rather than onepay's `{error, error_description}`. `error` above still carries
+	 * this same value as a fallback so existing `.error` checks keep working.
+	 */
+	apiErrorType?: string;
+	/** Orchestration's free-text `errors[0].detail` — the only place the real failure reason lives on that envelope. */
+	apiErrorDetail?: string;
 	constructor(error: (typeof PurseErrors)[PurseErrorCodes], path?: string, errorCode?: string, message?: string);
 }
 /**
@@ -668,9 +691,21 @@ declare class ApiError extends PurseError {
  * `direct` means the merchant integrated it themselves. Always sent explicitly so a
  * missing value means "SDK build predates wrapper reporting" rather than "direct".
  *
+ * That holds on the wire and in Datadog. The BQ mapper in `cf-widget-logger` coerces an absent
+ * value to `direct` so the column is never NULL (SDK-12224), which files pre-3.72.0 traffic under
+ * `direct` — filter on `version` to tell the two apart in BigQuery.
+ *
  * @internal Not part of the public integration surface — set by the wrapping product.
  */
 export type MonitoringWrapper = "direct" | "dropin";
+/**
+ * Which SDK family emitted a monitoring message. The native SecureFields SDKs already stamp
+ * `platform: 'android' | 'ios'` on their `/widget/secure_fields` logs; the web SDKs send `'web'`,
+ * and the Android headless checkout `'android'` on `/widget/headless_checkout`. This is the field
+ * to filter a platform on — {@link MonitoringWrapper} answers a different question (which product
+ * embeds the SDK) and keeps its values.
+ */
+export type MonitoringPlatform = "web" | "android" | "ios";
 export interface MonitoringApiEventMessage<Event> {
 	instanceId?: string;
 	entityId?: string;
@@ -680,10 +715,13 @@ export interface MonitoringApiEventMessage<Event> {
 	/** @internal See {@link MonitoringWrapper}. */
 	wrapper?: MonitoringWrapper;
 	env?: EnvironmentTarget;
+	/** See {@link MonitoringPlatform}. Always `'web'` from this package. */
+	platform?: MonitoringPlatform;
 	event: Event;
 }
 export interface PaymentAPI {
 	env: Pick<APIEnv, "apiKey" | "paymentAPIRoot" | "entityId" | "target">;
+	readonly root: string;
 	setSessionId(id: string): void;
 	init<Logs = Record<never, never>>(data: ItemPayload): Promise<InitData<Logs>>;
 	initXPays<Logs = Record<never, never>>(data: ItemPayload): Promise<InitXPaysData<Logs>>;
@@ -745,6 +783,11 @@ export declare type DeepPartial<T> = T extends any[] ? T : {
 export declare type EnvSource = {
 	id: string;
 	singleton?: boolean;
+	/**
+	 * Partner domains the URL may point at. Required for a source whose URL comes
+	 * from the API; a source whose URL is hardcoded here needs none (SDK-12165).
+	 */
+	allowedDomains?: string[];
 	production: Source;
 } & {
 	[key in ExternalSourceEnv]?: Source;
@@ -777,6 +820,7 @@ declare const ErrorCodes: {
 	readonly MultipleMatchesForTargetInDocument: "MultipleMatchesForTargetInDocument";
 	readonly PartnerDoesNotSupportUI: "PartnerDoesNotSupportUI";
 	readonly HolderNameFieldRequired: "HolderNameFieldRequired";
+	readonly ExternalSourceHostRefused: "ExternalSourceHostRefused";
 };
 export declare type ErrorPayload = {
 	reason?: string;
@@ -815,6 +859,16 @@ declare const Events: {
 	};
 	readonly died: {
 		readonly code: "died";
+		readonly topics: readonly [
+			"lethal"
+		];
+	};
+	/**
+	 * Purse 3DS will not authenticate this saved card (not eligible, expired, removed). Lethal for
+	 * the token's element only: the card form of the same method still works.
+	 */
+	readonly savedCardNotEligible: {
+		readonly code: "savedCardNotEligible";
 		readonly topics: readonly [
 			"lethal"
 		];
@@ -1404,6 +1458,12 @@ declare class PartnerUI<Context extends PartnerUIContext<any, any>> extends LitE
 	disconnectedCallback(): void;
 	performUpdate(): void;
 	private updateData;
+	/**
+	 * Extra sources carry a URL the API chose, so the plugin's declared partner
+	 * domains are checked here rather than in the tag builder: this is the only
+	 * path an API-supplied `src` takes, and a plugin's static `sources` never
+	 * reach it (SDK-12165).
+	 */
 	private loadExtraSources;
 	private getSourceListener;
 	updated(changedProperties: PropertyValues<this>): void;
@@ -1614,10 +1674,19 @@ declare class PursePartnerUI<Context extends PartnerUIContext<any, any>> extends
 export declare interface RedirectionHandler {
 	submitRedirectionForm(action: string, serializedFormData: string): Promise<void> | void;
 	submitStringRedirectionForm(id: string, responseFormAsString: string): Promise<void> | void;
-	redirectToUrl(url: string): Promise<void> | void;
+	redirectToUrl(url: string, options?: RedirectToUrlOptions): Promise<void> | void;
+	/**
+	 * Lets a plugin show an in-browser 3DS challenge in a popup it opens on a relay page, instead of
+	 * drawing it in a modal inside the checkout.
+	 */
+	hostsChallenge?: boolean;
 }
 export declare interface RedirectionUIOptions {
 	title?: string;
+}
+export declare interface RedirectToUrlOptions {
+	/** The 3DS challenge was already shown in a popup: redirect in place, do not open another one. */
+	challengedInPopup?: boolean;
 }
 export declare type Source = {
 	type: "script" | "link";
@@ -1769,7 +1838,8 @@ export declare interface UnifiedEventPayload {
 	clientError: ErrorPayload | null;
 	clientNotFound: ErrorPayload | null;
 	died: ErrorPayload | null;
-	apiError: Pick<ApiError, "error" | "additionalPayload" | "path"> | null;
+	savedCardNotEligible: ErrorPayload | null;
+	apiError: Pick<ApiError, "error" | "additionalPayload" | "path" | "status" | "apiErrorType" | "apiErrorDetail"> | null;
 	clientNotProperlyDestroyed: {
 		error: string;
 	};
@@ -1929,6 +1999,24 @@ declare interface XPayButtonUIOptions {
 		 * See https://developer.paypal.com/sdk/js/reference/#width
 		 */
 		disableMaxWidth?: boolean;
+	};
+	/**
+	 * Revolut Pay button, passed to the Revolut Web SDK as `buttonStyle`.
+	 * See https://developer.revolut.com/docs/sdks/merchant-web-sdk/payment-methods/revolut-pay
+	 */
+	revolut?: {
+		variant?: "dark" | "light" | "light-outlined";
+		radius?: "none" | "small" | "large" | "round";
+		size?: "large" | "small";
+		/** CSS length, e.g. `'48px'`. Defaults to the height of the container. */
+		height?: string;
+		/** Button wording. */
+		action?: "donate" | "pay" | "subscribe" | "buy";
+		/**
+		 * Shows Revolut's "new users get up to …" cashback banner under the button.
+		 * Defaults to `false`.
+		 */
+		cashback?: boolean;
 	};
 }
 /**
@@ -2127,6 +2215,8 @@ export interface PurseHeadlessCheckoutSecondaryTokenProvider {
 	 * If the provided pan does not respect the expected format
 	 * - {@link PurseHeadlessCheckoutError} `SECONDARY_METHOD_WRONG_CVV_FORMAT` \
 	 * If the provided cvv does not respect the expected format
+	 * - {@link PurseHeadlessCheckoutError} `SECONDARY_AUTH_POPUP_BLOCKED` \
+	 * If the method needs the buyer to authenticate at the partner and the browser refused the window
 	 */
 	getSecondaryToken(pan: string, cvv?: string, signal?: AbortSignal): Promise<PurseHeadlessCheckoutTemporarySecondaryToken>;
 }
@@ -2345,6 +2435,11 @@ declare const PurseHeadlessCheckoutErrors: {
 		message: string;
 		documentationLink: string;
 	};
+	readonly SECONDARY_AUTH_POPUP_BLOCKED: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
 	readonly USER_ACTION_REQUEST_HAS_EXPIRED: {
 		code: string;
 		message: string;
@@ -2441,6 +2536,7 @@ export interface PurseHeadlessCheckoutErrorsPayload {
 	};
 	LOYALTY_ACCOUNT_NOT_FOUND?: never;
 	SECONDARY_TOKEN_EMPTY_BALANCE?: never;
+	SECONDARY_AUTH_POPUP_BLOCKED?: never;
 	USER_ACTION_REQUEST_HAS_EXPIRED: never;
 	USER_ACTION_REQUEST_ABORTED_BY_CUSTOMER: never;
 	OTHER_TRANSACTION_PENDING_FOR_ACCOUNT: never;
@@ -2543,6 +2639,17 @@ export declare class PurseHeadlessCheckoutError extends Error {
 }
 export type SecondaryTakePolicy = "none" | "max";
 /**
+ * What a host renders for the method.
+ *
+ * `form` — the buyer types a number, and a CVV when {@link SecondarySpecificConfig.requiresCVV}
+ * asks for one. The default, and what every card-shaped secondary is.
+ *
+ * `button` — the buyer completes the method at the partner instead: one action, no inputs. The SDK
+ * sends them there and turns what comes back into the token, so `getSecondaryToken()` is called
+ * with an empty pan and validates none.
+ */
+export type SecondaryInterface = "form" | "button";
+/**
  * Secondaries are true Headless payment methods and are handled directly by the SDK for now.
  * They are not handled by the partner UI.
  */
@@ -2563,6 +2670,22 @@ export interface SecondarySpecificConfig {
 	 * Take policy
 	 */
 	takePolicy: SecondaryTakePolicy;
+	/**
+	 * Which interface the method presents. Defaults to `form`.
+	 *
+	 * A `button` method goes with {@link SecondaryInternalConfig.extractAuthenticationUrl}, which is
+	 * how the SDK finds where to send the buyer.
+	 */
+	interface?: SecondaryInterface;
+	/**
+	 * Leading characters every PAN of this method shares. Hosts show it as a fixed input prefix; a
+	 * PAN passed without it gets it prepended.
+	 */
+	panPrefix?: string;
+	/**
+	 * Length of a full PAN, prefix included. Lets hosts size the input and its placeholder.
+	 */
+	panLength?: number;
 	/**
 	 * Map the payment_data for the first init call.
 	 */
@@ -2604,6 +2727,7 @@ export type DisabledStatePayload = {
 	PAYMENT_ELEMENT_RENDER_FAILED: never;
 	PLUGIN_INCOMPATIBLE: never;
 	PARTNER_UI_FATAL_ERROR: never;
+	SAVED_CARD_NOT_ELIGIBLE: never;
 	PARTNER_UI_RECOVERABLE_ERROR: never;
 	FATAL_ERROR_BEFORE_RENDER: never;
 	MIN_AMOUNT_NOT_MET: {
@@ -2819,7 +2943,7 @@ export interface PurseHeadlessCheckoutGetPaymentElementOptions {
 	hostedForm?: HostedFormUIOptions;
 	/** Hosted fields configuration — see {@link HostedFieldsUIOptions.fields}. */
 	hostedFields?: HostedFieldsUIOptions["fields"];
-	/** xPay button configuration (Apple Pay, Google Pay) — see {@link XPayButtonUIOptions}. */
+	/** xPay button configuration (Apple Pay, Google Pay, PayPal, Revolut Pay) — see {@link XPayButtonUIOptions}. */
 	xPayButton?: XPayButtonUIOptions;
 }
 /**
@@ -3386,6 +3510,8 @@ export type PurseHeadlessCheckoutV2Params = string;
 export type RedirectionBasicParams = {
 	type: "redirection";
 	url: string;
+	/** Set when the 3DS challenge was already shown in a popup: redirect in place, do not open another one. */
+	challengedInPopup?: true;
 };
 export type RedirectionJSONParams = {
 	type: "jsonFormSubmit";
@@ -3409,6 +3535,12 @@ export interface PurseHeadlessCheckoutHooks {
 	onAfterValidate?: () => Promise<void>;
 	/** Optional argument to handle the redirection */
 	redirectionHandler?: (redirectionData: RedirectionHandlerParams) => Promise<void>;
+	/**
+	 * Shows the 3DS challenge of partners running it in-browser (Lyra, Axepta) in a popup instead of a
+	 * modal inside the checkout, falling back to the modal when the browser blocks the popup. The final
+	 * `redirection` then carries `challengedInPopup: true`.
+	 */
+	delegate3DSChallenge?: boolean;
 }
 /**
  * How a payment submission was triggered.
@@ -3604,8 +3736,9 @@ export interface PurseHeadlessCheckoutEventPayload {
 		trigger: PurseHeadlessCheckoutSubmitTrigger;
 	};
 	HEADLESS_CHECKOUT_SUBMIT_PAYMENT: {
-		splits: PaymentSplit[];
 		trigger: PurseHeadlessCheckoutSubmitTrigger;
+		nb_splits: number;
+		methods: Array<Pick<PaymentSplit["source"], "partner" | "method" | "type" | "isSecondary"> & Pick<PaymentSplit, "amount">>;
 	};
 	HEADLESS_CHECKOUT_TOKEN_DELETE: {
 		partner: string;
