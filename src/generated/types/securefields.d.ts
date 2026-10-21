@@ -235,6 +235,8 @@ export interface HostedFormUIOptions {
 	brandSelectionMode?: BrandSelectionMode;
 	/** Label of the select rendered in `explicit` mode. */
 	explicitBrandText?: string;
+	/** Accessible name of the form's field group. Secure Fields only: the widget has no such key. */
+	cardFormLabel?: string;
 	/** Overrides the displayed name of one or more card brands. */
 	brandLabels?: {
 		[key in Brand]?: string;
@@ -464,7 +466,8 @@ export interface SecureFieldsEventsPayload {
 	 * Use `'vault_form_token' in payload` or `'birth_date' in payload` to narrow the variant.
 	 *
 	 * With 3DS enabled at init, this fires only once the 3DS sequence has run, and carries its
-	 * `three_ds_server_trans_id` — a submit whose 3DS could not be attempted emits `error`, never `success`.
+	 * `three_ds_server_trans_id` — a submit whose 3DS could not be attempted still emits `success`,
+	 * without it.
 	 */
 	success: {
 		/** Standard tokenization — always present in this variant. */
@@ -609,6 +612,13 @@ export interface SecureFieldsFieldConfig {
 	 */
 	iframeTitle?: string;
 	/**
+	 * (Optional) Help text for the field, such as the expected format, exposed to screen readers as the
+	 * input's description from inside the frame.
+	 *
+	 * Hosted form mode fills this in for you from the tooltip texts in `hostedForm`.
+	 */
+	description?: string;
+	/**
 	 * (Optional) The message to announce for each validation error the field can raise.
 	 *
 	 * A screen reader reading the input cannot reach error text you render on your own page, because the
@@ -633,6 +643,13 @@ export interface SecureFieldsFieldConfig {
 	 * Hosted form mode fills this in for you from `hostedForm.brandLabels`.
 	 */
 	brandLabels?: Partial<Record<Brand, string>>;
+	/**
+	 * Card number field only: accessible name of the co-badge brand list drawn inside the frame, read
+	 * by screen readers. Defaults to `'Card brand'`; pass a translated label.
+	 *
+	 * Hosted form mode fills this in for you from `hostedForm.explicitBrandText`.
+	 */
+	brandSelectorLabel?: string;
 }
 export declare const Environments: readonly [
 	"sandbox",
@@ -762,6 +779,11 @@ export interface SecureFieldsHostedFieldsConfig {
 	 * Runs the 3DS sequence inside `submit()`. See {@link SecureFieldsThreeDSConfig}.
 	 */
 	threeDS?: SecureFieldsThreeDSConfig;
+	/**
+	 * (Optional) Language of the card fields, as a BCP 47 tag (e.g. `'fr'`, `'en-GB'`), so screen readers
+	 * pronounce their names and messages correctly. Defaults to the page's `<html lang>`, then `'en'`.
+	 */
+	lang?: string;
 }
 /**
  * Hosted form mode: the SDK renders a complete, ready to use card form — card number, expiry date, CVV
@@ -840,6 +862,11 @@ export interface SecureFieldsHostedFormConfig {
 	 * Runs the 3DS sequence inside `submit()`. See {@link SecureFieldsThreeDSConfig}.
 	 */
 	threeDS?: SecureFieldsThreeDSConfig;
+	/**
+	 * (Optional) Language of the card fields, as a BCP 47 tag (e.g. `'fr'`, `'en-GB'`), so screen readers
+	 * pronounce their names and messages correctly. Defaults to the page's `<html lang>`, then `'en'`.
+	 */
+	lang?: string;
 }
 /**
  * Partial update for {@link SecureFieldsConfig}.
@@ -927,8 +954,8 @@ export interface SecureFieldsClient {
 	 * after tokenization — versioning, then the 3DS Method in a hidden iframe when the card range has
 	 * one — and the result carries the `three_ds_server_trans_id` your backend needs for the payment
 	 * creation call, alongside the browser information you collect with `getBrowserData()`.
-	 * Fingerprinting is best-effort and never blocks the submit; a failed versioning call does, since
-	 * 3DS cannot be attempted without it.
+	 * The sequence is best-effort and never blocks the submit: a failed versioning call returns the
+	 * token without `three_ds_server_trans_id`.
 	 *
 	 * @see {@link SecureFieldsErrors}
 	 *
@@ -1033,9 +1060,16 @@ export declare const SecureFieldsErrors: {
 		readonly message: "Failed to tokenize payment information";
 		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/sdk-references/Core/SecureFieldsClient#submit";
 	};
+	/** Thrown by `threeDSSavedCard` only; `submit()` absorbs it. */
 	readonly THREEDS_VERSIONING_FAILED: {
 		readonly code: "THREEDS_VERSIONING_FAILED";
 		readonly message: "The 3DS versioning call failed - 3DS cannot be attempted";
+		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/";
+	};
+	/** Thrown by `threeDSSavedCard`: offer the card form. */
+	readonly THREEDS_CARD_NOT_ELIGIBLE: {
+		readonly code: "THREEDS_CARD_NOT_ELIGIBLE";
+		readonly message: "This saved card cannot be authenticated with 3DS - ask for the card details instead";
 		readonly documentationLink: "https://docs.purse.tech/docs/integrate/purse-api/additional-features/advanced-flow/";
 	};
 	readonly NETWORK_ERROR: {
@@ -1266,6 +1300,11 @@ export interface ThreeDSChallengeOptions extends ThreeDSFrameOptionsBase {
 	 */
 	challengeWindowSize?: ChallengeWindowSize;
 	/**
+	 * Accessible name of the challenge iframe, e.g. in the checkout's language. Defaults to
+	 * `'3D Secure authentication'`.
+	 */
+	title?: string;
+	/**
 	 * How the ACS reports that the cardholder is done. Required unless `resolveAfterLoads` is set —
 	 * a challenge has no other way to report a result.
 	 */
@@ -1471,6 +1510,55 @@ export declare const getBrowserData: () => ThreeDSBrowserData;
  * @category 3DS
  */
 export declare const toPaymentBrowserNode: (data?: ThreeDSBrowserData) => PaymentBrowserNode;
+/**
+ * The saved card, and its owner: the client session (session flow), or the entity and customer
+ * sent in `POST /v2/payments` (advanced flow).
+ *
+ * @category 3DS
+ */
+export type ThreeDSSavedCardOptions = ({
+	/** The oneWallet token `id` (a UUID), never its `value`. */
+	walletTokenId: string;
+	clientSessionId: string;
+	entityId?: never;
+	customerReference?: never;
+} | {
+	/** The oneWallet token `id` (a UUID), never its `value`. */
+	walletTokenId: string;
+	entityId: string;
+	customerReference: string;
+	clientSessionId?: never;
+}) & {
+	/** Gateway api key, the one passed to `initSecureFields`. */
+	apiKey?: string;
+	signal?: AbortSignal;
+};
+/**
+ * 3DS versioning and fingerprint for a card saved in oneWallet. No Secure Fields instance needed.
+ *
+ * Send the returned `three_ds_server_trans_id` in the payment call, with {@link getBrowserData}.
+ * The challenge, if any, is {@link threeDSChallenge}.
+ *
+ * @throws SdkError
+ *
+ * | Error Code                 | When                                                             |
+ * |----------------------------|------------------------------------------------------------------|
+ * | THREEDS_CARD_NOT_ELIGIBLE  | The gateway will not authenticate this card: offer the card form. Do not retry. |
+ * | THREEDS_VERSIONING_FAILED  | Any other versioning failure. `additionalPayload` carries `status` and `type`. |
+ *
+ * @example Session flow
+ * ```ts
+ * const { three_ds_server_trans_id } = await threeDSSavedCard({
+ *   walletTokenId,
+ *   clientSessionId,
+ *   apiKey,
+ * });
+ * ```
+ *
+ * @see {@link SecureFieldsErrors}
+ * @category 3DS
+ */
+export declare function threeDSSavedCard(options: ThreeDSSavedCardOptions): Promise<Required<ThreeDSSubmitData>>;
 /**
  * @function
  * Initializes the Secure Fields SDK with the provided tenant ID and configuration.
