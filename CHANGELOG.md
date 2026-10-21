@@ -35,6 +35,14 @@
 
 
 
+## [0.11.0](https://github.com/UpStreamPay/web-sdk/compare/v0.10.2...v0.11.0) (2026-10-21)
+
+
+### Features
+
+* add test env URLs for headless and dropin SDKs ([#107](https://github.com/UpStreamPay/web-sdk/issues/107)) ([62f1ff1](https://github.com/UpStreamPay/web-sdk/commit/62f1ff1b9d18765aed92eeeabfd1a0dfb6891bbc))
+* **types:** sync dropin 0.18.0, headless-checkout 3.76.0, securefields 1.9.1 ([#115](https://github.com/UpStreamPay/web-sdk/issues/115)) ([3cca8aa](https://github.com/UpStreamPay/web-sdk/commit/3cca8aa143cc4d65daf9b871d5d2ec96d1dfdea2))
+
 ## [0.7.1](https://github.com/UpStreamPay/web-sdk/compare/v0.7.0...v0.7.1) (2026-05-20)
 
 
@@ -162,6 +170,3 @@
 ### Features
 
 * initial commit ([f57eb6f](https://github.com/UpStreamPay/web-sdk/commit/f57eb6f2b493b79633c2928861a41725b5e27183))
-
-
-
