@@ -3,7 +3,7 @@
 import { AnyObject } from 'final-form';
 import { CSSResult, LitElement, PropertyValues, TemplateResult as TemplateResult_2, nothing } from 'lit';
 import { TemplateResult } from 'lit-html';
-import { ZodIssue, z } from 'zod';
+import { z } from 'zod/mini';
 
 declare const Environments: readonly [
 	"development",
@@ -4208,8 +4208,8 @@ export declare interface WalletSession {
 	expirationDate: string;
 	ownerReference: string;
 }
-declare const DropinThemeSchema: z.ZodObject<{
-	fontFamily: z.ZodOptional<z.ZodEnum<{
+declare const DropinThemeSchema: z.ZodMiniObject<{
+	fontFamily: z.ZodMiniOptional<z.ZodMiniEnum<{
 		Roboto: "Roboto";
 		Montserrat: "Montserrat";
 		Raleway: "Raleway";
@@ -4220,13 +4220,13 @@ declare const DropinThemeSchema: z.ZodObject<{
 		Nunito: "Nunito";
 		"Work Sans": "Work Sans";
 	}>>;
-	borderRadius: z.ZodOptional<z.ZodString>;
-	accentColor: z.ZodOptional<z.ZodString>;
-	text: z.ZodOptional<z.ZodObject<{
-		primaryColor: z.ZodOptional<z.ZodString>;
-		secondaryColor: z.ZodOptional<z.ZodString>;
-		fontSize: z.ZodOptional<z.ZodString>;
-		fontWeight: z.ZodOptional<z.ZodEnum<{
+	borderRadius: z.ZodMiniOptional<z.ZodMiniString>;
+	accentColor: z.ZodMiniOptional<z.ZodMiniString>;
+	text: z.ZodMiniOptional<z.ZodMiniObject<{
+		primaryColor: z.ZodMiniOptional<z.ZodMiniString>;
+		secondaryColor: z.ZodMiniOptional<z.ZodMiniString>;
+		fontSize: z.ZodMiniOptional<z.ZodMiniString>;
+		fontWeight: z.ZodMiniOptional<z.ZodMiniEnum<{
 			normal: "normal";
 			bold: "bold";
 			bolder: "bolder";
@@ -4242,10 +4242,10 @@ declare const DropinThemeSchema: z.ZodObject<{
 			900: "900";
 		}>>;
 	}, z.core.$strict>>;
-	title: z.ZodOptional<z.ZodObject<{
-		color: z.ZodOptional<z.ZodString>;
-		fontSize: z.ZodOptional<z.ZodString>;
-		fontWeight: z.ZodOptional<z.ZodEnum<{
+	title: z.ZodMiniOptional<z.ZodMiniObject<{
+		color: z.ZodMiniOptional<z.ZodMiniString>;
+		fontSize: z.ZodMiniOptional<z.ZodMiniString>;
+		fontWeight: z.ZodMiniOptional<z.ZodMiniEnum<{
 			normal: "normal";
 			bold: "bold";
 			bolder: "bolder";
@@ -4261,23 +4261,23 @@ declare const DropinThemeSchema: z.ZodObject<{
 			900: "900";
 		}>>;
 	}, z.core.$strict>>;
-	xpay: z.ZodOptional<z.ZodObject<{
-		apple: z.ZodOptional<z.ZodObject<{
-			buttonstyle: z.ZodOptional<z.ZodEnum<{
+	xpay: z.ZodMiniOptional<z.ZodMiniObject<{
+		apple: z.ZodMiniOptional<z.ZodMiniObject<{
+			buttonstyle: z.ZodMiniOptional<z.ZodMiniEnum<{
 				black: "black";
 				white: "white";
 				"white-outline": "white-outline";
 			}>>;
 		}, z.core.$strict>>;
-		google: z.ZodOptional<z.ZodObject<{
-			buttonColor: z.ZodOptional<z.ZodEnum<{
+		google: z.ZodMiniOptional<z.ZodMiniObject<{
+			buttonColor: z.ZodMiniOptional<z.ZodMiniEnum<{
 				black: "black";
 				white: "white";
 				default: "default";
 			}>>;
 		}, z.core.$strict>>;
-		revolut: z.ZodOptional<z.ZodObject<{
-			variant: z.ZodOptional<z.ZodEnum<{
+		revolut: z.ZodMiniOptional<z.ZodMiniObject<{
+			variant: z.ZodMiniOptional<z.ZodMiniEnum<{
 				dark: "dark";
 				light: "light";
 				"light-outlined": "light-outlined";
@@ -4528,7 +4528,7 @@ export interface DropinPrivateEventPayload {
 	};
 	DROPIN_CHECKOUT_THEME_INVALID_CONFIG: {
 		sessionId: string;
-		errors: ZodIssue[];
+		errors: z.core.$ZodIssue[];
 	};
 	DROPIN_CHECKOUT_CONFIG_UPDATED: {
 		hasTheme: boolean;
