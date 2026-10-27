@@ -1332,6 +1332,13 @@ export declare interface HostedFormUIOptions {
 	brandLabels?: {
 		[key in CardScheme]?: string;
 	};
+	/**
+	 * Overlay drawn over the widget while a 3DS challenge runs in a popup (`hooks.delegate3DSChallenge`).
+	 * The overlay is shown only when all three texts are set.
+	 */
+	challengePopupText?: string;
+	challengePopupContinueLabel?: string;
+	challengePopupCloseLabel?: string;
 }
 declare const IntegrationTypes: {
 	readonly hostedForm: "hostedForm";
@@ -4202,184 +4209,82 @@ export declare interface WalletSession {
 	ownerReference: string;
 }
 declare const DropinThemeSchema: z.ZodObject<{
-	fontFamily: z.ZodOptional<z.ZodEnum<[
-		"Roboto",
-		"Montserrat",
-		"Raleway",
-		"Inter",
-		"Noto Sans",
-		"Open Sans",
-		"Lato",
-		"Nunito",
-		"Work Sans"
-	]>>;
+	fontFamily: z.ZodOptional<z.ZodEnum<{
+		Roboto: "Roboto";
+		Montserrat: "Montserrat";
+		Raleway: "Raleway";
+		Inter: "Inter";
+		"Noto Sans": "Noto Sans";
+		"Open Sans": "Open Sans";
+		Lato: "Lato";
+		Nunito: "Nunito";
+		"Work Sans": "Work Sans";
+	}>>;
 	borderRadius: z.ZodOptional<z.ZodString>;
 	accentColor: z.ZodOptional<z.ZodString>;
 	text: z.ZodOptional<z.ZodObject<{
 		primaryColor: z.ZodOptional<z.ZodString>;
 		secondaryColor: z.ZodOptional<z.ZodString>;
 		fontSize: z.ZodOptional<z.ZodString>;
-		fontWeight: z.ZodOptional<z.ZodEnum<[
-			"normal",
-			"bold",
-			"bolder",
-			"lighter",
-			"100",
-			"200",
-			"300",
-			"400",
-			"500",
-			"600",
-			"700",
-			"800",
-			"900"
-		]>>;
-	}, "strict", z.ZodTypeAny, {
-		primaryColor?: string | undefined;
-		secondaryColor?: string | undefined;
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-	}, {
-		primaryColor?: string | undefined;
-		secondaryColor?: string | undefined;
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-	}>>;
+		fontWeight: z.ZodOptional<z.ZodEnum<{
+			normal: "normal";
+			bold: "bold";
+			bolder: "bolder";
+			lighter: "lighter";
+			100: "100";
+			200: "200";
+			300: "300";
+			400: "400";
+			500: "500";
+			600: "600";
+			700: "700";
+			800: "800";
+			900: "900";
+		}>>;
+	}, z.core.$strict>>;
 	title: z.ZodOptional<z.ZodObject<{
 		color: z.ZodOptional<z.ZodString>;
 		fontSize: z.ZodOptional<z.ZodString>;
-		fontWeight: z.ZodOptional<z.ZodEnum<[
-			"normal",
-			"bold",
-			"bolder",
-			"lighter",
-			"100",
-			"200",
-			"300",
-			"400",
-			"500",
-			"600",
-			"700",
-			"800",
-			"900"
-		]>>;
-	}, "strict", z.ZodTypeAny, {
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-		color?: string | undefined;
-	}, {
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-		color?: string | undefined;
-	}>>;
+		fontWeight: z.ZodOptional<z.ZodEnum<{
+			normal: "normal";
+			bold: "bold";
+			bolder: "bolder";
+			lighter: "lighter";
+			100: "100";
+			200: "200";
+			300: "300";
+			400: "400";
+			500: "500";
+			600: "600";
+			700: "700";
+			800: "800";
+			900: "900";
+		}>>;
+	}, z.core.$strict>>;
 	xpay: z.ZodOptional<z.ZodObject<{
 		apple: z.ZodOptional<z.ZodObject<{
-			buttonstyle: z.ZodOptional<z.ZodEnum<[
-				"black",
-				"white",
-				"white-outline"
-			]>>;
-		}, "strict", z.ZodTypeAny, {
-			buttonstyle?: "black" | "white" | "white-outline" | undefined;
-		}, {
-			buttonstyle?: "black" | "white" | "white-outline" | undefined;
-		}>>;
+			buttonstyle: z.ZodOptional<z.ZodEnum<{
+				black: "black";
+				white: "white";
+				"white-outline": "white-outline";
+			}>>;
+		}, z.core.$strict>>;
 		google: z.ZodOptional<z.ZodObject<{
-			buttonColor: z.ZodOptional<z.ZodEnum<[
-				"black",
-				"white",
-				"default"
-			]>>;
-		}, "strict", z.ZodTypeAny, {
-			buttonColor?: "black" | "white" | "default" | undefined;
-		}, {
-			buttonColor?: "black" | "white" | "default" | undefined;
-		}>>;
+			buttonColor: z.ZodOptional<z.ZodEnum<{
+				black: "black";
+				white: "white";
+				default: "default";
+			}>>;
+		}, z.core.$strict>>;
 		revolut: z.ZodOptional<z.ZodObject<{
-			variant: z.ZodOptional<z.ZodEnum<[
-				"dark",
-				"light",
-				"light-outlined"
-			]>>;
-		}, "strict", z.ZodTypeAny, {
-			variant?: "dark" | "light" | "light-outlined" | undefined;
-		}, {
-			variant?: "dark" | "light" | "light-outlined" | undefined;
-		}>>;
-	}, "strict", z.ZodTypeAny, {
-		apple?: {
-			buttonstyle?: "black" | "white" | "white-outline" | undefined;
-		} | undefined;
-		google?: {
-			buttonColor?: "black" | "white" | "default" | undefined;
-		} | undefined;
-		revolut?: {
-			variant?: "dark" | "light" | "light-outlined" | undefined;
-		} | undefined;
-	}, {
-		apple?: {
-			buttonstyle?: "black" | "white" | "white-outline" | undefined;
-		} | undefined;
-		google?: {
-			buttonColor?: "black" | "white" | "default" | undefined;
-		} | undefined;
-		revolut?: {
-			variant?: "dark" | "light" | "light-outlined" | undefined;
-		} | undefined;
-	}>>;
-}, "strict", z.ZodTypeAny, {
-	fontFamily?: "Roboto" | "Montserrat" | "Raleway" | "Inter" | "Noto Sans" | "Open Sans" | "Lato" | "Nunito" | "Work Sans" | undefined;
-	borderRadius?: string | undefined;
-	accentColor?: string | undefined;
-	text?: {
-		primaryColor?: string | undefined;
-		secondaryColor?: string | undefined;
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-	} | undefined;
-	title?: {
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-		color?: string | undefined;
-	} | undefined;
-	xpay?: {
-		apple?: {
-			buttonstyle?: "black" | "white" | "white-outline" | undefined;
-		} | undefined;
-		google?: {
-			buttonColor?: "black" | "white" | "default" | undefined;
-		} | undefined;
-		revolut?: {
-			variant?: "dark" | "light" | "light-outlined" | undefined;
-		} | undefined;
-	} | undefined;
-}, {
-	fontFamily?: "Roboto" | "Montserrat" | "Raleway" | "Inter" | "Noto Sans" | "Open Sans" | "Lato" | "Nunito" | "Work Sans" | undefined;
-	borderRadius?: string | undefined;
-	accentColor?: string | undefined;
-	text?: {
-		primaryColor?: string | undefined;
-		secondaryColor?: string | undefined;
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-	} | undefined;
-	title?: {
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-		color?: string | undefined;
-	} | undefined;
-	xpay?: {
-		apple?: {
-			buttonstyle?: "black" | "white" | "white-outline" | undefined;
-		} | undefined;
-		google?: {
-			buttonColor?: "black" | "white" | "default" | undefined;
-		} | undefined;
-		revolut?: {
-			variant?: "dark" | "light" | "light-outlined" | undefined;
-		} | undefined;
-	} | undefined;
-}>;
+			variant: z.ZodOptional<z.ZodEnum<{
+				dark: "dark";
+				light: "light";
+				"light-outlined": "light-outlined";
+			}>>;
+		}, z.core.$strict>>;
+	}, z.core.$strict>>;
+}, z.core.$strict>;
 export type DropinTheme = z.infer<typeof DropinThemeSchema>;
 export type SaveTokenEventPayload = {
 	partner: string;
@@ -4780,9 +4685,13 @@ declare const translationFiles: {
 				holderInputLabel: string;
 				holderRequiredError: string;
 				holderFormatError: string;
+				explicitBrandText: string;
 				birthdateInputLabel: string;
 				birthdateRequiredError: string;
 				birthdateFormatError: string;
+				challengePopupText: string;
+				challengePopupContinueLabel: string;
+				challengePopupCloseLabel: string;
 				saveTokenLabel: string;
 				saveAccountLabel: string;
 			};
@@ -5014,9 +4923,13 @@ declare const translationFiles: {
 				holderInputLabel: string;
 				holderRequiredError: string;
 				holderFormatError: string;
+				explicitBrandText: string;
 				birthdateInputLabel: string;
 				birthdateRequiredError: string;
 				birthdateFormatError: string;
+				challengePopupText: string;
+				challengePopupContinueLabel: string;
+				challengePopupCloseLabel: string;
 				saveTokenLabel: string;
 				saveAccountLabel: string;
 			};
@@ -5248,9 +5161,13 @@ declare const translationFiles: {
 				holderInputLabel: string;
 				holderRequiredError: string;
 				holderFormatError: string;
+				explicitBrandText: string;
 				birthdateInputLabel: string;
 				birthdateRequiredError: string;
 				birthdateFormatError: string;
+				challengePopupText: string;
+				challengePopupContinueLabel: string;
+				challengePopupCloseLabel: string;
 				saveTokenLabel: string;
 				saveAccountLabel: string;
 			};
@@ -5506,9 +5423,13 @@ declare const translationFiles: {
 				holderInputLabel: string;
 				holderRequiredError: string;
 				holderFormatError: string;
+				explicitBrandText: string;
 				birthdateInputLabel: string;
 				birthdateRequiredError: string;
 				birthdateFormatError: string;
+				challengePopupText: string;
+				challengePopupContinueLabel: string;
+				challengePopupCloseLabel: string;
 				saveTokenLabel: string;
 				saveAccountLabel: string;
 			};
@@ -5764,9 +5685,13 @@ declare const translationFiles: {
 				holderInputLabel: string;
 				holderRequiredError: string;
 				holderFormatError: string;
+				explicitBrandText: string;
 				birthdateInputLabel: string;
 				birthdateRequiredError: string;
 				birthdateFormatError: string;
+				challengePopupText: string;
+				challengePopupContinueLabel: string;
+				challengePopupCloseLabel: string;
 				saveTokenLabel: string;
 				saveAccountLabel: string;
 			};
@@ -6022,9 +5947,13 @@ declare const translationFiles: {
 				holderInputLabel: string;
 				holderRequiredError: string;
 				holderFormatError: string;
+				explicitBrandText: string;
 				birthdateInputLabel: string;
 				birthdateRequiredError: string;
 				birthdateFormatError: string;
+				challengePopupText: string;
+				challengePopupContinueLabel: string;
+				challengePopupCloseLabel: string;
 				saveTokenLabel: string;
 				saveAccountLabel: string;
 			};
@@ -6280,9 +6209,13 @@ declare const translationFiles: {
 				holderInputLabel: string;
 				holderRequiredError: string;
 				holderFormatError: string;
+				explicitBrandText: string;
 				birthdateInputLabel: string;
 				birthdateRequiredError: string;
 				birthdateFormatError: string;
+				challengePopupText: string;
+				challengePopupContinueLabel: string;
+				challengePopupCloseLabel: string;
 				saveTokenLabel: string;
 				saveAccountLabel: string;
 			};
@@ -6538,9 +6471,13 @@ declare const translationFiles: {
 				holderInputLabel: string;
 				holderRequiredError: string;
 				holderFormatError: string;
+				explicitBrandText: string;
 				birthdateInputLabel: string;
 				birthdateRequiredError: string;
 				birthdateFormatError: string;
+				challengePopupText: string;
+				challengePopupContinueLabel: string;
+				challengePopupCloseLabel: string;
 				saveTokenLabel: string;
 				saveAccountLabel: string;
 			};
@@ -6796,9 +6733,13 @@ declare const translationFiles: {
 				holderInputLabel: string;
 				holderRequiredError: string;
 				holderFormatError: string;
+				explicitBrandText: string;
 				birthdateInputLabel: string;
 				birthdateRequiredError: string;
 				birthdateFormatError: string;
+				challengePopupText: string;
+				challengePopupContinueLabel: string;
+				challengePopupCloseLabel: string;
 				saveTokenLabel: string;
 				saveAccountLabel: string;
 			};
@@ -7054,9 +6995,13 @@ declare const translationFiles: {
 				holderInputLabel: string;
 				holderRequiredError: string;
 				holderFormatError: string;
+				explicitBrandText: string;
 				birthdateInputLabel: string;
 				birthdateRequiredError: string;
 				birthdateFormatError: string;
+				challengePopupText: string;
+				challengePopupContinueLabel: string;
+				challengePopupCloseLabel: string;
 				saveTokenLabel: string;
 				saveAccountLabel: string;
 			};
@@ -7312,9 +7257,13 @@ declare const translationFiles: {
 				holderInputLabel: string;
 				holderRequiredError: string;
 				holderFormatError: string;
+				explicitBrandText: string;
 				birthdateInputLabel: string;
 				birthdateRequiredError: string;
 				birthdateFormatError: string;
+				challengePopupText: string;
+				challengePopupContinueLabel: string;
+				challengePopupCloseLabel: string;
 				saveTokenLabel: string;
 				saveAccountLabel: string;
 			};
@@ -7570,9 +7519,13 @@ declare const translationFiles: {
 				holderInputLabel: string;
 				holderRequiredError: string;
 				holderFormatError: string;
+				explicitBrandText: string;
 				birthdateInputLabel: string;
 				birthdateRequiredError: string;
 				birthdateFormatError: string;
+				challengePopupText: string;
+				challengePopupContinueLabel: string;
+				challengePopupCloseLabel: string;
 				saveTokenLabel: string;
 				saveAccountLabel: string;
 			};
@@ -7828,9 +7781,13 @@ declare const translationFiles: {
 				holderInputLabel: string;
 				holderRequiredError: string;
 				holderFormatError: string;
+				explicitBrandText: string;
 				birthdateInputLabel: string;
 				birthdateRequiredError: string;
 				birthdateFormatError: string;
+				challengePopupText: string;
+				challengePopupContinueLabel: string;
+				challengePopupCloseLabel: string;
 				saveTokenLabel: string;
 				saveAccountLabel: string;
 			};
@@ -8004,6 +7961,11 @@ export type InitOptions = {
 	highlightMethods?: DropinHighlightMethod[];
 	hooks?: {
 		onRefreshSession?: () => PurseHeadlessCheckoutV1Params["paymentSession"] | string | void | Promise<PurseHeadlessCheckoutV1Params["paymentSession"] | string | void>;
+		/**
+		 * Shows the 3DS challenge of partners running it in-browser (Lyra, Axepta) in a popup instead of a
+		 * modal inside the checkout, falling back to the modal when the browser blocks the popup.
+		 */
+		delegate3DSChallenge?: boolean;
 	};
 };
 export type DropinConfig = {
