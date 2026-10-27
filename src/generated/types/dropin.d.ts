@@ -3,7 +3,6 @@
 import { AnyObject } from 'final-form';
 import { CSSResult, LitElement, PropertyValues, TemplateResult as TemplateResult_2, nothing } from 'lit';
 import { TemplateResult } from 'lit-html';
-import { ZodIssue, z } from 'zod';
 
 declare const Environments: readonly [
 	"development",
@@ -4201,186 +4200,39 @@ export declare interface WalletSession {
 	expirationDate: string;
 	ownerReference: string;
 }
-declare const DropinThemeSchema: z.ZodObject<{
-	fontFamily: z.ZodOptional<z.ZodEnum<[
-		"Roboto",
-		"Montserrat",
-		"Raleway",
-		"Inter",
-		"Noto Sans",
-		"Open Sans",
-		"Lato",
-		"Nunito",
-		"Work Sans"
-	]>>;
-	borderRadius: z.ZodOptional<z.ZodString>;
-	accentColor: z.ZodOptional<z.ZodString>;
-	text: z.ZodOptional<z.ZodObject<{
-		primaryColor: z.ZodOptional<z.ZodString>;
-		secondaryColor: z.ZodOptional<z.ZodString>;
-		fontSize: z.ZodOptional<z.ZodString>;
-		fontWeight: z.ZodOptional<z.ZodEnum<[
-			"normal",
-			"bold",
-			"bolder",
-			"lighter",
-			"100",
-			"200",
-			"300",
-			"400",
-			"500",
-			"600",
-			"700",
-			"800",
-			"900"
-		]>>;
-	}, "strict", z.ZodTypeAny, {
-		primaryColor?: string | undefined;
-		secondaryColor?: string | undefined;
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-	}, {
-		primaryColor?: string | undefined;
-		secondaryColor?: string | undefined;
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-	}>>;
-	title: z.ZodOptional<z.ZodObject<{
-		color: z.ZodOptional<z.ZodString>;
-		fontSize: z.ZodOptional<z.ZodString>;
-		fontWeight: z.ZodOptional<z.ZodEnum<[
-			"normal",
-			"bold",
-			"bolder",
-			"lighter",
-			"100",
-			"200",
-			"300",
-			"400",
-			"500",
-			"600",
-			"700",
-			"800",
-			"900"
-		]>>;
-	}, "strict", z.ZodTypeAny, {
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-		color?: string | undefined;
-	}, {
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-		color?: string | undefined;
-	}>>;
-	xpay: z.ZodOptional<z.ZodObject<{
-		apple: z.ZodOptional<z.ZodObject<{
-			buttonstyle: z.ZodOptional<z.ZodEnum<[
-				"black",
-				"white",
-				"white-outline"
-			]>>;
-		}, "strict", z.ZodTypeAny, {
-			buttonstyle?: "black" | "white" | "white-outline" | undefined;
-		}, {
-			buttonstyle?: "black" | "white" | "white-outline" | undefined;
-		}>>;
-		google: z.ZodOptional<z.ZodObject<{
-			buttonColor: z.ZodOptional<z.ZodEnum<[
-				"black",
-				"white",
-				"default"
-			]>>;
-		}, "strict", z.ZodTypeAny, {
-			buttonColor?: "black" | "white" | "default" | undefined;
-		}, {
-			buttonColor?: "black" | "white" | "default" | undefined;
-		}>>;
-		revolut: z.ZodOptional<z.ZodObject<{
-			variant: z.ZodOptional<z.ZodEnum<[
-				"dark",
-				"light",
-				"light-outlined"
-			]>>;
-		}, "strict", z.ZodTypeAny, {
-			variant?: "dark" | "light" | "light-outlined" | undefined;
-		}, {
-			variant?: "dark" | "light" | "light-outlined" | undefined;
-		}>>;
-	}, "strict", z.ZodTypeAny, {
-		apple?: {
-			buttonstyle?: "black" | "white" | "white-outline" | undefined;
-		} | undefined;
-		google?: {
-			buttonColor?: "black" | "white" | "default" | undefined;
-		} | undefined;
-		revolut?: {
-			variant?: "dark" | "light" | "light-outlined" | undefined;
-		} | undefined;
-	}, {
-		apple?: {
-			buttonstyle?: "black" | "white" | "white-outline" | undefined;
-		} | undefined;
-		google?: {
-			buttonColor?: "black" | "white" | "default" | undefined;
-		} | undefined;
-		revolut?: {
-			variant?: "dark" | "light" | "light-outlined" | undefined;
-		} | undefined;
-	}>>;
-}, "strict", z.ZodTypeAny, {
-	fontFamily?: "Roboto" | "Montserrat" | "Raleway" | "Inter" | "Noto Sans" | "Open Sans" | "Lato" | "Nunito" | "Work Sans" | undefined;
-	borderRadius?: string | undefined;
-	accentColor?: string | undefined;
+// Hand-written in place of dropin's zod types (no zod dependency here). Drop once bundle-types runs against a dropin release exporting plain types.
+export type DropinTheme = {
+	fontFamily?: "Roboto" | "Montserrat" | "Raleway" | "Inter" | "Noto Sans" | "Open Sans" | "Lato" | "Nunito" | "Work Sans";
+	borderRadius?: string;
+	accentColor?: string;
 	text?: {
-		primaryColor?: string | undefined;
-		secondaryColor?: string | undefined;
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-	} | undefined;
+		primaryColor?: string;
+		secondaryColor?: string;
+		fontSize?: string;
+		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900";
+	};
 	title?: {
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-		color?: string | undefined;
-	} | undefined;
+		color?: string;
+		fontSize?: string;
+		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900";
+	};
 	xpay?: {
 		apple?: {
-			buttonstyle?: "black" | "white" | "white-outline" | undefined;
-		} | undefined;
+			buttonstyle?: "black" | "white" | "white-outline";
+		};
 		google?: {
-			buttonColor?: "black" | "white" | "default" | undefined;
-		} | undefined;
+			buttonColor?: "black" | "white" | "default";
+		};
 		revolut?: {
-			variant?: "dark" | "light" | "light-outlined" | undefined;
-		} | undefined;
-	} | undefined;
-}, {
-	fontFamily?: "Roboto" | "Montserrat" | "Raleway" | "Inter" | "Noto Sans" | "Open Sans" | "Lato" | "Nunito" | "Work Sans" | undefined;
-	borderRadius?: string | undefined;
-	accentColor?: string | undefined;
-	text?: {
-		primaryColor?: string | undefined;
-		secondaryColor?: string | undefined;
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-	} | undefined;
-	title?: {
-		fontSize?: string | undefined;
-		fontWeight?: "normal" | "bold" | "bolder" | "lighter" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
-		color?: string | undefined;
-	} | undefined;
-	xpay?: {
-		apple?: {
-			buttonstyle?: "black" | "white" | "white-outline" | undefined;
-		} | undefined;
-		google?: {
-			buttonColor?: "black" | "white" | "default" | undefined;
-		} | undefined;
-		revolut?: {
-			variant?: "dark" | "light" | "light-outlined" | undefined;
-		} | undefined;
-	} | undefined;
-}>;
-export type DropinTheme = z.infer<typeof DropinThemeSchema>;
+			variant?: "dark" | "light" | "light-outlined";
+		};
+	};
+};
+interface DropinThemeIssue {
+	code: string;
+	path: (string | number)[];
+	message: string;
+}
 export type SaveTokenEventPayload = {
 	partner: string;
 	method: string;
@@ -4623,7 +4475,7 @@ export interface DropinPrivateEventPayload {
 	};
 	DROPIN_CHECKOUT_THEME_INVALID_CONFIG: {
 		sessionId: string;
-		errors: ZodIssue[];
+		errors: DropinThemeIssue[];
 	};
 	DROPIN_CHECKOUT_CONFIG_UPDATED: {
 		hasTheme: boolean;
