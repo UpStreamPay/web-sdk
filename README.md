@@ -23,6 +23,8 @@ To use @purse-eu/web-sdk in your project, ensure the following:
 
 Node.js: ≥ 20.x
 
+TypeScript: ≥ 5.4 (the bundled types depend on zod 4)
+
 ### Peer Dependencies
 
 You can install the following peer dependency:
@@ -70,6 +72,8 @@ You can also use the `loadDropInCheckout` to preview the upcoming Dropin Checkou
 To use @purse-eu/web-sdk in your project, ensure the following:
 
 Node.js: ≥ 20.x
+
+TypeScript: ≥ 5.4 (the bundled types depend on zod 4)
 
 ### Peer Dependencies
 
