@@ -998,6 +998,30 @@ export interface SecureFieldsClient {
 	 */
 	setSelectedBrand: (brand: Brand) => void;
 	/**
+	 * Moves keyboard focus into a field.
+	 *
+	 * The input lives in a cross-origin iframe, so a `<label for>` on your page cannot reach it, and in
+	 * hosted fields mode the SDK does not move focus for you after a rejected submit. Use this for both:
+	 * focus the field when its label is clicked, and focus the first invalid field after `submit()`
+	 * rejects. Hosted form mode already does the latter itself.
+	 *
+	 * Call it after the `ready` event: before that the frame is not listening yet.
+	 *
+	 * @param field - `'cardNumber'`, `'cvv'`, `'expDate'` or `'holderName'`.
+	 * @throws SecureFieldsErrors.FIELDS_NOT_RENDERED If the fields have not been rendered yet.
+	 * @throws SecureFieldsErrors.INSTANCE_DESTROYED If the instance has been destroyed.
+	 * @throws SecureFieldsErrors.NOT_SUPPORTED_FIELD If the field is not part of this form.
+	 * @example
+	 * ```ts
+	 * document.querySelector('#card-number-label').addEventListener('click', () => {
+	 *   secureFields.focus('cardNumber');
+	 * });
+	 * ```
+	 *
+	 * @see {@link SecureFieldsErrors}
+	 */
+	focus: (field: PublicFrameName) => void;
+	/**
 	 * Registers an event listener for the specified event.
 	 */
 	on<K extends SecureFieldsEvents>(event: K, callback: (data: SecureFieldsEventsPayload[K]) => void): void;
@@ -1405,6 +1429,22 @@ export declare const threeDSFingerprint: (options: ThreeDSFingerprintOptions) =>
  * only those exact origins can end the wait — the Purse 3DS challenge included: its notification
  * endpoint answers with a page that posts the completion. `resolveAfterLoads` waits for the iframe to
  * navigate instead, for a provider whose result page posts nothing.
+ *
+ * ### Accessibility
+ *
+ * The SDK names the iframe from `title` (`'3D Secure authentication'` by default) and, when the frame
+ * is removed while it holds focus, gives focus back to what had it before the call, else to the
+ * container. The rest is yours:
+ * - Pass `title` in the checkout's language, and give the container a visible heading, e.g.
+ *   "Verify your payment".
+ * - Move focus into the challenge once it is shown, e.g. on the first `onLoad` — it fires on every navigation. With `keepFrame: true`, or
+ *   with focus parked outside the frame, restoring it at the end is yours too.
+ * - Announce loading, success and expiry in a `role="status"` region.
+ * - In a modal: `role="dialog"`, `aria-modal="true"`, focus trapped inside, and Escape calling
+ *   `abort()` on the controller behind `signal`.
+ * - Warn the cardholder before `timeoutMs` runs out: it cannot be extended once started.
+ * - The ACS page inside the frame is the bank's: declare it as third-party content in your
+ *   accessibility statement.
  *
  * Note the challenge outcome is authoritative **server-side**. Whatever this resolves with, confirm
  * the payment through your backend before fulfilling: an abandoned or timed-out challenge is settled
