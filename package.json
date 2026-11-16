@@ -55,5 +55,9 @@
     "final-form": "^4.20.10",
     "lit": "^3.3.3",
     "lit-html": "^3.3.3"
+  },
+  "overrides": {
+    "minimatch": "^11.0.1",
+    "glob": "^14.0.2"
   }
 }
