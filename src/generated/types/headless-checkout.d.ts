@@ -719,10 +719,22 @@ export interface MonitoringApiEventMessage<Event> {
 	platform?: MonitoringPlatform;
 	event: Event;
 }
+/** What a session's cold status means for loading the checkout. `unknown` means proceed as if usable. */
+export type ColdStatusOutcome = "usable" | "submitted" | "expired" | "terminated" | "invalid" | "unknown";
+export type ColdStatus = {
+	outcome: ColdStatusOutcome;
+	/** Orchestration's `status` or OnePay's `state`, as received. */
+	state?: string;
+	/** Orchestration's `expires_at` or OnePay's `expiration`, as received. Logged, not used for the outcome. */
+	expiresAt?: string;
+	/** Why the outcome is `unknown`: `timeout`, `network`, `http_<status>` or `unparseable`. */
+	reason?: "timeout" | "network" | "unparseable" | `http_${number}`;
+};
 export interface PaymentAPI {
 	env: Pick<APIEnv, "apiKey" | "paymentAPIRoot" | "entityId" | "target">;
 	readonly root: string;
 	setSessionId(id: string): void;
+	getColdStatus(timeoutMs?: number): Promise<ColdStatus>;
 	init<Logs = Record<never, never>>(data: ItemPayload): Promise<InitData<Logs>>;
 	initXPays<Logs = Record<never, never>>(data: ItemPayload): Promise<InitXPaysData<Logs>>;
 	init3DS<Logs = Record<never, never>>(data: ItemPayload): Promise<Init3DSData<Logs>>;
@@ -968,12 +980,6 @@ declare const Events: {
 	};
 	readonly pluginSourcesLoaded: {
 		readonly code: "pluginSourcesLoaded";
-		readonly topics: readonly [
-			"info"
-		];
-	};
-	readonly pluginIsIncompatibleWithInterface: {
-		readonly code: "pluginIsIncompatibleWithInterface";
 		readonly topics: readonly [
 			"info"
 		];
@@ -1333,6 +1339,13 @@ declare interface HostedFormUIOptions {
 	brandLabels?: {
 		[key in CardScheme]?: string;
 	};
+	/**
+	 * Overlay drawn over the widget while a 3DS challenge runs in a popup (`hooks.delegate3DSChallenge`).
+	 * The overlay is shown only when all three texts are set.
+	 */
+	challengePopupText?: string;
+	challengePopupContinueLabel?: string;
+	challengePopupCloseLabel?: string;
 }
 declare const IntegrationTypes: {
 	readonly hostedForm: "hostedForm";
@@ -1881,12 +1894,6 @@ export declare interface UnifiedEventPayload {
 		active?: string;
 	};
 	pluginExtraSourcesLoaded: Record<string, any> | null;
-	pluginIsIncompatibleWithInterface: {
-		partner: Partner;
-		method: Method;
-		interface: string;
-		fallBackInterface: string;
-	};
 	/** `code`/`reason` carry the rejecting `UnifiedError`, so the log says which check refused. */
 	pluginIsIncompatibleWithClient: {
 		partner: Partner;
@@ -2475,6 +2482,16 @@ declare const PurseHeadlessCheckoutErrors: {
 		message: string;
 		documentationLink: string;
 	};
+	readonly TERMINATED_SESSION: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
+	readonly SESSION_CHANGE_DURING_SUBMIT: {
+		code: string;
+		message: string;
+		documentationLink: string;
+	};
 	readonly SESSION_ALREADY_SET: {
 		code: string;
 		message: string;
@@ -2508,7 +2525,9 @@ export type PurseHeadlessCheckoutErrorCodes = keyof typeof PurseHeadlessCheckout
  */
 export interface PurseHeadlessCheckoutErrorsPayload {
 	EXPIRED_SESSION?: never;
+	TERMINATED_SESSION?: never;
 	SESSION_ALREADY_SET?: never;
+	SESSION_CHANGE_DURING_SUBMIT?: never;
 	MISSING_SESSION?: string;
 	MISSING_WALLET_SESSION?: never;
 	SET_WALLET_SESSION_FAILED?: Error;
@@ -2722,6 +2741,7 @@ export interface SecondarySpecificConfig {
 export type DisabledStatePayload = {
 	METHOD_UNSTABLE: never;
 	TOKEN_INIT_FAILED: never;
+	TOKEN_BALANCE_PENDING: never;
 	PAYMENT_ELEMENT_FATAL_ERROR: never;
 	SUBMITTING: never;
 	PAYMENT_ELEMENT_RENDER_FAILED: never;
@@ -3241,8 +3261,8 @@ export interface PurseHeadlessCheckoutSecondaryToken extends PurseHeadlessChecko
 	expiration_date: string | Date;
 	/**
 	 * The amount available for use on the card.
-	 * This value will be at 0 until we've fetched its current value.
-	 * The fetching is done in parallel during the checkout creation to speed up the process.
+	 * On a saved token it is 0 while `disabled` carries `TOKEN_BALANCE_PENDING`, and is set once the fetch
+	 * answers; it stays 0 when that fetch fails, and `disabled` then carries `TOKEN_INIT_FAILED`.
 	 */
 	balance: Readable<number>;
 	/**
@@ -3321,9 +3341,8 @@ export interface PurseHeadlessCheckoutTemporarySecondaryToken extends PurseHeadl
 export interface PurseHeadlessCheckoutLoyaltyToken extends PurseHeadlessCheckoutTemporarySecondaryToken {
 	method: "loyaltycard";
 	/**
-	 * The total amount on the loyalty account.
-	 * This value will be at 0 until we've fetched its current value.
-	 * The fetching is done in parallel during the checkout creation to speed up the process.
+	 * The total amount on the loyalty account, from the `/init` answer of a token created with
+	 * `getSecondaryToken`.
 	 * The amount may differ from the balance. The balance represents the usable amount by the customer.
 	 */
 	totalBalance: Readable<number>;
@@ -3602,6 +3621,20 @@ export interface PurseHeadlessCheckoutEventPayload {
 	HEADLESS_CHECKOUT_METHOD_LOAN_SIM: {
 		partner: string;
 		method: string;
+		amount?: string;
+		currencyCode?: string;
+	};
+	/**
+	 * The SDK made a method, token or xpay unavailable. `cause` is the `DisabledStateCode`,
+	 * the one taxonomy shared with dropin. Never emitted for `SUBMITTING`, which is the UI
+	 * locking itself during a submit rather than a method becoming unusable (SDK-12470).
+	 */
+	HEADLESS_CHECKOUT_METHOD_DISABLED: {
+		partner: string;
+		method: string;
+		cause: string;
+		id?: string;
+		isSecondary?: boolean;
 	};
 	HEADLESS_CHECKOUT_METHOD_REGISTER: {
 		partner: string;
@@ -3637,6 +3670,12 @@ export interface PurseHeadlessCheckoutEventPayload {
 	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_APPEND_TO: {
 		partner: string;
 		method: string;
+	};
+	/** A payment element was not mounted because `/validate` was already sent for this session (SDK-12461). */
+	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_APPEND_TO_BLOCKED: {
+		partner: string;
+		method: string;
+		phase: "inFlight" | "spent";
 	};
 	HEADLESS_CHECKOUT_PAYMENT_ELEMENT_REMOVE: {
 		partner: string;
@@ -3684,6 +3723,13 @@ export interface PurseHeadlessCheckoutEventPayload {
 		has_redirection?: boolean;
 		/** Set when the failure came from a thrown error rather than from an API status. */
 		error_name?: string;
+		/** HTTP status, path, backend error code and Cloudflare ray id of a refused API call (`ApiError`). */
+		status?: number;
+		path?: string;
+		apiError?: string;
+		rayId?: string;
+		/** `/validate` answered under 400 with an unreadable body: the session is spent and the submit resolves. */
+		accepted?: boolean;
 	};
 	HEADLESS_CHECKOUT_PAYMENT_FULFILLED: {
 		isFulfilled: boolean;
@@ -3700,16 +3746,28 @@ export interface PurseHeadlessCheckoutEventPayload {
 	HEADLESS_CHECKOUT_REACTIVE_VALUE_SUBSCRIBE: {
 		variableName: string;
 	};
-	HEADLESS_CHECKOUT_READY: Record<never, never>;
-	HEADLESS_CHECKOUT_SECONDARY_TOKEN_REGISTER: Record<never, never>;
+	/** The instance reached its first usable session. `durationMs` measures SDK init. */
+	HEADLESS_CHECKOUT_READY: {
+		paymentSessionId: string;
+		durationMs: number;
+	};
+	/** `saveToken` is a string, as it was before the 3.60.0 refactor, so history stays comparable. */
+	HEADLESS_CHECKOUT_SECONDARY_TOKEN_REGISTER: {
+		partner: string;
+		method: string;
+		tokenId?: string;
+		saveToken?: string;
+	};
 	HEADLESS_CHECKOUT_SECONDARY_TOKEN_REMOVE_FROM_SPLIT: {
 		partner: string;
 		method: string;
-		id?: string;
+		tokenId?: string;
 	};
+	/** `amount` is the amount the take policy actually applied, not the one requested. */
 	HEADLESS_CHECKOUT_SECONDARY_TOKEN_TAKE: {
 		partner: string;
 		method: string;
+		tokenId?: string;
 		amount?: number;
 	};
 	HEADLESS_CHECKOUT_SET_SESSION: {
@@ -3718,6 +3776,17 @@ export interface PurseHeadlessCheckoutEventPayload {
 		message?: string;
 		amount?: number;
 		nb_methods?: number;
+	};
+	/**
+	 * The session's cold status, read before any `/init` (SDK-12540). `INFO` when usable, `WARNING`
+	 * otherwise; `reason` says why an `unknown` one let the checkout proceed.
+	 */
+	HEADLESS_CHECKOUT_SESSION_COLD_STATUS: {
+		paymentSessionId: string;
+	} & ColdStatus;
+	/** `setSession` was refused because a submit is in flight. */
+	HEADLESS_CHECKOUT_SET_SESSION_BLOCKED: {
+		state: PurseHeadlessCheckoutSessionState;
 	};
 	HEADLESS_CHECKOUT_SET_WALLET_SESSION: {
 		walletSessionId: string;
@@ -3760,6 +3829,10 @@ export interface PurseHeadlessCheckoutEventPayload {
 		stack: string;
 		message?: string;
 	};
+	HEADLESS_CHECKOUT_UNCAUGHT_CROSS_ORIGIN_ERROR: {
+		stack: string;
+		message?: string;
+	};
 	HEADLESS_CHECKOUT_ON_BEFORE_VALIDATE_HOOK_FAILED: {
 		message: string;
 		error: {
@@ -3797,6 +3870,11 @@ declare class PurseHeadlessCheckoutEventBus extends EventBus<PurseHeadlessChecko
 declare class ApiLogger extends FetchMonitoringAPI<PurseHeadlessCheckoutEventBusEvent<any>> {
 	constructor(env: EnvironmentTarget, apiKey: string, apiRoot?: string);
 }
+/**
+ * Where the checkout stands with its single `/validate` (SDK-12461): `inFlight` from `submitPayment()` until it
+ * settles, `spent` once `/validate` was accepted, `none` otherwise.
+ */
+export type SubmitPhase = "none" | "inFlight" | "spent";
 export interface PaymentSession {
 	id: string;
 	source: LegacyPaymentSession;
@@ -3822,6 +3900,8 @@ type OnePayWalletSession$1 = {
 	owner_reference: string;
 	merchant: string;
 };
+/** A session the cold status found readable but not payable (SDK-12540). */
+export type UnpayableSessionState = Extract<PurseHeadlessCheckoutSessionState, "submitted" | "terminated">;
 export interface Payment {
 	api: PaymentAPI;
 	walletAPI: WalletAPI;
@@ -3833,6 +3913,9 @@ export interface Payment {
 		}) => Promise<void>;
 		submitPayment: (skipOnBeforeValidateHook?: boolean) => Promise<void>;
 		onSessionTerminated: () => void;
+		getSubmitPhase?: () => SubmitPhase;
+		/** Resolves once no submit is in flight. */
+		whenSubmitSettled?: () => Promise<void>;
 	};
 	mops: Readable<PurseHeadlessCheckoutPaymentItem[]>;
 	methods: Readable<PurseHeadlessCheckoutPaymentMethod[]>;
@@ -3845,13 +3928,19 @@ export interface Payment {
 	paymentSession: Readable<PaymentSession | null>;
 	session: PaymentSession;
 	walletSession: WalletSession | null;
-	setSession(session: LegacyPaymentSession): Promise<void>;
+	setSession(session: LegacyPaymentSession): Promise<UnpayableSessionState | undefined>;
 	onExpires(callback: () => void): () => void;
 	getMop(mop: Partial<PurseHeadlessCheckoutPaymentItemBase>): PurseHeadlessCheckoutPaymentItem | null;
 	deleteAllTokens(): Promise<void>;
 	deactivateMop(mop: PurseHeadlessCheckoutPaymentItemBase, reason: DisabledState): Promise<void>;
+	/** Bumped when a different session starts loading: an answer for an older one is stale. */
+	sessionGeneration: number;
+	/** The amount-driven disabled state an item would get against the current rest to pay. */
+	amountDisabledState(mop: PurseHeadlessCheckoutPaymentItemBase): DisabledState | null;
 	isSessionExpired(): boolean;
 }
+/** Wallet / pay-button methods; card forms are left alone. Widget V3 and hosted-checkout keep their own rules, see knowledge/PAYMENT_CONCEPTS.md. */
+export declare const PAY_BUTTON_METHODS: readonly string[];
 declare class PurseHeadlessCheckoutElement {
 	private readonly manuallyTriggerHook;
 	private readonly onSessionTerminated?;
@@ -3911,6 +4000,8 @@ declare class PurseHeadlessCheckoutElement {
 	 * @returns {Promise<boolean | CreditCardValidateUiResult>} A promise that resolves with true or the result of the validation
 	 */
 	validateUi(): Promise<boolean | CreditCardValidateUiResult>;
+	/** A handle kept across a refresh must not mount its item into a session that no longer has it. */
+	protected assertInCurrentSession(): void;
 	private clearListeners;
 }
 declare class PurseHeadlessCheckoutPaymentElement$1 extends PurseHeadlessCheckoutElement implements PurseHeadlessCheckoutPaymentElement {
@@ -3935,7 +4026,12 @@ declare class PurseHeadlessCheckoutHostedFields$1 extends PurseHeadlessCheckoutE
 	setOptions(options?: Options): void;
 	render(): void;
 }
-declare function buildPaymentElementAccessors(create: <I extends Interface>(inter: I) => I extends "form" ? PurseHeadlessCheckoutPaymentElement$1 : PurseHeadlessCheckoutHostedFields$1): {
+declare function buildPaymentElementAccessors(create: <I extends Interface>(inter: I) => I extends "form" ? PurseHeadlessCheckoutPaymentElement$1 : PurseHeadlessCheckoutHostedFields$1, monitoring?: {
+	partner: string;
+	method: string;
+	id?: string;
+	isToken?: boolean;
+}): {
 	getPaymentElement: (options?: Omit<Options, "hostedFields">) => PurseHeadlessCheckoutPaymentElement$1;
 	getHostedFields: (options?: HostedFieldsOptions) => PurseHeadlessCheckoutHostedFields$1;
 	getElementInstance: () => PurseHeadlessCheckoutPaymentElement$1 | PurseHeadlessCheckoutHostedFields$1 | undefined;
@@ -3948,12 +4044,16 @@ declare class PursePayment implements Payment {
 		}) => Promise<void>;
 		submitPayment: (skipOnBeforeValidateHook?: boolean) => Promise<void>;
 		onSessionTerminated: () => void;
+		getSubmitPhase?: () => SubmitPhase;
+		whenSubmitSettled?: () => Promise<void>;
 	};
 	private _paymentSession;
 	private _walletSession;
 	private readonly _serverDateChecker;
 	api: PaymentAPI;
 	walletAPI: WalletAPI;
+	/** Bumped when a different session starts loading: an answer for an older one is stale. */
+	sessionGeneration: number;
 	paymentSplitter: PaymentSplitter;
 	readonly paymentSession: Writable<PaymentSession | null>;
 	mops: Writable<PurseHeadlessCheckoutPaymentItem[]>;
@@ -3979,10 +4079,18 @@ declare class PursePayment implements Payment {
 		}) => Promise<void>;
 		submitPayment: (skipOnBeforeValidateHook?: boolean) => Promise<void>;
 		onSessionTerminated: () => void;
+		getSubmitPhase?: () => SubmitPhase;
+		whenSubmitSettled?: () => Promise<void>;
 	});
 	get session(): PaymentSession;
 	get walletSession(): WalletSession | null;
-	setSession(session: LegacyPaymentSession): Promise<void>;
+	/**
+	 * A session past its date throws `EXPIRED_SESSION` before its cold status is read. The cold status
+	 * then throws the same for an expired or invalid session, and resolves with `submitted` or
+	 * `terminated` for one that is readable but not payable: no item is published, so nothing can
+	 * `/init` it.
+	 */
+	setSession(session: LegacyPaymentSession): Promise<UnpayableSessionState | undefined>;
 	setWalletSession(session: OnePayWalletSession): Promise<void>;
 	onExpires(callback: () => void): () => void;
 	getMop(mop: Partial<PurseHeadlessCheckoutPaymentItem>): PurseHeadlessCheckoutPaymentItem | null;
@@ -3990,6 +4098,7 @@ declare class PursePayment implements Payment {
 	deactivateMop(mop: PurseHeadlessCheckoutPaymentItem, reason: DisabledState): Promise<void>;
 	isSessionExpired(): boolean;
 	private updateMopDisabledState;
+	amountDisabledState(mop: PurseHeadlessCheckoutPaymentItemBase, primaryReach?: number): DisabledState | null;
 }
 export declare class PurseHeadlessCheckout {
 	#private;
@@ -4125,6 +4234,18 @@ export declare class PurseHeadlessCheckout {
 	 */
 	static init(checkoutParams: PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params, hooks?: PurseHeadlessCheckoutHooks, apiPaths?: APIPaths, wrapper?: MonitoringWrapper): Promise<PurseHeadlessCheckout>;
 	/**
+	 * For Purse products only, not part of the merchant API. Typed in the declarations because dropin
+	 * compiles against them, which `@internal` would strip.
+	 * Builds the instance without setting its sessions, so the wrapping product decides what a
+	 * failing first session means: dropin keeps an instance expired at load to show its expired screen.
+	 * Same parameters as {@link PurseHeadlessCheckout.init}.
+	 */
+	static build(checkoutParams: PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params, hooks?: PurseHeadlessCheckoutHooks, apiPaths?: APIPaths, wrapper?: MonitoringWrapper): {
+		instance: PurseHeadlessCheckout;
+		paymentSession: PurseHeadlessCheckoutV1Params["paymentSession"];
+		walletSession?: OnePayWalletSession;
+	};
+	/**
 	 * Get the config from params
 	 * @param {PurseHeadlessCheckoutV2Params | PurseHeadlessCheckoutV1Params} checkoutParams - The checkoutParams data for initializing the checkout.
 	 * @param {APIPaths} apiPaths - dev purposes only to override the APi URL's
@@ -4229,6 +4350,10 @@ export declare class PurseHeadlessCheckout {
 	 * @throws
 	 * - {@link PurseHeadlessCheckoutError} `MISSING_SESSION` \
 	 * If the session is missing
+	 * - {@link PurseHeadlessCheckoutError} `EXPIRED_SESSION` \
+	 * If `sessionState` is `expired`
+	 * - {@link PurseHeadlessCheckoutError} `TERMINATED_SESSION` \
+	 * If `sessionState` is `terminated`
 	 * - {@link PurseHeadlessCheckoutError} `PAYMENT_NOT_FULFILLED_ON_SUBMIT` \
 	 * If submitting a payment not available for submission
 	 * - {@link PurseHeadlessCheckoutError} `POST_VALIDATE_FAILED` \
