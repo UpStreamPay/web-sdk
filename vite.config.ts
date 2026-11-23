@@ -36,7 +36,7 @@ export default defineConfig({
     dts({
       insertTypesEntry: true,
       copyDtsFiles: true,
-      exclude: ['**/**.test.ts', '**/**.spec.ts'],
+      exclude: ['**/**.test.ts', '**/**.spec.ts', '**/**.test-d.ts'],
     }),
   ],
 });
