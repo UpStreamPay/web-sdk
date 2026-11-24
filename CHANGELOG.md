@@ -35,6 +35,13 @@
 
 
 
+## [0.11.1](https://github.com/UpStreamPay/web-sdk/compare/v0.11.0...v0.11.1) (2026-11-24)
+
+
+### Bug Fixes
+
+* **types:** type the 3DS helpers on the loadSecureFields module SDK-12711 ([#126](https://github.com/UpStreamPay/web-sdk/issues/126)) ([9bd2b31](https://github.com/UpStreamPay/web-sdk/commit/9bd2b3140c451714a159fa008292451a4abbf6b2))
+
 ## [0.11.0](https://github.com/UpStreamPay/web-sdk/compare/v0.10.2...v0.11.0) (2026-10-27)
 
 
